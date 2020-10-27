@@ -5,5 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RestaurantsOverviewScreen">
+<!--    <GridView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:numColumns="auto_fit"-->
+<!--        />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

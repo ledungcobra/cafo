@@ -10,5 +10,8 @@ public class RestaurantDetailScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail_screen);
+        //TODO: SHOP INFO:{ HÌNH + TÊN _ SỐ điện thoại  }
+        //TODO:
+
     }
 }
