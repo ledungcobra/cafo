@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="10dp"
-        android:padding="15dp"
-        android:background="@drawable/rounded_drop_shadow_bg">
+        android:layout_margin="8dp"
+        android:padding="10dp"
+        android:background="@android:color/white">
         <ImageView
             android:id="@+id/ivRestaurantPhoto"
             android:layout_width="0dp"
@@ -50,8 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="10dp"
-        android:background="@drawable/rounded_drop_shadow_bg"
+        android:layout_margin="8dp"
+        android:background="@android:color/white"
         android:padding="10dp">
         <LinearLayout
             android:layout_width="0dp"
