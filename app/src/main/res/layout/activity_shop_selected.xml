@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShopSelected">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="0dp"
+        android:padding="0dp"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginStart="0dp"
+            android:padding="0dp"
+            app:contentInsetStart="0dp"
+        >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:orientation="vertical"
+                android:paddingStart="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:orientation="horizontal"
+                    android:padding="0dp">
+
+                    <ImageButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/ic_baseline_arrow_back_24" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="6"
+                        android:text="@string/cafo"
+                        android:textAlignment="center"
+                        android:textColor="#FFFF"
+                        android:textSize="40sp" />
+
+                    <ImageButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@drawable/ic_baseline_info_24" />
+                </LinearLayout>
+
+                <SearchView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="#ffff"
+                    android:padding="0dp"
+
+                    />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

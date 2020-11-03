@@ -1,5 +1,3 @@
-package com.ledungcobra.cafo;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
