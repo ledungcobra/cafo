@@ -112,8 +112,9 @@
         android:layout_marginTop="10dp"/>
     <ListView
         android:id="@+id/lvMenu"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="1dp"
-        android:divider="@android:color/darker_gray"/>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp"/>
 </LinearLayout>
