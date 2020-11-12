@@ -3,6 +3,7 @@ package com.ledungcobra.cafo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -68,5 +69,13 @@ public class RestaurantDetailScreen extends Activity {
         ivDist = findViewById(R.id.ivDist);
         ivLoc.setImageResource(R.drawable.location);
         ivDist.setImageResource(R.drawable.cursor);
+
+        findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RestaurantDetailScreen.this,MapScreen.class);
+                startActivity(intent);
+            }
+        });
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Cafo</string>
+    <string name="maps_api_key">AIzaSyDscN7POG1r4wNZDSBsoTz5xgRFKfQH0LM</string>
 </resources>
