@@ -28,7 +28,6 @@ public class RestaurantsOverviewScreen extends Activity {
         //TODO: Them search trên appbar(navbar)
 
 
-        Toast.makeText(this,getIntent().getStringExtra("KEY"),Toast.LENGTH_SHORT).show();
 
 
 

@@ -4,25 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.ledungcobra.cafo.sampledata.Food;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class MainActivity extends Activity {
     View appTitle;
@@ -43,10 +26,9 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFinish() {
-                Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
-                intent.putExtra("KEY","Hello");
-                finish();
+                Intent intent = new Intent(MainActivity.this,ShopSelected.class);
 
+                finish();
                 startActivity(intent);
             }
         }.start();

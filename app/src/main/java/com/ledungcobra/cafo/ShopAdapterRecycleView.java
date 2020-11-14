@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.ledungcobra.cafo.sampledata.Photo;
+import com.ledungcobra.cafo.sampledata.Restaurant;
+import com.squareup.picasso.Picasso;
 
 public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecycleView.MyViewHolder>{
      LayoutInflater mInflater;
@@ -32,9 +35,12 @@ public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecy
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.imageView.setImageResource(thumbnails[position]);
-            holder.txtView1.setText(items[position]);
-            holder.txtView2.setText(address[position]);
+
+            holder.bindData(new Restaurant("10","20","google.com"
+            ,new Photo[] {
+                    new Photo("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+                    100,100),
+            },null,null,"Yes coffee",null,"Yes coffee"));
 
         }
 
@@ -43,17 +49,31 @@ public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecy
             return items.length;
         }
 
-        public static class MyViewHolder extends RecyclerView.ViewHolder{
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
             ImageView imageView;
-            TextView txtView1;
-            TextView txtView2;
+            TextView txtNameShop;
+            TextView txtAddress;
+            Restaurant restaurant;
 
             public MyViewHolder(@NonNull View itemView) {
                 super(itemView);
-                imageView = itemView.findViewById(R.id.ivAvatar);
-                txtView1 = itemView.findViewById(R.id.twNameShop);
-                txtView2 = itemView.findViewById(R.id.tvAddress);
-
             }
+
+            public void bindData(Restaurant restaurant){
+                this.restaurant = restaurant;
+
+                imageView = itemView.findViewById(R.id.ivAvatar);
+                txtNameShop = itemView.findViewById(R.id.twNameShop);
+                txtAddress = itemView.findViewById(R.id.tvAddress);
+
+                txtNameShop.setText(restaurant.getName());
+                txtAddress.setText(restaurant.getShortAddress());
+
+                Picasso.get().load(restaurant.getPhotos()[0].getUrl()).into(imageView);
+            }
+
+
         }
+
+
     }
