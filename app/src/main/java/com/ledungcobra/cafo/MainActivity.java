@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
             public void onFinish() {
                 Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
                 intent.putExtra("KEY","Hello");
+                finish();
 
                 startActivity(intent);
             }
