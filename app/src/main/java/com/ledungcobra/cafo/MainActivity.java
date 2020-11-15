@@ -3,12 +3,21 @@ package com.ledungcobra.cafo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
+
+import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.models.common.Restaurant;
+import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
+
+import java.util.List;
 
 
 public class MainActivity extends Activity {
     View appTitle;
+
+    private static String TAG = "CALLAPI";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,38 +28,36 @@ public class MainActivity extends Activity {
         appTitle.setAlpha(0);
 
         appTitle.animate().alphaBy(1).setDuration(3000).start();
-        new CountDownTimer(2000,1000){
+
+        Repository repository = Repository.getInstance();
+
+        repository.getAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>,Error>(){
 
             @Override
-            public void onTick(long millisUntilFinished) { }
+            public void onResult(List<BriefRestaurantInfo> result) {
+                //Having
+                Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
 
-            @Override
-            public void onFinish() {
-                Intent intent = new Intent(MainActivity.this,ShopSelected.class);
-
-                finish();
+                intent.putExtra("DONE","DOne");
                 startActivity(intent);
+
             }
-        }.start();
-//        String url = "https://app-demo-0123.herokuapp.com/";
-//
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//
-//        JsonObjectRequest jor = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                Log.d("ANDROIDDEBUG", "onResponse: " + response.toString());
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d("ANDROIDDEBUG", "Error: " );
-//            }
-//        });
-//
-//
-//        queue.add(jor);
-//        queue.start();
+
+            @Override
+            public void onFailure(Error error) {
+                //Handle Error
+            }
+
+            @Override
+            public void stopProgressIndicator() {
+                //Handle stop progress indicator
+            }
+
+            @Override
+            public void startProgressIndicator() {
+                //Handle start progress indicator
+            }
+        });
     }
 
 }

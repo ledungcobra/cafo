@@ -4,9 +4,10 @@ package com.ledungcobra.cafo.models.common;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     @SerializedName("photos")
     @Expose
@@ -134,4 +135,6 @@ public class Restaurant {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+
 }

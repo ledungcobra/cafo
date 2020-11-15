@@ -1,8 +1,7 @@
 package com.ledungcobra.cafo.network;
 
 import com.ledungcobra.cafo.models.city.CityArray;
-import com.ledungcobra.cafo.models.common.Restaurant;
-import com.ledungcobra.cafo.models.restaurant_detail.RestaurantDetail;
+import com.ledungcobra.cafo.models.restaurant_detail.RestaurantWrapper;
 import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
 
 import retrofit2.Call;
@@ -19,7 +18,7 @@ public interface NetworkService {
     Call<CityArray> getCities();
 
     @GET("restaurants/id/{restaurant_id}")
-    Call<RestaurantDetail> getRestaurant(@Path("restaurant_id") String id);
+    Call<RestaurantWrapper> getRestaurant(@Path("restaurant_id") String id);
 
 
 }

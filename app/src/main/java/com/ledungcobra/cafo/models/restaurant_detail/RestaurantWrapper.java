@@ -5,7 +5,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.ledungcobra.cafo.models.common.Restaurant;
 
-public class RestaurantDetail {
+import java.io.Serializable;
+
+public class RestaurantWrapper implements Serializable {
 
     @SerializedName("restaurant")
     @Expose

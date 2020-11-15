@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.ledungcobra.cafo.models.common.Restaurant;
-import com.squareup.picasso.Picasso;
 
 public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecycleView.MyViewHolder>{
      LayoutInflater mInflater;

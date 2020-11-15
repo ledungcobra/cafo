@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".RestaurantDetailScreen"
+    android:id="@+id/restaurant_detail_view"
     android:background="@drawable/gradient_background">
 
     <LinearLayout

@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.view_adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,23 +9,31 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.models.common.Food;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
 public class MenuListViewAdapter extends BaseAdapter {
     Context context;
-    int[] foodPhotos;
-    String[] foodNames;
-    String[] foodPrices;
+    List<Food> foods;
 
-    public MenuListViewAdapter(Context context, int[] foodPhotos, String[] foodNames, String[] foodPrices)
+    public MenuListViewAdapter(Context context,List<Food> foods)
     {
         this.context = context;
-        this.foodPhotos = foodPhotos;
-        this.foodNames = foodNames;
-        this.foodPrices = foodPrices;
+        this.foods = foods;
+
+    }
+
+    public void setFoods(List<Food> foods) {
+        this.foods = foods;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return foodPhotos.length;
+        return foods.size();
     }
 
     @Override
@@ -49,9 +57,10 @@ public class MenuListViewAdapter extends BaseAdapter {
         TextView tvFoodPrice = row.findViewById(R.id.tvFoodPrice);
 
         if (convertView == null) {
-            ivFoodPhoto.setImageResource(foodPhotos[position]);
-            tvFoodName.setText(foodNames[position]);
-            tvFoodPrice.setText(foodPrices[position]);
+            Food food =foods.get(position) ;
+            Picasso.get().load(food.getPhotos().get(0).getValue()).into(ivFoodPhoto);
+            tvFoodName.setText(food.getName());
+            tvFoodPrice.setText(food.getPrice().getValue()+"");
         } else {
             row = convertView;
         }
