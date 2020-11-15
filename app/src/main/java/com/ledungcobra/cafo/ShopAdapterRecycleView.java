@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ledungcobra.cafo.sampledata.Photo;
-import com.ledungcobra.cafo.sampledata.Restaurant;
+
+import com.ledungcobra.cafo.models.common.Restaurant;
 import com.squareup.picasso.Picasso;
 
 public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecycleView.MyViewHolder>{
@@ -36,11 +36,11 @@ public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecy
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-            holder.bindData(new Restaurant("10","20","google.com"
-            ,new Photo[] {
-                    new Photo("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-                    100,100),
-            },null,null,"Yes coffee",null,"Yes coffee"));
+//            holder.bindData(new Restaurant("10","20","google.com"
+//            ,new Photo[] {
+//                    new Photo("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+//                    100,100),
+//            },null,null,"Yes coffee",null,"Yes coffee"));
 
         }
 
@@ -67,9 +67,9 @@ public class ShopAdapterRecycleView extends RecyclerView.Adapter<ShopAdapterRecy
                 txtAddress = itemView.findViewById(R.id.tvAddress);
 
                 txtNameShop.setText(restaurant.getName());
-                txtAddress.setText(restaurant.getShortAddress());
+//                txtAddress.setText(restaurant.getShortAddress());
 
-                Picasso.get().load(restaurant.getPhotos()[0].getUrl()).into(imageView);
+//                Picasso.get().load(restaurant.getPhotos()[0].getUrl()).into(imageView);
             }
 
 

@@ -53,6 +53,9 @@ public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback 
                 getNewLocation(s.toString());
             }
         });
+
+
+
     }
 
     @Override
