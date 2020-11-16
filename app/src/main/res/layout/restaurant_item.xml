@@ -8,6 +8,7 @@
     android:padding="5dp"
     android:orientation="vertical"
     android:background="@android:color/white"
+    android:id="@+id/restaurant_item"
     android:layout_margin="5dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

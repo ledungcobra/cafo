@@ -1,18 +1,27 @@
 package com.ledungcobra.cafo;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-public class RestaurantsOverviewScreen extends Activity {
+import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
+import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
+import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
+
+public class RestaurantsOverviewScreen extends AppCompatActivity implements RestaurantClickListener {
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    RestaurantOverviewItemAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
     ImageButton btnInfo;
+
+    public static String DATA_KEY = "DATA";
+    public static String EXTRA_KEY = "RESTAURANT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +34,25 @@ public class RestaurantsOverviewScreen extends Activity {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new RestaurantOverviewItemAdapter(this);
         recyclerView.setAdapter(adapter);
-        //TODO: Them search trên appbar(navbar)
+
+        Repository.getInstance().getAllRestaurants().observe(this, new Observer<RestaurantArray>() {
+            @Override
+            public void onChanged(RestaurantArray restaurantArray) {
+                adapter.setRestaurants(restaurantArray.getRestaurants());
+            }
+        });
+        adapter.setOnRestaurantClickListener(this);
+    }
+
+    @Override
+    public void onClick(String restaurantID) {
+
+        Intent intent = new Intent(RestaurantsOverviewScreen.this,RestaurantDetailScreen.class);
 
 
-        Toast.makeText(this,getIntent().getStringExtra("KEY"),Toast.LENGTH_SHORT).show();
+        intent.putExtra(EXTRA_KEY,restaurantID);
 
-
+        startActivity(intent);
 
     }
 }
