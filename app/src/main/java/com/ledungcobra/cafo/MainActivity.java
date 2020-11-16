@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResult(List<BriefRestaurantInfo> result) {
                 //Having
                 Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
+                finish();
                 startActivity(intent);
             }
 

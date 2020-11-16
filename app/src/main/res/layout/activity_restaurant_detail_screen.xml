@@ -14,38 +14,70 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp"
-        android:padding="10dp"
-        android:background="@android:color/white">
+
+        android:background="@android:color/white"
+
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_dehaze_24"
+                android:background="@drawable/restaurant_info_triagle_background"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvRestaurantName"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="2"
+                android:overScrollMode="always"
+                android:text="Tên quán"
+                android:textSize="23sp"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvRestaurantPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="50dp"
+                android:layout_weight="1"
+                android:text="SĐT"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <ImageView
             android:id="@+id/ivRestaurantPhoto"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/img_restaurant_placeholder"
             android:layout_marginRight="10dp"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tvRestaurantName"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:layout_gravity="center_vertical"
-                android:text="Tên quán"
-                android:textSize="30sp" />
-            <TextView
-                android:id="@+id/tvRestaurantPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:text="SĐT"
-                android:textSize="20sp" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -111,7 +143,7 @@
         android:padding="10dp"
         android:background="@drawable/rounded_drop_shadow_bg"
         android:layout_marginTop="10dp"/>
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lvMenu"
         android:background="@android:color/white"
         android:layout_width="match_parent"
