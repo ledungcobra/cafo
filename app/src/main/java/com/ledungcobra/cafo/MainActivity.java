@@ -1,20 +1,23 @@
 package com.ledungcobra.cafo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.models.common.Restaurant;
 import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     View appTitle;
 
     private static String TAG = "CALLAPI";
@@ -31,16 +34,13 @@ public class MainActivity extends Activity {
 
         Repository repository = Repository.getInstance();
 
-        repository.getAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>,Error>(){
+        LiveData<RestaurantArray> restaurants = repository.fetchAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>,Error>(){
 
             @Override
             public void onResult(List<BriefRestaurantInfo> result) {
                 //Having
                 Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
-
-                intent.putExtra("DONE","DOne");
                 startActivity(intent);
-
             }
 
             @Override
@@ -58,6 +58,14 @@ public class MainActivity extends Activity {
                 //Handle start progress indicator
             }
         });
+
+        restaurants.observe(this, new Observer<RestaurantArray>() {
+            @Override
+            public void onChanged(RestaurantArray restaurantArray) {
+
+            }
+        });
+
     }
 
 }

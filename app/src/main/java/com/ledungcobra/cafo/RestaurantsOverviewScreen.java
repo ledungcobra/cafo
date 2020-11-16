@@ -1,18 +1,20 @@
 package com.ledungcobra.cafo;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 
 import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
-public class RestaurantsOverviewScreen extends Activity implements RestaurantClickListener {
+public class RestaurantsOverviewScreen extends AppCompatActivity implements RestaurantClickListener {
     RecyclerView recyclerView;
     RestaurantOverviewItemAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -20,8 +22,6 @@ public class RestaurantsOverviewScreen extends Activity implements RestaurantCli
 
     public static String DATA_KEY = "DATA";
     public static String EXTRA_KEY = "RESTAURANT";
-
-    private boolean isLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +35,13 @@ public class RestaurantsOverviewScreen extends Activity implements RestaurantCli
         adapter = new RestaurantOverviewItemAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        adapter.setRestaurants(Repository.getInstance().getAllRestaurants());
-
-
+        Repository.getInstance().getAllRestaurants().observe(this, new Observer<RestaurantArray>() {
+            @Override
+            public void onChanged(RestaurantArray restaurantArray) {
+                adapter.setRestaurants(restaurantArray.getRestaurants());
+            }
+        });
         adapter.setOnRestaurantClickListener(this);
-
     }
 
     @Override

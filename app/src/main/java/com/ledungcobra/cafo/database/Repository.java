@@ -1,6 +1,10 @@
 package com.ledungcobra.cafo.database;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.google.gson.GsonBuilder;
+import com.ledungcobra.cafo.models.city.City;
 import com.ledungcobra.cafo.models.city.CityArray;
 import com.ledungcobra.cafo.models.common.Restaurant;
 import com.ledungcobra.cafo.models.restaurant_detail.RestaurantWrapper;
@@ -20,10 +24,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Repository {
 
     private static final String BASE_URL = "http://cafo-dev-api.herokuapp.com/";
-    private RestaurantArray arrayRestaurants;
+    private MutableLiveData<RestaurantArray> arrayRestaurants = new MutableLiveData<RestaurantArray>();
     private static Repository INSTANCE;
-
     private NetworkService networkService;
+    private MutableLiveData<CityArray> cites;
+
+
     public static Repository getInstance(){
         if(INSTANCE == null){
             synchronized (Repository.class){
@@ -47,16 +53,16 @@ public class Repository {
 
     }
 
-    public void getAllRestaurants(final UIThreadCallBack<List<BriefRestaurantInfo>, Error> callBack){
+    public LiveData<RestaurantArray> fetchAllRestaurants(final UIThreadCallBack<List<BriefRestaurantInfo>, Error> callBack){
 
-        if(arrayRestaurants == null){
+        if(arrayRestaurants.getValue() == null){
 
             callBack.startProgressIndicator();
             networkService.getRestaurants().enqueue(new Callback<RestaurantArray>() {
                 @Override
                 public void onResponse(Call<RestaurantArray> call, Response<RestaurantArray> response) {
                     callBack.stopProgressIndicator();
-                    arrayRestaurants = response.body();
+                    arrayRestaurants.setValue(response.body());
                     callBack.onResult(response.body().getRestaurants());
                 }
 
@@ -67,11 +73,16 @@ public class Repository {
             });
 
         }else{
-            callBack.onResult(arrayRestaurants.getRestaurants());
+            callBack.onResult(arrayRestaurants.getValue().getRestaurants());
         }
+        return arrayRestaurants;
     }
 
-    public void getAllCities(final UIThreadCallBack callBack){
+    public LiveData<RestaurantArray> getAllRestaurants(){
+        return this.arrayRestaurants;
+    }
+
+    public LiveData<CityArray> fetchAllCities(final UIThreadCallBack<CityArray,Error> callBack){
 
         callBack.startProgressIndicator();
         networkService.getCities().enqueue(new Callback<CityArray>() {
@@ -79,6 +90,7 @@ public class Repository {
             public void onResponse(Call<CityArray> call, Response<CityArray> response) {
                 callBack.stopProgressIndicator();
                 callBack.onResult(response.body());
+                cites.setValue(response.body());
             }
 
             @Override
@@ -87,6 +99,12 @@ public class Repository {
             }
         });
 
+        return cites;
+
+    }
+
+    public LiveData<CityArray> getCityArray(){
+        return cites;
     }
 
     public void getRestaurant(String id, final UIThreadCallBack<Restaurant,Error> callback){
@@ -103,10 +121,6 @@ public class Repository {
                callback.onFailure(new Error(t.getMessage()));
            }
        });
-    }
-
-    public List<BriefRestaurantInfo> getAllRestaurants(){
-        return arrayRestaurants.getRestaurants();
     }
 
 }
