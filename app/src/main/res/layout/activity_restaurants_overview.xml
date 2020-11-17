@@ -19,19 +19,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:id="@+id/toolbar"
+            >
 
+        </androidx.appcompat.widget.Toolbar>
         <SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@android:color/white"
-            android:gravity="center" />
+            android:gravity="center"
+            android:id="@+id/searchView"
+            />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurantOverviewRecyclerView"
-        android:layout_width="421dp"
-        android:layout_height="621dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorBackgroundAccent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

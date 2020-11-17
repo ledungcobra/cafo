@@ -50,7 +50,7 @@ public class ShopSelected extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //Title
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("CaFo");
+        collapsingToolbar.setTitle("CaFoe");
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.black));
         collapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.black));
 
