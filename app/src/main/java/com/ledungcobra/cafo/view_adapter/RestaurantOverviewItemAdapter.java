@@ -37,7 +37,7 @@ public class RestaurantOverviewItemAdapter
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext())
+        View layout =  LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.restaurant_item, parent,false);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override

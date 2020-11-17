@@ -1,44 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:padding="5dp"
-    android:orientation="vertical"
-    android:background="@android:color/white"
-    android:id="@+id/restaurant_item"
-    android:layout_margin="5dp">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
 
-        <ImageView
-            android:id="@+id/imgRestaurant"
+    android:background="@android:color/white"
+    android:layout_margin="5dp"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="5dp"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:id="@+id/restaurant_item"
+        android:padding="15dp"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
-            android:src="@drawable/img_restaurant_placeholder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <TextView
-        android:id="@+id/txtRestaurantName"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"
-        android:text="(Tên quán)"/>
-    <TextView
-        android:id="@+id/txtRestaurantAddress"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:textSize="10sp"
-        android:textColor="@android:color/black"
-        android:text="(Địa chỉ)"/>
-</LinearLayout>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgRestaurant"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:src="@drawable/img_restaurant_placeholder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/txtRestaurantName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:text="(Tên quán)"
+            android:layout_marginBottom="10dp"/>
+        <TextView
+            android:id="@+id/txtRestaurantAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="@android:color/black"
+            android:text="(Địa chỉ)"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
