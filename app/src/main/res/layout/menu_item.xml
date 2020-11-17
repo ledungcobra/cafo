@@ -19,27 +19,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.85" />
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/card_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        android:scaleType="fitXY"
-        app:cardElevation="10dp"
-        app:cardCornerRadius="1000dp"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/card_view"
-        >
+
         <ImageView
             android:id="@+id/ivFoodPhoto"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:elevation="10dp"
             android:src="@mipmap/ic_launcher"
-          />
+            app:layout_constraintBottom_toBottomOf="@+id/card_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/card_view"
+            />
 
-    </androidx.cardview.widget.CardView>
+
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -48,6 +44,7 @@
         android:layout_marginRight="60dp"
         app:cardCornerRadius="50dp"
         app:cardElevation="6dp"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

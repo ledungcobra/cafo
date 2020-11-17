@@ -19,6 +19,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapter.MenuViewHolder> {
     Context context;
     List<Food> foods;
@@ -51,7 +53,7 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
 
             String useImageUrl = loadedImageURL.equals("https://images.foody.vn/default/s120x120/deli-dish-no-image.png")?"https://www.bmihealthcare.co.uk/~/media/images/health-matters/editions/april-2020/greek-salad-recipe-blog-1.ashx?la=en":loadedImageURL;
 
-            Picasso.get().load(useImageUrl).into(holder.ivFoodPhoto);
+            Picasso.get().load(useImageUrl).transform(new CropCircleTransformation()).into(holder.ivFoodPhoto);
             holder.tvFoodName.setText(food.getName());
             holder.tvFoodPrice.setText(food.getPrice().getValue()+"");
     }
