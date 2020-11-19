@@ -40,6 +40,7 @@ public class Restaurant implements Serializable {
     @Expose
     private String name;
 
+
     public List<Photo> getPhotos() {
         return photos;
     }

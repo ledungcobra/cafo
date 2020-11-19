@@ -2,6 +2,8 @@ package com.ledungcobra.cafo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +30,6 @@ import org.json.JSONObject;
 
 public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private EditText searchTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +39,23 @@ public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.myMap);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
-        searchTextField = findViewById(R.id.searchTextField);
+//        searchTextField = findViewById(R.id.searchTextField);
+//
+//        searchTextField.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                getNewLocation(s.toString());
+//            }
+//        });
 
-        searchTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                getNewLocation(s.toString());
-            }
-        });
 
 
 
@@ -62,12 +65,18 @@ public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        final LatLng pos = new LatLng(10.8843949, 106.7491382);
+        Intent intent = getIntent();
+        double lat = intent.getDoubleExtra("lat", 0);
+        double long_ = intent.getDoubleExtra("long",0);
+        final LatLng pos = new LatLng(lat, long_);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
         googleMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title("Marker in Sydney"));
+
+        moveCamera(11.041064082997485,106.62728961229126,"Start");
+
 
     }
 
