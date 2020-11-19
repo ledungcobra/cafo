@@ -6,6 +6,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,9 +40,11 @@ public class RestaurantDetailScreen extends Activity {
     RecyclerView lvMenu;
     ImageView ivLoc;
     ImageView ivDist;
-    MenuListViewAdapter adapter ;
+    MenuListViewAdapter adapter;
     ImageView ivRestaurant;
     TextView tvRestaurantName;
+    LinearLayout phoneContainer;
+    TextView tvRestaurantPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,17 @@ public class RestaurantDetailScreen extends Activity {
         lvMenu.setLayoutManager(new LinearLayoutManager(this));
         lvMenu.setAdapter(adapter);
 
+        tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
+        phoneContainer = findViewById(R.id.phoneContainer);
+        phoneContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + tvRestaurantPhone.getText().toString()));
+                startActivity(callIntent);
+            }
+        });
+
 //        adapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -68,8 +83,8 @@ public class RestaurantDetailScreen extends Activity {
 
         ivLoc = findViewById(R.id.ivLoc);
         ivDist = findViewById(R.id.ivDist);
-        ivLoc.setImageResource(R.drawable.location);
-        ivDist.setImageResource(R.drawable.cursor);
+        ivLoc.setImageResource(R.drawable.ic_baseline_place_24);
+        ivDist.setImageResource(R.drawable.ic_baseline_near_me_24);
 
 
 
