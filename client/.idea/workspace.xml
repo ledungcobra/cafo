@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca8d9759-821c-47c3-b2f1-b954042814e2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/modules/Cafo.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../.idea/modules/app/Cafo.app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules/cafo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/modules/cafo.iml" afterDir="false" />
-    </list>
+    <list default="true" id="ca8d9759-821c-47c3-b2f1-b954042814e2" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
