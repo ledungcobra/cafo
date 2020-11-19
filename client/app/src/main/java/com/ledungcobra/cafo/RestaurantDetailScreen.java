@@ -6,13 +6,16 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,6 +23,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,7 +41,7 @@ import java.util.ArrayList;
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.DATA_KEY;
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
-public class RestaurantDetailScreen extends Activity {
+public class RestaurantDetailScreen extends AppCompatActivity {
 
     RecyclerView lvMenu;
     ImageView ivLoc;
@@ -133,6 +139,37 @@ public class RestaurantDetailScreen extends Activity {
             }
         });
 
+        Toolbar toolbar = findViewById(R.id.toolbarDetail);
+        setSupportActionBar(toolbar);
+
+        final ImageButton imgbtnList = findViewById(R.id.btnGrid);
+        final boolean[] isListView = {true};
+        imgbtnList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isListView[0]){
+                    lvMenu.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+                    lvMenu.setAdapter(adapter);
+                    isListView[0] = !isListView[0];
+                    imgbtnList.setImageResource(R.drawable.ic_baseline_grid_on_24);
+
+                }
+                else{
+                    lvMenu.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    lvMenu.setAdapter(adapter);
+                    isListView[0] = !isListView[0];
+                    imgbtnList.setImageResource(R.drawable.ic_baseline_list_24);
+                }
+
+            }
+        });
+
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_restaurant, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
 }
