@@ -10,6 +10,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:client/app/src/main/AndroidManifest.xml
+>>>>>>> Improve_UI
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <meta-data
@@ -17,7 +21,21 @@
             android:value="@string/maps_api_key" />
 
         <activity android:name=".DriverFindOrdersScreen">
+<<<<<<< HEAD
 
+=======
+========
+        android:theme="@style/AppTheme">
+        <activity android:name=".ShopSelected"></activity>
+        <activity android:name=".MapScreen" />
+        <activity android:name=".RestaurantDetailScreen">
+>>>>>>>> Improve_UI:app/src/main/AndroidManifest.xml
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+>>>>>>> Improve_UI
         </activity>
         <activity android:name=".DriverScreen" />
 
@@ -33,6 +51,7 @@
         </activity>
         <activity android:name=".RestaurantDetailScreen" />
         <activity android:name=".RestaurantsOverviewScreen" />
+<<<<<<< HEAD
         <activity android:name=".ShopSelected" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -41,6 +60,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+=======
+<<<<<<<< HEAD:client/app/src/main/AndroidManifest.xml
+        <activity android:name=".ShopSelected" />
+        <activity android:name=".MainActivity">
+
+        </activity>
+========
+        <activity android:name=".MainActivity"></activity>
+>>>>>>>> Improve_UI:app/src/main/AndroidManifest.xml
+>>>>>>> Improve_UI
     </application>
 
 </manifest>

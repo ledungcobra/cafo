@@ -107,7 +107,9 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
 
         View view = findViewById(R.id.searchView);
-        height = view.getMeasuredHeight();
+        if(height == 0){
+            height = view.getMeasuredHeight();
+        }
         slideView(view, height, 0, new OnAnimationEnd() {
             @Override
             public void onEnd() {

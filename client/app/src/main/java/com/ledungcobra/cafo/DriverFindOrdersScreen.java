@@ -64,6 +64,7 @@ public class DriverFindOrdersScreen extends AppCompatActivity implements OnMapRe
             @Override
             public void onPageSelected(int position) {
                 Log.d("VIEWPAGER", "onPageScrolled: "+position);
+
             }
 
             @Override
