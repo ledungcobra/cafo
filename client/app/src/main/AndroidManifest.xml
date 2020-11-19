@@ -17,7 +17,11 @@
             android:value="@string/maps_api_key" />
 
         <activity android:name=".DriverFindOrdersScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".DriverScreen" />
 
@@ -35,11 +39,7 @@
         <activity android:name=".RestaurantsOverviewScreen" />
         <activity android:name=".ShopSelected" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
