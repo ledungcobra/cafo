@@ -12,3 +12,6 @@
 /client/captures
 /client/.externalNativeBuild
 /client/.cxx
+
+#Server API ignore
+/server/node_modules
