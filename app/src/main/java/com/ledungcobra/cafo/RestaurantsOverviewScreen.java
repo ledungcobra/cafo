@@ -41,7 +41,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
     RecyclerView.LayoutManager layoutManager;
     ImageButton btnInfo;
 
-    boolean isShowActionBar = false;
+    boolean isShowActionBar = true;
 
     public static String DATA_KEY = "DATA";
     public static String EXTRA_KEY = "RESTAURANT";
@@ -66,12 +66,10 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
         recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY - oldScrollY > 0) {
+                if (scrollY - oldScrollY > 0 &&isShowActionBar == true) {
                     hideComponents();
-                } else if (scrollY - oldScrollY < 0) {
+                } else if (scrollY - oldScrollY < 0 && isShowActionBar == false) {
                     showComponents();
-
-
                 }
             }
         });
@@ -98,7 +96,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
             public void onEnd()
 
             {
-
+                isShowActionBar = true;
             }
         });
 
@@ -114,6 +112,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
             @Override
             public void onEnd() {
                 searchButton.setVisible(true);
+                isShowActionBar = false;
             }
         });
 

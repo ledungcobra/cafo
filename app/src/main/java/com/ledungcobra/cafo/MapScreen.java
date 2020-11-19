@@ -3,6 +3,7 @@ package com.ledungcobra.cafo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +30,6 @@ import org.json.JSONObject;
 
 public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private EditText searchTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,9 @@ public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback 
         googleMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title("Marker in Sydney"));
+
+        moveCamera(11.041064082997485,106.62728961229126,"Start");
+
 
     }
 
