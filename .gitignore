@@ -12,6 +12,7 @@
 /client/captures
 /client/.externalNativeBuild
 /client/.cxx
-
+.gradle/
+.idea/
 #Server API ignore
 /server/node_modules
