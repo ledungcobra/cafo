@@ -7,4 +7,6 @@
     <color name="white">#ffffff</color>
     <color name="colorBackgroundAccent">#EEEEEE</color>
     <color name="signin_button_color">#424242</color>
+    <color name="drawer_selected_color">#defabb</color>
+    <color  name="drawer_unselected_color">#41c300</color>
 </resources>

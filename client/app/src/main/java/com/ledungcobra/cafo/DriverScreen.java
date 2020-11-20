@@ -46,7 +46,6 @@ public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnI
         //Setting up SlidingRootNav
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         toolbar.setTitleTextColor(Color.WHITE);
 
         slidingRootNav = new SlidingRootNavBuilder(this)
@@ -57,7 +56,6 @@ public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnI
                 .withSavedState(savedInstanceState)
                 .withMenuLayout(R.layout.menu_left_drawer)
                 .inject();
-
         screenIcons = loadScreenIcons();
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
                 createItemFor(POS_DASHBOARD).setChecked(true),
@@ -88,10 +86,10 @@ public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnI
 
     private DrawerItem createItemFor(int position) {
         return new SimpleItem(screenIcons[position], screenTitles[position])
-                .withIconTint(color(R.color.colorPrimary))
-                .withTextTint(color(R.color.colorPrimaryDark))
-                .withSelectedIconTint(color(R.color.colorAccent))
-                .withSelectedTextTint(color(R.color.colorAccent));
+                .withIconTint(color(R.color.drawer_unselected_color))
+                .withTextTint(color(R.color.drawer_unselected_color))
+                .withSelectedIconTint(color(R.color.drawer_selected_color))
+                .withSelectedTextTint(color(R.color.drawer_selected_color));
     }
 
     @ColorInt
