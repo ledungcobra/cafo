@@ -1,33 +1,22 @@
 # ANDROID CLIENT APP
 
 # Built application files
-client/*/build/
+cafo/*/build/
 
 # Crashlytics configuations
-client/com_crashlytics_export_strings.xml
+cafo/com_crashlytics_export_strings.xml
 
 # Local configuration file (sdk path, etc)
-client/local.properties
+cafo/local.properties
 
 # Gradle generated files
-client/.gradle/
+cafo/.gradle/
 
 # Signing files
-client/.signing/
+cafo/.signing/
 
 # User-specific configurations
-client/.idea/libraries/
-client/.idea/workspace.xml
-client/.idea/tasks.xml
-client/.idea/.name
-client/.idea/compiler.xml
-client/.idea/copyright/profiles_settings.xml
-client/.idea/encodings.xml
-client/.idea/misc.xml
-client/.idea/modules.xml
-client/.idea/scopes/scope_settings.xml
-client/.idea/vcs.xml
-client/*.iml
+cafo/.idea
 
 # OS-specific files
 .DS_Store
@@ -42,4 +31,4 @@ Thumbs.db
 # NODEJS API SERVER
 
 # node_modules
-/server/node_modules
+server/node_modules
