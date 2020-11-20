@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,9 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +41,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.DATA_KEY;
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
@@ -51,6 +55,7 @@ public class RestaurantDetailScreen extends AppCompatActivity {
     TextView tvRestaurantName;
     LinearLayout phoneContainer;
     TextView tvRestaurantPhone;
+    MenuItem searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,13 @@ public class RestaurantDetailScreen extends AppCompatActivity {
         Intent intent = getIntent();
         String restaurantID =intent.getStringExtra(EXTRA_KEY);
         adapter = new MenuListViewAdapter(this,new ArrayList<Food>());
+        adapter.setOnClickListener(new MenuListViewAdapter.OnItemClickListener() {
+            @Override
+            public void onAddClick(int position) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Add " + position + " food!", LENGTH_SHORT);
+                toast.show();
+            }
+        });
         lvMenu = findViewById(R.id.lvMenu);
 
         ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
@@ -163,6 +175,7 @@ public class RestaurantDetailScreen extends AppCompatActivity {
 
             }
         });
+
 
     }
 
