@@ -1,17 +1,45 @@
-/client/*.iml
-/client/.gradle
-/client/local.properties
-/client/.idea/caches
-/client/.idea/libraries
-/client/.idea/modules.xml
-/client/.idea/workspace.xml
-/client/.idea/navEditor.xml
-/client/.idea/assetWizardSettings.xml
-/client/.DS_Store
-/client/build
-/client/captures
-/client/.externalNativeBuild
-/client/.cxx
+# ANDROID CLIENT APP
 
-#Server API ignore
+# Built application files
+client/*/build/
+
+# Crashlytics configuations
+client/com_crashlytics_export_strings.xml
+
+# Local configuration file (sdk path, etc)
+client/local.properties
+
+# Gradle generated files
+client/.gradle/
+
+# Signing files
+client/.signing/
+
+# User-specific configurations
+client/.idea/libraries/
+client/.idea/workspace.xml
+client/.idea/tasks.xml
+client/.idea/.name
+client/.idea/compiler.xml
+client/.idea/copyright/profiles_settings.xml
+client/.idea/encodings.xml
+client/.idea/misc.xml
+client/.idea/modules.xml
+client/.idea/scopes/scope_settings.xml
+client/.idea/vcs.xml
+client/*.iml
+
+# OS-specific files
+client/.DS_Store
+client/.DS_Store?
+client/._*
+client/.Spotlight-V100
+client/.Trashes
+client/ehthumbs.db
+client/Thumbs.db
+
+
+# NODEJS API SERVER
+
+# node_modules
 /server/node_modules
