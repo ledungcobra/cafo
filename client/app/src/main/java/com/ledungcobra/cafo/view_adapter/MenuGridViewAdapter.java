@@ -1,5 +1,6 @@
 package com.ledungcobra.cafo.view_adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ public class MenuGridViewAdapter extends RecyclerView.Adapter<MenuGridViewAdapte
         return new MenuGridViewHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MenuGridViewHolder holder, int position) {
         Food food = foods.get(position);
@@ -42,7 +44,8 @@ public class MenuGridViewAdapter extends RecyclerView.Adapter<MenuGridViewAdapte
 
         Picasso.get().load(useImageUrl).transform(new CropCircleTransformation()).into(holder.ivFoodPhoto);
         holder.tvFoodName.setText(food.getName());
-        holder.tvFoodPrice.setText(food.getPrice().getValue() + "");
+        holder.tvFoodPrice.setText(Integer.toString(food.getPrice().getValue()));
+
 
     }
 
