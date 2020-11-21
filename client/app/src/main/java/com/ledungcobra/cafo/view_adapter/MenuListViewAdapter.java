@@ -38,6 +38,10 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
 
     }
 
+    public Food getFood(int position) {
+        return foods.get(position);
+    }
+
     public void setFoods(List<Food> foods) {
         this.foods = foods;
         notifyDataSetChanged();
