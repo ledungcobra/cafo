@@ -26,29 +26,11 @@
             android:layout_weight="4"
             android:gravity="center"
             android:id="@+id/tvNameFood"
-            android:text="Mon"
+            android:background="@drawable/line_bottom_layout"
+            android:text="ShopCart"
             android:textSize="25sp"
             android:textStyle="bold"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/line_left_right"
-            android:text="SL "
-            android:id="@+id/tvNumber"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:gravity="center"
-            android:id="@+id/tvCost"
-            android:text="Gia "
-            android:textSize="25sp"
-            android:textStyle="bold"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,9 +73,10 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btnOrderFood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnOrderFood"
-        android:text="Dat Hang"
-        android:layout_gravity="right"/>
+        android:layout_marginTop="30dp"
+        android:layout_gravity="end"
+        android:text="Dat Hang" />
 </LinearLayout>
