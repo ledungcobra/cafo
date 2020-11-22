@@ -16,6 +16,12 @@ public class Price {
     @Expose
     private Integer value;
 
+    public Price(Integer value) {
+        this.value = value;
+        this.unit = "đ";
+        this.text = this.value.toString() + " " + this.unit;
+    }
+
     public String getText() {
         return text;
     }
