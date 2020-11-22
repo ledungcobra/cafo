@@ -22,7 +22,6 @@ public class ShopSelected extends AppCompatActivity {
     GridView gridView;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    ShopAdapterRecycleView shopAdapterRecycleView;
     private boolean appBarExpanded = true;
 
     String[] items = {"Item1","Item2","Item3","Item4","Item5","Item6","Item7","Item8","Item7","Item8"};
@@ -40,9 +39,6 @@ public class ShopSelected extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleView);
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
-        shopAdapterRecycleView = new ShopAdapterRecycleView(this,thumbnails, items,address);
-
-        recyclerView.setAdapter(shopAdapterRecycleView);
 
         //Toolbar action button
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

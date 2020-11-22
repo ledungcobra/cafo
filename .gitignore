@@ -12,6 +12,8 @@
 /client/captures
 /client/.externalNativeBuild
 /client/.cxx
-
+.gradle/
+.idea/
+.DS_Store
 #Server API ignore
 /server/node_modules
