@@ -146,9 +146,6 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
 
         ivLoc = findViewById(R.id.ivLoc);
         ivDist = findViewById(R.id.ivDist);
-        ivLoc.setImageResource(R.drawable.ic_baseline_place_24);
-        ivDist.setImageResource(R.drawable.ic_baseline_near_me_24);
-
 
         LayoutInflater layoutInflater = getLayoutInflater();
         final View view = layoutInflater.inflate(R.layout.progress_indicator, null, false);
