@@ -34,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_background"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="8dp"
                 android:id="@+id/textFieldFullName"
                 >
             </com.google.android.material.textfield.TextInputEditText>
@@ -49,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_background"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="8dp"
                 android:id="@+id/textFieldUsername"
                 >
             </com.google.android.material.textfield.TextInputEditText>
@@ -65,7 +63,6 @@
                 android:background="@drawable/input_background"
                 android:paddingHorizontal="10dp"
                 android:inputType="textEmailAddress"
-                android:paddingVertical="8dp"
                 android:id="@+id/textFieldEmail"
                 >
             </com.google.android.material.textfield.TextInputEditText>
@@ -81,10 +78,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_background"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="8dp"
                 android:inputType="textPassword"
                 android:id="@+id/textFieldPassword"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 >
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
@@ -97,7 +92,6 @@
                 android:layout_width="match_parent"
                 android:background="@drawable/input_background"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="8dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textFieldConfirmPassword"
                 >
