@@ -1,101 +1,66 @@
-const Address = require('../model/Address');
-const Food = require('../model/Food');
-const Restaurant = require('../model/Restaurant');
-const Menu = require('../model/Menu');
-const { mongooseToObject } = require('../../utils/mongoose')
-const { multipleMongooseToObject } = require('../../utils/mongoose')
+const City = require("../model/City");
+const Restaurant = require("../model/Restaurant");
+const FoodCategory = require("../model/FoodCategory");
+const Food = require("../model/Food");
+const { mongooseToObject } = require("../../utils/mongoose");
+const { multipleMongooseToObject } = require("../../utils/mongoose");
 
 class RestaurantController {
     //[GET] /restaurants/id/:id
-    showOneByID(req, res, next) {
-        Restaurant.findOne({ _id: req.params.id })
-            .populate({
-                path: 'menu_id',
-                populate: {
-                    path: 'foods_id',
-                }
-            })
-            .populate({
-                path: 'address_id',
-            })
-            .then(restaurant => {
-                restaurant = mongooseToObject(restaurant);
+    async showOneByID(req, res, next) {
+        let rest = await Restaurant.findOne({ _id: req.params.id }).select('-createdAt -updatedAt -__v');
+        let foodCategories = await FoodCategory.find({ restaurant_id: req.params.id }).select('name');
 
-                delete restaurant.createdAt;
-                delete restaurant.updatedAt;
-                delete restaurant.__v;
+        rest = mongooseToObject(rest);
+        foodCategories = multipleMongooseToObject(foodCategories);
 
-                delete restaurant.address_id.restaurants_id;
-                delete restaurant.address_id.createdAt;
-                delete restaurant.address_id.updatedAt;
-                delete restaurant.address_id.__v;
+        for (let i = 0; i < foodCategories.length; i++) {
+            const id_foodCategory = foodCategories[i]._id;
 
-                for (let i = 0; i < restaurant.menu_id.foods_id.length; i++) {
-                    delete restaurant.menu_id.foods_id[i].createdAt;
-                    delete restaurant.menu_id.foods_id[i].updatedAt;
-                    delete restaurant.menu_id.foods_id[i].__v;
-                }
+            let foods = await Food.find({ category_id: id_foodCategory }).select('name decription price image_url');
+            foods = multipleMongooseToObject(foods);
 
-                res.send({ restaurant });
-            })
-            .catch(next);
+            foodCategories[i].foods = foods;
+        }
+
+        rest.menu = foodCategories;
+
+        res.send(rest);
     }
 
     //[GET] /restaurants/:restaurant_url
-    showOneByURL(req, res, next) {
-        Restaurant.findOne({ restaurant_url: req.params.restaurant_url })
-            .populate({
-                path: 'menu_id',
-                populate: {
-                    path: 'foods_id',
-                }
-            })
-            .populate({
-                path: 'address_id',
-            })
-            .then(restaurant => {
-                restaurant = mongooseToObject(restaurant);
+    async showOneByURL(req, res, next) {
+        let rest = await Restaurant.findOne({ restaurant_url: req.params.restaurant_url }).select('-createdAt -updatedAt -__v');
+        let foodCategories = await FoodCategory.find({ restaurant_id: rest._id }).select('name');
 
-                delete restaurant.createdAt;
-                delete restaurant.updatedAt;
-                delete restaurant.__v;
+        rest = mongooseToObject(rest);
+        foodCategories = multipleMongooseToObject(foodCategories);
 
-                delete restaurant.address_id.restaurants_id;
-                delete restaurant.address_id.createdAt;
-                delete restaurant.address_id.updatedAt;
-                delete restaurant.address_id.__v;
+        for (let i = 0; i < foodCategories.length; i++) {
+            const id_foodCategory = foodCategories[i]._id;
 
-                for (let i = 0; i < restaurant.menu_id.foods_id.length; i++) {
-                    delete restaurant.menu_id.foods_id[i].createdAt;
-                    delete restaurant.menu_id.foods_id[i].updatedAt;
-                    delete restaurant.menu_id.foods_id[i].__v;
-                }
+            let foods = await Food.find({ category_id: id_foodCategory }).select('name decription price image_url');
+            foods = multipleMongooseToObject(foods);
 
-                res.send({ restaurant });
-            })
-            .catch(next);
+            foodCategories[i].foods = foods;
+        }
+
+        rest.menu = foodCategories;
+
+        res.send(rest);
     }
 
     //[GET] /restaurants
-    showFull(req, res, next) {
-        Restaurant.find()
-            .populate({
-                path: 'address_id',
-            })
-            .then(restaurants => {
-                restaurants = multipleMongooseToObject(restaurants);
-                for (let i = 0; i < restaurants.length; i++) {
-                    delete restaurants[i].address_id.restaurants_id;
-                    delete restaurants[i].address_id.createdAt;
-                    delete restaurants[i].address_id.updatedAt;
-                    delete restaurants[i].address_id.__v;
-                    delete restaurants[i].createdAt;
-                    delete restaurants[i].updatedAt;
-                    delete restaurants[i].__v;
-                }
-                res.send({ restaurants });
-            })
-            .catch(next);
+    async showRestaurants(req, res, next) {
+        const resPerPage = parseInt(req.query.limit); // results per page
+        const page = parseInt(req.query.page); // page
+
+        let rest = await Restaurant.find().select('name restaurant_url address phones image operating price_range city_id')
+            .skip(resPerPage * page - resPerPage)
+            .limit(resPerPage);
+
+        rest = multipleMongooseToObject(rest);
+        res.send(rest);
     }
 }
 
