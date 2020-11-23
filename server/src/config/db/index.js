@@ -9,9 +9,9 @@ async function connect() {
             useFindAndModify: false,
             useCreateIndex: true
         });
-        console.log('Connect cafo_dev database successfully!')
+        console.log('Connect cafo_api_dev database successfully!')
     } catch (error) {
-        console.log('Connect cafo_dev database failure!')
+        console.log('Connect cafo_api_dev database failure!')
     }
 }
 
