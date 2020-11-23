@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const FoodCategory = require("./FoodCategory");
-const Restaurant = require("./Restaurant");
 
 const Food = new Schema({
     name: { type: String },
