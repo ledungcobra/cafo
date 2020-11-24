@@ -84,6 +84,9 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getColor(R.color.white));
+        toolbar.setTitleTextAppearance(this,R.style.titleToolbar);
+
     }
 
 

@@ -1,11 +1,14 @@
 package com.ledungcobra.cafo.view_adapter;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,6 +92,18 @@ public class MenuGridViewAdapter extends RecyclerView.Adapter<MenuGridViewAdapte
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
+                    onItemClickListener.onAddClick(position);
+
+                    ObjectAnimator animatorX = ObjectAnimator.ofFloat(v, "scaleX",1,1.2f,1.4f,1.2f,1);
+                    ObjectAnimator animatorY = ObjectAnimator.ofFloat(v, "scaleY",1,1.2f,1.4f,1.2f,1);
+
+                    animatorX.setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
+                    animatorY.setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
+
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(animatorX,animatorY);
+                    animatorSet.start();
+
                     onItemClickListener.onAddClick(position);
                 }
             });
