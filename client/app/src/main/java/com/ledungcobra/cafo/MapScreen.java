@@ -1,14 +1,10 @@
 package com.ledungcobra.cafo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,7 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,12 +65,13 @@ public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback 
         double long_ = intent.getDoubleExtra("long",0);
         final LatLng pos = new LatLng(lat, long_);
 
+
+
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
         googleMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title("Marker in Sydney"));
-
-        moveCamera(11.041064082997485,106.62728961229126,"Start");
+        moveCamera(lat,long_,"Start");
 
 
     }
@@ -113,6 +109,7 @@ public class MapScreen extends AppCompatActivity  implements OnMapReadyCallback 
                     }
                 });
         requestQueue.add(jsonArrayRequest);
+
 
     }
 
