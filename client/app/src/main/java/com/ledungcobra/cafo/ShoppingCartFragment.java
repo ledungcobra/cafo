@@ -103,7 +103,7 @@ public class ShoppingCartFragment extends Fragment {
 
         TextView tvSum = rootView.findViewById(R.id.tvResult);
         Price priceTotal = new Price(sumOfCost);
-        tvSum.setText(Integer.toString(priceTotal.getValue()));
+        tvSum.setText(Integer.toString(priceTotal.getValue()) + " " + getString(R.string.currency));
 
 
         return rootView;
