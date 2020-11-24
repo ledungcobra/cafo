@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryDark">#00B294</color>
-    <color name="colorPrimary">#00527D</color>
+        <color name="colorPrimary">#378ad0</color>
+    <color name="colorPrimaryDark">#4051e7</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="colorBackgroundAccent">#EEEEEE</color>
     <color name="signin_button_color">#424242</color>
+    <color name="colorCart">#4051e7</color>
+    <color name="backgroundCart">#d3dbe2</color>
     <color name="drawer_selected_color">#defabb</color>
     <color  name="drawer_unselected_color">#41c300</color>
 </resources>

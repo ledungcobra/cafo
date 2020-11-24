@@ -1,12 +1,9 @@
 package com.ledungcobra.cafo;
 
 
-import android.app.Activity;
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
-import android.content.Context;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,20 +12,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -40,8 +35,8 @@ import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.models.common.CartShop;
 import com.ledungcobra.cafo.models.common.Food;
 import com.ledungcobra.cafo.models.common.Restaurant;
+import com.ledungcobra.cafo.ui_calllback.OnAnimationEnd;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
-import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
 import com.ledungcobra.cafo.view_adapter.MenuGridViewAdapter;
 import com.ledungcobra.cafo.view_adapter.MenuListViewAdapter;
 import com.squareup.picasso.Picasso;
@@ -50,11 +45,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.ledungcobra.cafo.RestaurantsOverviewScreen.DATA_KEY;
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
-public class RestaurantDetailScreen extends AppCompatActivity  implements ShoppingCartFragment.callBack{
+public class RestaurantDetailScreen extends AppCompatActivity implements ShoppingCartFragment.callBack {
 
+    private static final String TAGKEO = "SCROLL" ;
     RecyclerView lvMenu;
     ImageView ivLoc;
     ImageView ivDist;
@@ -64,18 +59,26 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
     TextView tvRestaurantName;
     LinearLayout phoneContainer;
     TextView tvRestaurantPhone;
+    LinearLayout restaurantCard;
     FragmentManager fm;
-    List<CartShop>  cartShops;
+    List<CartShop> cartShops;
+    private boolean isShowCard = true;
+
+    int cardHeight = -100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail_screen);
 
+        restaurantCard = findViewById(R.id.restaurantCard);
+
+
         Intent intent = getIntent();
-        String restaurantID = intent.getStringExtra(EXTRA_KEY);
+        final String restaurantID = intent.getStringExtra(EXTRA_KEY);
         cartShops = (List<CartShop>) intent.getSerializableExtra("CartShop");
-        if (cartShops==null){
+        if (cartShops == null) {
             cartShops = new ArrayList<CartShop>();
         }
         final List<Food> foods;
@@ -86,7 +89,7 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
         adapter.setOnClickListener(new MenuListViewAdapter.OnItemClickListener() {
             @Override
             public void onAddClick(int position) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Added " + adapter.getFood(position).getName() , LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), "Added " + adapter.getFood(position).getName(), LENGTH_SHORT);
                 toast.show();
                 int sameFood = 0;
                 for (CartShop cartShop : cartShops) {
@@ -107,7 +110,7 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
         //button Add Food
         adapterGrid.setOnClickListener(new MenuGridViewAdapter.OnItemClickListener() {
             public void onAddClick(int position) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Added " + adapter.getFood(position).getName() , LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), "Added " + adapter.getFood(position).getName(), LENGTH_SHORT);
                 toast.show();
                 int sameFood = 0;
                 for (CartShop cartShop : cartShops) {
@@ -183,6 +186,7 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
                         intent.putExtra("lat", result.getPosition().get(0).getLatitude());
                         intent.putExtra("long", result.getPosition().get(0).getLongitude());
 
+
                         startActivity(intent);
                     }
                 });
@@ -197,6 +201,7 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
         //Toolbar setup menu
         Toolbar toolbar = findViewById(R.id.toolbarDetail);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
         //Transition from ListView to GridView and vice versa
         final ImageButton imgbtnList = findViewById(R.id.btnGrid);
         final boolean[] isListView = {true};
@@ -220,6 +225,133 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
             }
         });
 
+        lvMenu.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if( Math.abs(scrollY - oldScrollY)<400 && Math.abs(scrollY - oldScrollY)>20) {
+                    if (scrollY - oldScrollY > 0 && isShowCard == true) {
+                        Log.d(TAGKEO, "Keo len: " + "Y old: " + oldScrollY + " Y: " + scrollY);
+                        Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card);
+                        restaurantCard.startAnimation(animation);
+
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                hideComponents();
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        isShowCard = !isShowCard;
+
+
+                    } else if (scrollY - oldScrollY < 0 && isShowCard == false) {
+                        Log.d(TAGKEO, "Keo xuong: " + "Y old: " + oldScrollY + " Y: " + scrollY);
+                        Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
+
+                        restaurantCard.startAnimation(animation);
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                showComponents();
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        isShowCard = !isShowCard;
+                    }
+                }
+
+            }
+        });
+
+    }
+
+    public void slideView(final View view,
+                          int currentHeight,
+                          final int newHeight,
+                          final OnAnimationEnd callback
+    ) {
+        ValueAnimator slideAnimator = ValueAnimator
+                .ofInt(currentHeight, newHeight)
+                .setDuration(1000);
+
+        /* We use an update listener which listens to each tick
+         * and manually updates the height of the view  */
+
+        slideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+
+                view.getLayoutParams().height = value;
+                view.requestLayout();
+
+                if(newHeight == value){
+                    callback.onEnd();
+                }
+
+            }
+        });
+
+        AnimatorSet animationSet = new AnimatorSet();
+        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animationSet.play(slideAnimator);
+        animationSet.start();
+    }
+    private void showComponents() {
+
+        slideView(restaurantCard, 0, cardHeight, new OnAnimationEnd() {
+            @Override
+            public void onEnd() {
+                ViewGroup.LayoutParams layoutParams = restaurantCard.getLayoutParams();
+
+
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                restaurantCard.setLayoutParams(layoutParams);
+            }
+        });
+
+
+
+    }
+
+
+    private void hideComponents() {
+
+        if(cardHeight == -100){
+            cardHeight = restaurantCard.getMeasuredHeight();
+        }
+
+        slideView(restaurantCard, cardHeight, 0, new OnAnimationEnd() {
+            @Override
+            public void onEnd() {
+
+            }
+        });
+
+//        ViewGroup.LayoutParams layoutParams= restaurantCard.getLayoutParams();
+//        layoutParams.height=0;
+//        restaurantCard.setVisibility(View.INVISIBLE);
+//        restaurantCard.setLayoutParams(layoutParams);
+
+
     }
 
     @Override
@@ -232,16 +364,16 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.shopCart){
+        if (id == R.id.shopCart) {
             fm = getSupportFragmentManager();
             ArrayList<CartShop> al_Food;
             al_Food = new ArrayList<>(cartShops.size());
             al_Food.addAll(cartShops);
 
             Bundle bundleFragment = new Bundle();
-            bundleFragment.putSerializable("ListFood",al_Food);
+            bundleFragment.putSerializable("ListFood", al_Food);
             FragmentTransaction ft_add = fm.beginTransaction();
-            ft_add.setCustomAnimations(R.anim.animation_enter,R.anim.animation_example).replace(R.id.flrestaurant_detail_view, ShoppingCartFragment.
+            ft_add.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example).replace(R.id.flrestaurant_detail_view, ShoppingCartFragment.
                     newInstance(bundleFragment))
                     .addToBackStack(null).commit();
         }
