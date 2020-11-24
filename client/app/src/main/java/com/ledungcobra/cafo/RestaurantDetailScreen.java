@@ -164,7 +164,9 @@ public class RestaurantDetailScreen extends AppCompatActivity  implements Shoppi
             @Override
             public void startProgressIndicator() {
                 ((ViewGroup) lvMenu.getParent()).removeView(lvMenu);
-                detailViewGroup.addView(view);
+                //Specify layout_width & height to fill the rest of the screen
+                //(addView ignore child's XML layout_width & height)
+                detailViewGroup.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             }
 
             @Override
