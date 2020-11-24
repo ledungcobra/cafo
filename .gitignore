@@ -15,3 +15,6 @@
 
 #Server API ignore
 /server/node_modules
+client/.idea/libraries/Gradle__com_android_volley_volley_1_1_1_aar.xml
+client/.idea/modules/app/Cafo.app.iml
+client/.idea/workspace.xml
