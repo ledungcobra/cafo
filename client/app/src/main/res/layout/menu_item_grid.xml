@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:paddingBottom="5dp"
+    android:background="@drawable/border_radian_shape"
+    android:elevation="10dp"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:id="@+id/ivFoodPhotoGrid"
+                android:src="@drawable/ic_baseline_home_24"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NameFood"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:id="@+id/tvNameFoodGrid"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/ivAddCartGrid"
+            android:src="@drawable/ic_baseline_add_shopping_cart_24"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/tvFoodPriceGrid"
+            android:textSize="25sp"
+            android:gravity="end"
+            android:layout_gravity="bottom"
+            android:text ="00.0000d"/>
+    </LinearLayout>
+
+</LinearLayout>

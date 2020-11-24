@@ -24,11 +24,26 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapter.MenuViewHolder> {
     Context context;
     List<Food> foods;
+    OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void onAddClick(int position);
+    }
+
+    public void setOnClickListener(OnItemClickListener listener) {mListener = listener;}
 
     public MenuListViewAdapter(Context context, List<Food> foods) {
         this.context = context;
         this.foods = foods;
 
+    }
+
+    public List<Food> getListFood(){
+        return this.foods;
+    }
+
+    public Food getFood(int position) {
+        return foods.get(position);
     }
 
     public void setFoods(List<Food> foods) {
@@ -68,12 +83,22 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
         public  ImageView ivFoodPhoto;
         public TextView tvFoodName ;
         public TextView tvFoodPrice;
+        public ImageView ivAddCart;
 
         public MenuViewHolder(@NonNull View row) {
             super(row);
             ivFoodPhoto = row.findViewById(R.id.ivFoodPhoto);
             tvFoodName = row.findViewById(R.id.tvFoodName);
             tvFoodPrice = row.findViewById(R.id.tvFoodPrice);
+            ivAddCart = row.findViewById(R.id.ivAddCart);
+
+            ivAddCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    mListener.onAddClick(position);
+                }
+            });
         }
     }
 }
