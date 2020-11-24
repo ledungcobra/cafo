@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
     android:paddingBottom="5dp"
     android:background="@drawable/border_radian_shape"
     android:elevation="10dp"
-    android:orientation="vertical"
-    >
-    <LinearLayout
+    android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -17,9 +16,12 @@
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="7"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -32,20 +34,23 @@
                 android:layout_height="wrap_content"
                 android:text="NameFood"
                 android:gravity="center"
+                android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:id="@+id/tvNameFoodGrid"/>
         </LinearLayout>
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginTop="5dp"
+            app:tint="@android:color/black"
             android:id="@+id/ivAddCartGrid"
             android:src="@drawable/ic_baseline_add_shopping_cart_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,10 +63,12 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/tvFoodPriceGrid"
-            android:textSize="25sp"
+            android:textSize="15sp"
             android:gravity="end"
             android:layout_gravity="bottom"
-            android:text ="00.0000d"/>
+            android:text ="00.0000d"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </LinearLayout>

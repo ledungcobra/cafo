@@ -28,7 +28,7 @@
             android:layout_height="60dp"
             android:layout_gravity="end"
             android:padding="3dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_baseline_shopping_cart_24" />
 
         <TextView
