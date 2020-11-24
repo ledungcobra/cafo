@@ -18,4 +18,5 @@ const Restaurant = new Schema({
     timestamps: true,
 });
 
+Restaurant.index({ name: 'text', address: 'text' });
 module.exports = mongoose.model('Restaurant', Restaurant);

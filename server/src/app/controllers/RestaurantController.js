@@ -50,7 +50,7 @@ class RestaurantController {
         res.send(rest);
     }
 
-    //[GET] /restaurants
+    //[GET] /restaurants?page=?&limit=?
     async showRestaurants(req, res, next) {
         const resPerPage = parseInt(req.query.limit); // results per page
         const page = parseInt(req.query.page); // page
@@ -61,6 +61,19 @@ class RestaurantController {
 
         rest = multipleMongooseToObject(rest);
         res.send(rest);
+    }
+
+    //[POST] /restaurants?ids[]
+    async showRestaurantsByArrayID(req, res, next) {
+        let ids = req.body.ids;
+        console.log(ids);
+        let result = Array();
+        for (let i = 0; i < ids.length; i++) {
+            console.log(ids[i]);
+            let rest = await Restaurant.find({ _id: ids[i] });
+            result.push(rest);
+        }
+        res.send(result);
     }
 }
 

@@ -12,7 +12,7 @@ app.use(cors());
 app.use(logger('dev'))
 
 app.use(express.urlencoded({
-    extended: true
+    extended: false
 }));
 app.use(express.json());
 
