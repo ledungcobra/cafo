@@ -52,10 +52,9 @@ getData = async(ids, fileName) => {
         }
     }
     await fs.appendFileSync(fileName, ']', 'utf-8');
-    console.log('Success!');
+    //console.log(data);
+    console.log('Success get data!');
+    return data;
 }
 
-
-const ids = [712005, 1024034, 734378, 692259, 728011, 757262, 723995, 1012779, 969879, 899520, 1049727, 1047465, 1053510, 971483, 1046479, 1035447, 1056208, 1022929, 1047511, 1056075, 1056097, 1049592, 851518, 794330, 797376]
-
-getData(ids, './resources/raw-data/test.json');
+module.exports = getData;

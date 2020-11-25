@@ -66,11 +66,10 @@ class RestaurantController {
     //[POST] /restaurants?ids[]
     async showRestaurantsByArrayID(req, res, next) {
         let ids = req.body.ids;
-        console.log(ids);
+        //console.log(ids);
         let result = Array();
         for (let i = 0; i < ids.length; i++) {
-            console.log(ids[i]);
-            let rest = await Restaurant.find({ _id: ids[i] });
+            let rest = await Restaurant.find({ _id: ids[i] }, '-__v -createdAt -updatedAt');
             result.push(rest);
         }
         res.send(result);

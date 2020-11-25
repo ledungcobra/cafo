@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 async function connect() {
     try {
-        //await mongoose.connect('mongodb+srv://anhhuu:maiy3uem@cluster0.16sjn.mongodb.net/cafo_api_app?retryWrites=true&w=majority', {
+        //await mongoose.connect('mongodb+srv://anhhuu:maiy3uem@cluster0.16sjn.mongodb.net/cafo_app_API1_0?retryWrites=true&w=majority', {
         await mongoose.connect('mongodb://localhost:27017/cafo_api_dev', {
             useNewUrlParser: true,
             useUnifiedTopology: true,

@@ -3,6 +3,7 @@ const route = require('./routes')
 const db = require('./config/db');
 const cors = require('cors')
 const logger = require('morgan')
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -15,6 +16,14 @@ app.use(express.urlencoded({
     extended: false
 }));
 app.use(express.json());
+
+app.use(function(req, res, next) {
+    res.header(
+        "Access-Control-Allow-Headers",
+        "x-cafo-client-access-token"
+    );
+    next();
+});
 
 //Routes init
 route(app);

@@ -1,4 +1,4 @@
-const restaurants = require('../resources/raw-data/data.json');
+//const restaurants = require('../resources/raw-data/data.json');
 
 const { mongooseToObject } = require('../utils/mongoose')
 const { multipleMongooseToObject } = require('../utils/mongoose')
@@ -8,7 +8,7 @@ const Food = require('../app/model/Food');
 const Restaurant = require('../app/model/Restaurant');
 const FoodCategory = require('../app/model/FoodCategory');
 
-saveData = async() => {
+saveData = async(restaurants) => {
     for (let index = 0; index < restaurants.length; index++) {
         let city = await City.findOne({ city_url: restaurants[index].location_url });
         city = mongooseToObject(city);
@@ -69,7 +69,7 @@ saveData = async() => {
 
     }
 
-    console.log('Success!');
+    console.log('Success save data!');
 }
 
 module.exports = saveData;
