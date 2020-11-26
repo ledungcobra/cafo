@@ -1,5 +1,10 @@
 package com.ledungcobra.cafo;
 
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-
-import com.google.android.material.appbar.AppBarLayout;
 import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
@@ -86,10 +85,10 @@ public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnI
 
     private DrawerItem createItemFor(int position) {
         return new SimpleItem(screenIcons[position], screenTitles[position])
-                .withIconTint(color(R.color.drawer_unselected_color))
-                .withTextTint(color(R.color.drawer_unselected_color))
-                .withSelectedIconTint(color(R.color.drawer_selected_color))
-                .withSelectedTextTint(color(R.color.drawer_selected_color));
+                .withIconTint(color(R.color.colorPrimary))
+                .withTextTint(color(R.color.colorPrimaryDark))
+                .withSelectedIconTint(color(R.color.colorPrimary))
+                .withSelectedTextTint(color(R.color.colorPrimaryDark));
     }
 
     @ColorInt

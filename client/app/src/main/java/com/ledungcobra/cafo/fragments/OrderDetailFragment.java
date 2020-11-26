@@ -9,38 +9,34 @@ import androidx.fragment.app.Fragment;
 
 import com.ledungcobra.cafo.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrderViewPager#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class OrderViewPager extends Fragment {
+public class OrderDetailFragment extends Fragment {
 
 
 
-    public OrderViewPager() {
-        
+
+
+    public OrderDetailFragment() {
+        // Required empty public constructor
     }
 
 
-    public static OrderViewPager newInstance(Bundle bundle) {
-        OrderViewPager fragment = new OrderViewPager();
-        fragment.setArguments(bundle);
+    public static OrderDetailFragment newInstance(String param1, String param2) {
+        OrderDetailFragment fragment = new OrderDetailFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order_view_pager, container, false);
+        return inflater.inflate(R.layout.fragment_order_detail, container, false);
     }
 }
