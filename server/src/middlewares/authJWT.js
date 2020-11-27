@@ -12,14 +12,14 @@ verifyToken = (req, res, next) => {
         if (err) {
             return res.status(401).send({ message: "Unauthorized!" });
         }
-        req.userId = decoded.id;
+        req.userID = decoded.id;
         //console.log(req.userId)
         next();
     });
 };
 
 isAdmin = (req, res, next) => {
-    User.findById(req.userId).exec((err, user) => {
+    User.findById(req.userID).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
@@ -48,7 +48,7 @@ isAdmin = (req, res, next) => {
 
 
 isCustomer = (req, res, next) => {
-    User.findById(req.userId).exec((err, user) => {
+    User.findById(req.userID).exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
@@ -63,6 +63,37 @@ isCustomer = (req, res, next) => {
                 }
                 for (let i = 0; i < roles.length; i++) {
                     if (roles[i].name === "customer") {
+                        req.permision = "customer"
+                        next();
+                        return;
+                    }
+                }
+                return;
+                //res.status(403).send({ message: "Require Moderator Role!" });
+            }
+        );
+    });
+};
+
+
+
+isShipper = (req, res, next) => {
+    User.findById(req.userID).exec((err, user) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        Role.find({
+                _id: { $in: user.roles }
+            },
+            (err, roles) => {
+                if (err) {
+                    res.status(500).send({ message: err });
+                    return;
+                }
+                for (let i = 0; i < roles.length; i++) {
+                    if (roles[i].name === "shipper") {
+                        req.permision = "shipper"
                         next();
                         return;
                     }
@@ -77,6 +108,7 @@ isCustomer = (req, res, next) => {
 const authJWT = {
     verifyToken,
     isAdmin,
-    isCustomer
+    isCustomer,
+    isShipper
 };
 module.exports = authJWT;
