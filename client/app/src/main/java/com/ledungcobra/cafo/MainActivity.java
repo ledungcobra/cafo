@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Error error) {
                 //Handle Error
+                Log.d(TAG, "onFailure: "+error);
             }
 
             @Override

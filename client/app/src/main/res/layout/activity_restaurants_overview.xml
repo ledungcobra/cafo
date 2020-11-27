@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RestaurantsOverviewScreen"
+    android:background="@color/colorBackgroundAccent"
     android:id="@+id/constraint"
     android:orientation="vertical">
 
@@ -23,10 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:id="@+id/toolbar"
-            >
-
-        </androidx.appcompat.widget.Toolbar>
+            android:id="@+id/toolbar" />
         <SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,11 +39,11 @@
         android:id="@+id/restaurantOverviewRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorBackgroundAccent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

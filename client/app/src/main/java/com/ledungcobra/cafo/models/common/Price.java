@@ -4,7 +4,9 @@ package com.ledungcobra.cafo.models.common;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Price {
+import java.io.Serializable;
+
+public class Price implements Serializable {
 
     @SerializedName("text")
     @Expose
@@ -15,6 +17,12 @@ public class Price {
     @SerializedName("value")
     @Expose
     private Integer value;
+
+    public Price(Integer value) {
+        this.value = value;
+        this.unit = "đ";
+        this.text = this.value.toString() + " " + this.unit;
+    }
 
     public String getText() {
         return text;
