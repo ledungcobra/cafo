@@ -149,9 +149,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
         ivLoc = findViewById(R.id.ivLoc);
         ivDist = findViewById(R.id.ivDist);
-        ivLoc.setImageResource(R.drawable.ic_baseline_place_24);
-        ivDist.setImageResource(R.drawable.ic_baseline_near_me_24);
-
 
         LayoutInflater layoutInflater = getLayoutInflater();
         final View view = layoutInflater.inflate(R.layout.progress_indicator, null, false);
@@ -170,7 +167,9 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             @Override
             public void startProgressIndicator() {
                 ((ViewGroup) lvMenu.getParent()).removeView(lvMenu);
-                detailViewGroup.addView(view);
+                //Specify layout_width & height to fill the rest of the screen
+                //(addView ignore child's XML layout_width & height)
+                detailViewGroup.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             }
 
             @Override
