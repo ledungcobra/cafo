@@ -50,7 +50,7 @@ public class OrderDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order_detail, container, false);
 
         recyclerView = view.findViewById(R.id.rvCustomerOrders);
-        customerOrdersAdapter = new CustomerOrdersAdapter();
+        customerOrdersAdapter = new CustomerOrdersAdapter(null);
         recyclerView.setAdapter(customerOrdersAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
