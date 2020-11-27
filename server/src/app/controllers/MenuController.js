@@ -4,7 +4,7 @@ const FoodCategory = require('../model/FoodCategory');
 const { mongooseToObject } = require('../../utils/mongoose')
 const { multipleMongooseToObject } = require('../../utils/mongoose')
 
-class Menu {
+class MenuController {
     //[GET] /menus?res_id=?
     async show(req, res, next) {
         let res_id = req.query.res_id;
@@ -26,4 +26,4 @@ class Menu {
     }
 }
 
-module.exports = new Menu();
+module.exports = new MenuController();

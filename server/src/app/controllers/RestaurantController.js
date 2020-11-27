@@ -1,4 +1,3 @@
-const City = require("../model/City");
 const Restaurant = require("../model/Restaurant");
 const FoodCategory = require("../model/FoodCategory");
 const Food = require("../model/Food");
@@ -70,7 +69,7 @@ class RestaurantController {
         let result = Array();
         for (let i = 0; i < ids.length; i++) {
             let rest = await Restaurant.find({ _id: ids[i] }, '-__v -createdAt -updatedAt');
-            result.push(rest);
+            result = result.concat(rest);
         }
         res.send(result);
     }

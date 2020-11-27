@@ -9,7 +9,7 @@ class CityController {
         City.findOne({ _id: req.params.id }, 'name city_url')
             .then(city => {
                 city = mongooseToObject(city);
-                res.send({ city });
+                res.send(city);
             })
             .catch(next);
     }
@@ -19,7 +19,7 @@ class CityController {
         City.findOne({ city_url: req.params.city_url }, 'name city_url')
             .then(city => {
                 city = mongooseToObject(city);
-                res.send({ city });
+                res.send(city);
             })
             .catch(next);
     }
@@ -29,8 +29,8 @@ class CityController {
         City.find()
             .then(cities => {
                 cities = multipleMongooseToObject(cities);
-
-                res.send({ cities });
+                console.log(cities)
+                res.send(cities);
             })
             .catch(next);
     }

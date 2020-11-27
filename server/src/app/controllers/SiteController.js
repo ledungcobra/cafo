@@ -5,8 +5,8 @@ class SiteController {
     //[GET] /
     index(req, res, next) {
         let resJSON = {
-            API_NAME: "CAFO",
-            VER: "0.1"
+            api_name: "cafo",
+            version: "0.2"
         }
         res.send(resJSON);
     }
