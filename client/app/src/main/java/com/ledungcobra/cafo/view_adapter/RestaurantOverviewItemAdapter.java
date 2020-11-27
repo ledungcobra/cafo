@@ -59,6 +59,8 @@ public class RestaurantOverviewItemAdapter
         holder.txtRestaurantAddress.setText(currentRestaurant.getSingleAddress());
 
         String imageURL =currentRestaurant.getPhotos().size()>0?currentRestaurant.getPhotos().get(0).getValue():"https://www.tibs.org.tw/images/default.jpg";
+//        String imageURL = "https://images.foody.vn/res/g5/48759/prof/s1242x600/foody-upload-api-foody-mobile-bocha-jpg-180528104629.jpg";
+
         Picasso.get().load(imageURL).into(holder.imgRestaurant);
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,7 +4,9 @@ package com.ledungcobra.cafo.models.common;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+import java.io.Serializable;
+
+public class Photo implements Serializable {
 
     @SerializedName("width")
     @Expose

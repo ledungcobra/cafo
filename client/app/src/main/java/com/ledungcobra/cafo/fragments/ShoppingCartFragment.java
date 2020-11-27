@@ -1,9 +1,8 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,16 +10,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.common.CartShop;
-import com.ledungcobra.cafo.models.common.Food;
 import com.ledungcobra.cafo.models.common.Price;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
+import com.ledungcobra.cafo.view_adapter.CartInformationShipping;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
 public class ShoppingCartFragment extends Fragment {
     List<CartShop> cartShops;
 
-    interface callBack{
+    public interface callBack{
         void callBackActivity(List<CartShop> cartShopList);
     }
     callBack listCart;
@@ -103,7 +103,17 @@ public class ShoppingCartFragment extends Fragment {
 
         TextView tvSum = rootView.findViewById(R.id.tvResult);
         Price priceTotal = new Price(sumOfCost);
-        tvSum.setText(Integer.toString(priceTotal.getValue()));
+        tvSum.setText(Integer.toString(priceTotal.getValue()) + " " + getString(R.string.currency));
+
+        Button Order = rootView.findViewById(R.id.btnOrderFood);
+        Order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CartInformationShipping.class);
+                //intent.putExtra("Info", (Serializable) cartShops);
+                startActivity(intent);
+            }
+        });
 
 
         return rootView;

@@ -1,58 +1,65 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.fragments;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.ledungcobra.cafo.fragments.OrderViewPager;
+import com.ledungcobra.cafo.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class DriverFindOrdersScreen extends AppCompatActivity implements OnMapReadyCallback, ViewPager.PageTransformer {
+public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCallback, ViewPager.PageTransformer{
+
     private GoogleMap mMap;
 
     private static final int NUM_PAGES = 5;
 
     ViewPager viewPager;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driver_find_orders_screen);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+    public DriverFindOrdersFragment() {
+        // Required empty public constructor
+    }
+
+
+    public static DriverFindOrdersFragment newInstance() {
+        DriverFindOrdersFragment fragment = new DriverFindOrdersFragment();
+        Bundle args = new Bundle();
+
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_driver_find_orders, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.myMap2);
         mapFragment.getMapAsync( this);
-        viewPager = findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
 
-
-        viewPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager()));
         viewPager.setPageTransformer(true, this);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -71,7 +78,23 @@ public class DriverFindOrdersScreen extends AppCompatActivity implements OnMapRe
 
             }
         });
+        return  view;
+    }
 
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return new OrderViewPager();
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
     }
 
     @Override
@@ -109,22 +132,6 @@ public class DriverFindOrdersScreen extends AppCompatActivity implements OnMapRe
         }
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return new OrderViewPager();
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
-    }
-
 
 
     @Override
@@ -149,8 +156,4 @@ public class DriverFindOrdersScreen extends AppCompatActivity implements OnMapRe
                 .title(title));
 
     }
-
-
-
-
 }

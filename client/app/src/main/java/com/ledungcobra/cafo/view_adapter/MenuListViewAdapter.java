@@ -1,11 +1,17 @@
 package com.ledungcobra.cafo.view_adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationSet;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -85,7 +91,7 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
         public TextView tvFoodPrice;
         public ImageView ivAddCart;
 
-        public MenuViewHolder(@NonNull View row) {
+        public MenuViewHolder(@NonNull final View row) {
             super(row);
             ivFoodPhoto = row.findViewById(R.id.ivFoodPhoto);
             tvFoodName = row.findViewById(R.id.tvFoodName);
@@ -94,9 +100,20 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
 
             ivAddCart.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     int position = getAdapterPosition();
+                    ObjectAnimator animatorX = ObjectAnimator.ofFloat(v, "scaleX",1,1.2f,1.4f,1.2f,1);
+                    ObjectAnimator animatorY = ObjectAnimator.ofFloat(v, "scaleY",1,1.2f,1.4f,1.2f,1);
+
+                    animatorX.setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
+                    animatorY.setDuration(1000).setInterpolator(new AccelerateDecelerateInterpolator());
+
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(animatorX,animatorY);
+                    animatorSet.start();
+
                     mListener.onAddClick(position);
+
                 }
             });
         }

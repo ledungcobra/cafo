@@ -1,12 +1,11 @@
 package com.ledungcobra.cafo.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.ledungcobra.cafo.R;
 
@@ -20,6 +19,7 @@ public class OrderViewPager extends Fragment {
 
 
     public OrderViewPager() {
+        
     }
 
 

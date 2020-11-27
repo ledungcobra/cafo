@@ -3,7 +3,8 @@
     package="com.ledungcobra.cafo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,12 +13,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".CallApi">
+        </activity>
+        <activity
+            android:name=".view_adapter.CartInformationShipping"
+            android:label="@string/title_activity_cart_infomation_shipping">
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_api_key" />
-        <activity android:name=".DriverStatisticScreen"></activity>
-        <activity android:name=".DriverFindOrdersScreen"></activity>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <activity android:name=".DriverStatisticScreen" />
         <activity android:name=".DriverScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Login"
@@ -29,9 +43,14 @@
         </activity>
         <activity android:name=".MapScreen"></activity>
         <activity android:name=".RestaurantDetailScreen" />
-        <activity android:name=".RestaurantsOverviewScreen" />
+        <activity android:name=".RestaurantsOverviewScreen"/>
         <activity android:name=".ShopSelected" />
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
