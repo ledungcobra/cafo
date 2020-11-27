@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ledungcobra.cafo">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,26 +14,35 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+
+        <activity
+            android:name=".view_adapter.CartInformationShipping"
+            android:label="@string/title_activity_cart_infomation_shipping">
+        </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_api_key" />
-        <activity android:name=".DriverStatisticScreen"></activity>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
         <activity android:name=".DriverFindOrdersScreen"></activity>
-        <activity android:name=".DriverScreen">
-        </activity>
+        <activity android:name=".DriverScreen" />
         <activity
             android:name=".Login"
-            android:label="@string/title_activity_login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/title_activity_login"></activity>
         <activity android:name=".MapScreen"></activity>
         <activity android:name=".RestaurantDetailScreen" />
-        <activity android:name=".RestaurantsOverviewScreen"/>
+        <activity android:name=".RestaurantsOverviewScreen" />
         <activity android:name=".ShopSelected" />
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

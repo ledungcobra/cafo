@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.fragments.ShoppingCartFragment;
 import com.ledungcobra.cafo.models.common.CartShop;
 import com.ledungcobra.cafo.models.common.Food;
 import com.ledungcobra.cafo.models.common.Restaurant;
@@ -227,7 +228,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         lvMenu.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if( Math.abs(scrollY - oldScrollY)<400 && Math.abs(scrollY - oldScrollY)>20) {
+                if( Math.abs(scrollY - oldScrollY)<400 && Math.abs(scrollY - oldScrollY)>50) {
                     if (scrollY - oldScrollY > 0 && isShowCard == true) {
                         Log.d(TAGKEO, "Keo len: " + "Y old: " + oldScrollY + " Y: " + scrollY);
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card);
