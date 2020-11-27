@@ -1,22 +1,18 @@
 package com.ledungcobra.cafo.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.fragments.dummy.DummyContent;
 import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;

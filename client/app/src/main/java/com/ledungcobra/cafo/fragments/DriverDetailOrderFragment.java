@@ -7,25 +7,28 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.button.MaterialButton;
 import com.ledungcobra.cafo.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OrderViewPager#newInstance} factory method to
+ * Use the {@link DriverDetailOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OrderViewPager extends Fragment {
+public class DriverDetailOrderFragment extends Fragment {
 
-    MaterialButton btnAcceptOrder;
-    public OrderViewPager() {
-        
+;
+
+    public DriverDetailOrderFragment() {
+        // Required empty public constructor
     }
 
 
-    public static OrderViewPager newInstance(Bundle bundle) {
-        OrderViewPager fragment = new OrderViewPager();
-        fragment.setArguments(bundle);
+    // TODO: Rename and change types and number of parameters
+    public static DriverDetailOrderFragment newInstance() {
+        DriverDetailOrderFragment fragment = new DriverDetailOrderFragment();
+        Bundle args = new Bundle();
+
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -41,14 +44,9 @@ public class OrderViewPager extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_order_view_pager, container, false);
-        btnAcceptOrder = view.findViewById(R.id.btnAcceptOrder);
-        btnAcceptOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        View view = inflater.inflate(R.layout.fragment_driver_detail_order, container, false);
 
-            }
-        });
         return view;
+
     }
 }
