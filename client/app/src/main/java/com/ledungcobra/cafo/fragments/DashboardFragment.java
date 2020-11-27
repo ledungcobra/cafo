@@ -10,8 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.ledungcobra.cafo.DriverFindOrdersScreen;
 import com.ledungcobra.cafo.DriverStatisticScreen;
 import com.ledungcobra.cafo.R;
 
@@ -45,8 +46,14 @@ public class DashboardFragment extends Fragment {
         cardFindOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(container.getContext(), DriverFindOrdersScreen.class);
-                startActivity(intent);
+
+                final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction ft= fragmentManager.beginTransaction();
+                DriverFindOrdersFragment findOrdersFragment = DriverFindOrdersFragment.newInstance();
+                ft.add(R.id.container,findOrdersFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+
             }
         });
 
