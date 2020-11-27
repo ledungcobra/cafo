@@ -4,6 +4,8 @@ const citiesRouter = require("./cities");
 const menuRouter = require('./menus');
 const authRouter = require('./auth');
 const userRouter = require('./user');
+const orderRouter = require('./order');
+const shipperRouter = require('./shipper');
 
 
 function route(app) {
@@ -12,6 +14,8 @@ function route(app) {
     app.use("/cities", citiesRouter);
     app.use("/auth", authRouter);
     app.use("/user", userRouter);
+    app.use("/order", orderRouter);
+    app.use("/shipper", shipperRouter);
     app.use("/", siteRouter);
 }
 
