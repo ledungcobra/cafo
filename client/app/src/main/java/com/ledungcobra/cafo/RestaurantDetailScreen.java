@@ -259,25 +259,35 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                     } else if (scrollY - oldScrollY < 0 && isShowCard == false) {
                         Log.d(TAGKEO, "Keo xuong: " + "Y old: " + oldScrollY + " Y: " + scrollY);
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
+                        boolean shouldMove = false;
+                        if(isListView[0]){
+                            shouldMove = 0 == ((LinearLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
 
-                        restaurantCard.startAnimation(animation);
-                        animation.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                                showComponents();
-                            }
+                        }else{
+                            shouldMove = 0 == ((GridLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
 
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
+                        }
+                        if(shouldMove){
+                            restaurantCard.startAnimation(animation);
+                            animation.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                    showComponents();
+                                }
 
-                            }
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
 
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
+                                }
 
-                            }
-                        });
-                        isShowCard = !isShowCard;
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                            isShowCard = !isShowCard;
+                            shouldMove = !shouldMove;
+                        }
                     }
                 }
 
