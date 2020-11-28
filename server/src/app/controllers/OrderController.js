@@ -78,7 +78,21 @@ class OrderController {
     }
 
     cancelOrder = async(req, res, next) => {
+        const order_id = req.body.order_id;
+        let order = await Ordering.findOne({ _id: order_id });
 
+        if (req.userID.toString() === String(order.user_id) && order.status === 'WAITING') {
+            order.status = 'CANCEL';
+            (await order).save();
+
+            res.send({
+                message: "Cancel order successfuly!"
+            })
+        } else {
+            res.send({
+                message: "Cancel order unsuccessfuly!"
+            })
+        }
     }
 
 }

@@ -91,11 +91,11 @@ class ShipperController {
             .then(order => {
                 if (order.shipper_id === null && order.status === 'WAITING') {
                     order.shipper_id = (req.userID);
-                    order.status = "SHIPPING";
+                    order.status = 'SHIPPING';
                     order.save();
-                    res.send({ message: "Get order successfuly!" });
+                    res.send(getDistanceFromLatLonInKm('Get order successfuly!'));
                 } else {
-                    res.send({ message: "Get order unsuccessfuly!" });
+                    res.send(getDistanceFromLatLonInKm('Get order unsuccessfuly!'));
                 }
             })
             .catch(next)
@@ -107,17 +107,12 @@ class ShipperController {
 
         if (req.userID.toString() === String(order.shipper_id) && order.status === 'SHIPPING') {
             order.status = 'WAITING';
-            console.log('lololo')
             order.shipper_id = null;
             (await order).save();
 
-            res.send({
-                message: "Cancel order successfuly!"
-            })
+            res.send(getDistanceFromLatLonInKm('Cancel order successfuly!'))
         } else {
-            res.send({
-                message: "Cancel order unsuccessfuly!"
-            })
+            res.send(getDistanceFromLatLonInKm('Get order unsuccessfuly!'))
         }
     }
 

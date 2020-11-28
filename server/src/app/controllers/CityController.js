@@ -3,6 +3,8 @@ const City = require('../model/City');
 const { mongooseToObject } = require('../../utils/mongoose')
 const { multipleMongooseToObject } = require('../../utils/mongoose')
 
+const getMessageForClient = require('../../utils/message')
+
 class CityController {
     //[GET] /cities/id/:id
     showOneByID(req, res, next) {
@@ -11,7 +13,9 @@ class CityController {
                 city = mongooseToObject(city);
                 res.send(city);
             })
-            .catch(next);
+            .catch(err => {
+                res.send(getMessageForClient('null'));
+            });
     }
 
     //[GET] /cities/:city_url
@@ -21,7 +25,9 @@ class CityController {
                 city = mongooseToObject(city);
                 res.send(city);
             })
-            .catch(next);
+            .catch(err => {
+                res.send(getMessageForClient('null'));
+            });
     }
 
     //[GET] /cities
@@ -32,7 +38,9 @@ class CityController {
                 console.log(cities)
                 res.send(cities);
             })
-            .catch(next);
+            .catch(err => {
+                res.send(getMessageForClient('null'));
+            });
     }
 }
 
