@@ -10,17 +10,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
-import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
+import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
     View appTitle;
 
-    private static String TAG = "CALLAPI";
+    private static String TAG = "CALL_API";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +31,14 @@ public class MainActivity extends AppCompatActivity {
 
         appTitle.animate().alphaBy(1).setDuration(3000).start();
 
-        Repository repository = Repository.getInstance();
+        final Repository repository = Repository.getInstance();
 
-        LiveData<RestaurantArray> restaurants = repository.fetchAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>,Error>(){
+        LiveData<ArrayList<BriefRestaurantInfo>> restaurants = repository.fetchAllRestaurants(1, 10, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
 
             @Override
-            public void onResult(List<BriefRestaurantInfo> result) {
+            public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 //Having
+                Log.d(TAG, "onResult: " + result.toString());
                 Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
                 finish();
                 startActivity(intent);
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Error error) {
                 //Handle Error
-                Log.d(TAG, "onFailure: "+error);
+                Log.d(TAG, "onFailure: " + error);
             }
 
             @Override
@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        restaurants.observe(this, new Observer<RestaurantArray>() {
+        restaurants.observe(this, new Observer<ArrayList<BriefRestaurantInfo>>() {
             @Override
-            public void onChanged(RestaurantArray restaurantArray) {
-
+            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
+                Log.d(TAG, "onChanged: " + briefRestaurantInfos);
             }
         });
 

@@ -33,9 +33,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.fragments.ShoppingCartFragment;
-import com.ledungcobra.cafo.models.common.CartShop;
-import com.ledungcobra.cafo.models.common.Food;
-import com.ledungcobra.cafo.models.common.Restaurant;
+import com.ledungcobra.cafo.models.common_new.CartShop;
+import com.ledungcobra.cafo.models.common_new.Food;
+import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.ui_calllback.OnAnimationEnd;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.MenuGridViewAdapter;
@@ -47,6 +47,8 @@ import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
+
+;
 
 public class RestaurantDetailScreen extends AppCompatActivity implements ShoppingCartFragment.callBack {
 
@@ -158,7 +160,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
 
 
-        Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<Restaurant, Error>() {
+        Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<RestaurantDetail, Error>() {
             @Override
             public void stopProgressIndicator() {
                 detailViewGroup.removeView(view);
@@ -174,17 +176,18 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             }
 
             @Override
-            public void onResult(final Restaurant result) {
-                adapter.setFoods(result.getMenuId().getFoodsId());
-                Picasso.get().load(result.getPhotos().get(0).getValue()).into(ivRestaurant);
+            public void onResult(final RestaurantDetail result) {
+                //Menu theo loai
+                adapter.setFoods(result.getMenu().get(0).getFoods());
+                Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
                 tvRestaurantName.setText(result.getName());
 
                 findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(RestaurantDetailScreen.this, MapScreen.class);
-                        intent.putExtra("lat", result.getPosition().get(0).getLatitude());
-                        intent.putExtra("long", result.getPosition().get(0).getLongitude());
+                        intent.putExtra("lat", result.getPosition().getLatitude());
+                        intent.putExtra("long", result.getPosition().getLongitude());
 
 
                         startActivity(intent);
@@ -381,10 +384,8 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void callBackActivity(List<CartShop> cartShopList) {
-        cartShops = cartShopList;
+        this.cartShops = cartShopList;
     }
-
 }

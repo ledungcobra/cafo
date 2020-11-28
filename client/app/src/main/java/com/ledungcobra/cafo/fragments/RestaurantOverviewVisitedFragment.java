@@ -1,29 +1,24 @@
 package com.ledungcobra.cafo.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.fragments.dummy.DummyContent;
-import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
@@ -74,7 +69,7 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Repository.getInstance().fetchAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>, Error>() {
+        Repository.getInstance().fetchAllRestaurants(1, 20, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
             @Override
             public void stopProgressIndicator() {
 
@@ -86,7 +81,7 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
             }
 
             @Override
-            public void onResult(List<BriefRestaurantInfo> result) {
+            public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 adapter.setRestaurants(result);
             }
 

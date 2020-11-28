@@ -2,11 +2,10 @@ package com.ledungcobra.cafo.network;
 
 import com.ledungcobra.cafo.models.city.City;
 import com.ledungcobra.cafo.models.menu_category_new.MenuCategory;
-import com.ledungcobra.cafo.models.restaurant_detail.RestaurantWrapper;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
-import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,25 +18,18 @@ import retrofit2.http.Query;
 
 
 public interface RestaurantService {
-    @Deprecated
-    @GET("restaurants")
-    Call<RestaurantArray> getRestaurants();
-
-    @Deprecated
-    @GET("restaurants/id/{restaurant_id}")
-    Call<RestaurantWrapper> getRestaurant(@Path("restaurant_id") String id);
 
 
 
     @GET("cities")
-    Call<List<City>> getCities();
+    Call<ArrayList<City>> getCities();
     //DONE
     @GET("restaurants/id/{restaurant_id}")
-    Call<RestaurantDetail> getRestaurant_(@Path("restaurant_id") String id);
+    Call<RestaurantDetail> getRestaurant(@Path("restaurant_id") String id);
 
     //DONE
     @GET("restaurants")
-    Call<List<BriefRestaurantInfo>> getRestaurants(@Query("page") int page, @Query("limit") int limit);
+    Call<ArrayList<BriefRestaurantInfo>> getRestaurants(@Query("page") int page, @Query("limit") int limit);
 
 
     //DONE

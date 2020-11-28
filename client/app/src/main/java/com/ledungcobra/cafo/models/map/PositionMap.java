@@ -3,7 +3,9 @@ package com.ledungcobra.cafo.models.map;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PositionMap {
+import java.io.Serializable;
+
+public class PositionMap implements Serializable {
     @SerializedName("long")
     @Expose
     public Double _long;

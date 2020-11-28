@@ -1,61 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="20dp"
-    app:cardCornerRadius="10dp"
-    android:backgroundTint="#C8EDD6"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="5dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="5dp"
+    android:backgroundTint="@color/white"
+    android:paddingBottom="5dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="5dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:paddingTop="5dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="130dp"
-            android:scaleType="centerCrop"
-            android:id="@+id/ivFoodImage"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_height="130dp"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="70dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvFoodName_Order"
-                android:textSize="20dp"
-                android:text="Ten Mon"
-                android:textStyle="bold|italic"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Giá"
-                android:id="@+id/tvTotalPrice"
-                android:textSize="17dp"
-                android:textColor="#F04E43"
 
+      >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="15"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:id="@+id/tvFoodName_Order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:overScrollMode="never"
+                android:text="Tên món"
+                android:paddingHorizontal="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary"
                 />
             <TextView
+                android:layout_marginTop="5dp"
+                android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="So luong"
-                android:id="@+id/tvQuantity"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Giá tiền"
-                android:id="@+id/tvTotalPriceOrderItem"
-                />
+                android:layout_height="0dp"
+                android:paddingHorizontal="5dp"
+                android:layout_weight="1"
+                android:text="100.000 VND"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:paddingHorizontal="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Số lượng: "
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10 cái"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/ivFoodImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="7dp"
+            android:elevation="10dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+
+            app:layout_constraintTop_toTopOf="@+id/card_view" />
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

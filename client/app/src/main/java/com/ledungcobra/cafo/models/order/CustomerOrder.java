@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo.models;
+package com.ledungcobra.cafo.models.order;
 
 import java.io.Serializable;
 
@@ -8,12 +8,18 @@ public class CustomerOrder implements Serializable {
     String foodName;
     String quantity;
     String totalPrice;
+    String imageUrl;
 
-    public CustomerOrder(String price, String foodName, String quantity, String totalPrice) {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public CustomerOrder(String price, String foodName, String quantity, String totalPrice, String imageUrl) {
         this.price = price;
         this.foodName = foodName;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
+        this.imageUrl = imageUrl;
     }
 
     public String getPrice() {
@@ -46,5 +52,16 @@ public class CustomerOrder implements Serializable {
 
     public void setTotalPrice(String totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerOrder{" +
+                "price='" + price + '\'' +
+                ", foodName='" + foodName + '\'' +
+                ", quantity='" + quantity + '\'' +
+                ", totalPrice='" + totalPrice + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

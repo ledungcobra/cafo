@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,22 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
-import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RestaurantOverviewItemAdapter
         extends RecyclerView.Adapter<RestaurantOverviewItemAdapter.MyViewHolder> {
     private Context context;
-    private List<BriefRestaurantInfo> restaurants = new ArrayList<>();
+    private ArrayList<BriefRestaurantInfo> restaurants = new ArrayList<>();
     private RestaurantClickListener clickListener;
     public RestaurantOverviewItemAdapter(Context mainActivity) {
         context = mainActivity;
     }
-    public void setRestaurants(List<BriefRestaurantInfo> restaurants){
+    public void setRestaurants(ArrayList<BriefRestaurantInfo> restaurants){
         this.restaurants = restaurants;
         notifyDataSetChanged();
     }
@@ -56,12 +54,10 @@ public class RestaurantOverviewItemAdapter
         BriefRestaurantInfo currentRestaurant = restaurants.get(position);
 
         holder.txtRestaurantName.setText(currentRestaurant.getName());
-        holder.txtRestaurantAddress.setText(currentRestaurant.getSingleAddress());
+        holder.txtRestaurantAddress.setText(currentRestaurant.getAddress());
 
-        String imageURL =currentRestaurant.getPhotos().size()>0?currentRestaurant.getPhotos().get(0).getValue():"https://www.tibs.org.tw/images/default.jpg";
-//        String imageURL = "https://images.foody.vn/res/g5/48759/prof/s1242x600/foody-upload-api-foody-mobile-bocha-jpg-180528104629.jpg";
-
-        Picasso.get().load(imageURL).into(holder.imgRestaurant);
+        String imageUrl = currentRestaurant.getImage().getValue();
+        Picasso.get().load(imageUrl).into(holder.imgRestaurant);
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

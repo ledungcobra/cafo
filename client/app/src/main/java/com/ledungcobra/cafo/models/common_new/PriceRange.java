@@ -4,7 +4,9 @@ package com.ledungcobra.cafo.models.common_new;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PriceRange {
+import java.io.Serializable;
+
+public class PriceRange implements Serializable {
 
     @SerializedName("min_price")
     @Expose

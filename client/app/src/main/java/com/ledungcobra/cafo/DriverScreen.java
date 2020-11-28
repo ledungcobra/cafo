@@ -11,10 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.fragments.DashboardFragment;
+import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
+import com.ledungcobra.cafo.fragments.OrderViewPager;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
 import com.ledungcobra.cafo.view_adapter.SimpleItem;
@@ -24,7 +27,9 @@ import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
+public class DriverScreen extends AppCompatActivity implements
+                                DrawerAdapter.OnItemSelectedListener,
+                                    OrderViewPager.OrderViewPagerCallback {
 
     private static final int POS_DASHBOARD = 0;
     private static final int POS_PROFILE = 1;
@@ -53,7 +58,7 @@ public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnI
                 .withMenuOpened(false)
                 .withContentClickableWhenMenuOpened(true)
                 .withSavedState(savedInstanceState)
-                .withMenuLayout(R.layout.menu_left_drawer)
+                .withMenuLayout(R.layout.drawer_menu_left)
                 .inject();
         screenIcons = loadScreenIcons();
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
@@ -106,5 +111,15 @@ public class DriverScreen extends AppCompatActivity implements DrawerAdapter.OnI
         }
         ta.recycle();
         return icons;
+    }
+
+    @Override
+    public void onButtonAcceptOrderClick() {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container,new DriverDetailOrderFragment());
+        ft.addToBackStack(null);
+        ft.commit();
+
     }
 }

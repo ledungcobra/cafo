@@ -12,9 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.common.CartShop;
-import com.ledungcobra.cafo.models.common.Food;
-import com.ledungcobra.cafo.models.common.Price;
+import com.ledungcobra.cafo.models.common_new.CartShop;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -41,7 +39,7 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_shop_cart,parent,false);
+        View view = mInflater.inflate(R.layout.shop_cart_item,parent,false);
 
         return new CartViewHolder(view);
     }
@@ -124,9 +122,7 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
             ivFoodPhoto = itemView.findViewById(R.id.ivFoodPhotoCart);
 
             tvName.setText(cartShop.getFood().getName());
-            cartShop.getFood().getPhotos();
-            String loadedImageURL = cartShop.getFood().getPhotos().get(0).getValue();
-
+            String loadedImageURL = cartShop.getFood().getImage().getValue();
             String useImageUrl = loadedImageURL.equals("https://images.foody.vn/default/s120x120/deli-dish-no-image.png")?"https://www.bmihealthcare.co.uk/~/media/images/health-matters/editions/april-2020/greek-salad-recipe-blog-1.ashx?la=en":loadedImageURL;
             Picasso.get().load(useImageUrl).into(ivFoodPhoto);
 

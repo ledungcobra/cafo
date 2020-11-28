@@ -88,7 +88,9 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
         @Override
         public Fragment getItem(int position) {
-            return new OrderViewPager();
+            OrderViewPager viewPager = new OrderViewPager();
+            viewPager.setCallback((OrderViewPager.OrderViewPagerCallback) getActivity());
+            return viewPager;
         }
 
         @Override

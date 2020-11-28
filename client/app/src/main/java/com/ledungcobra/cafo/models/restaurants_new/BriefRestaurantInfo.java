@@ -6,9 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import com.ledungcobra.cafo.models.common_new.Image;
 import com.ledungcobra.cafo.models.common_new.PriceRange;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BriefRestaurantInfo {
+public class BriefRestaurantInfo  implements Serializable {
 
     @SerializedName("phones")
     @Expose

@@ -6,9 +6,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.user.UserInfo;
+import com.ledungcobra.cafo.models.order.OrderResponse;
 import com.ledungcobra.cafo.network.UserService;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,9 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UserApiHandler {
     private UserService userService;
     private final String BASE_URL = "https://cafo-api.herokuapp.com/";
-    private final MutableLiveData<UserInfo> userInfo = new MutableLiveData<>();
     private final MutableLiveData<Boolean> regSuccess = new MutableLiveData<>(false);
-
+    private final MutableLiveData<String> userAccessToken = new MutableLiveData<>(null);
     public UserApiHandler(){
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -33,15 +35,13 @@ public class UserApiHandler {
         userService = retrofit.create(UserService.class);
     }
 
-    public LiveData<UserInfo> signIn(final String username, String password){
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("username",username);
-        jsonObject.addProperty("password",password);
-        Call<UserInfo> call = userService.signIn(jsonObject);
+    public LiveData<String> signIn(final String username, String password){
+
+        Call<UserInfo> call = userService.signIn(username,password);
         call.enqueue(new Callback<UserInfo>() {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                userInfo.setValue(response.body());
+                userAccessToken.setValue(response.body() != null ? response.body().getAccessToken() : null);
             }
 
             @Override
@@ -49,17 +49,14 @@ public class UserApiHandler {
 
             }
         });
-        return userInfo;
+        return userAccessToken;
     }
 
-    public LiveData<Boolean> signUp(final String username,String password,String email,String roles){
-        JsonObject body = new JsonObject();
-        body.addProperty("username",username);
-        body.addProperty("password",password);
-        body.addProperty("email",email);
-        body.addProperty("roles",roles);
+    public LiveData<Boolean> signUp(final String username,String password,String email,String roles,
+                                    String phoneNumber){
 
-        Call<Object> call = userService.signUp(body);
+
+        Call<Object> call = userService.signUp(username,password,email,roles,phoneNumber);
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
@@ -79,5 +76,16 @@ public class UserApiHandler {
     public UserService getUserService(){
         return this.userService;
     }
+
+
+    public Call<OrderResponse> order(String restaurantID,String latitude,String longitude,
+                                ArrayList<FoodOrderItem> listOrderItems
+                              ){
+        OrderInfo orderInfo = new OrderInfo(restaurantID,new UserPos(latitude,longitude),listOrderItems);
+        return userService.order(orderInfo,userAccessToken.getValue());
+
+    }
+
+
 }
 

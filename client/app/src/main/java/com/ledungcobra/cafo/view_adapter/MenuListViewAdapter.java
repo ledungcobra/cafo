@@ -1,18 +1,13 @@
 package com.ledungcobra.cafo.view_adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationSet;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.common.Food;
+import com.ledungcobra.cafo.models.common_new.Food;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -70,7 +65,7 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
     @Override
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
             Food food =foods.get(position) ;
-            String loadedImageURL = food.getPhotos().get(0).getValue();
+            String loadedImageURL = food.getImage().getValue();
 
             String useImageUrl = loadedImageURL.equals("https://images.foody.vn/default/s120x120/deli-dish-no-image.png")?"https://www.bmihealthcare.co.uk/~/media/images/health-matters/editions/april-2020/greek-salad-recipe-blog-1.ashx?la=en":loadedImageURL;
 

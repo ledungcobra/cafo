@@ -1,18 +1,18 @@
 package com.ledungcobra.cafo.database;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.GsonBuilder;
-import com.ledungcobra.cafo.models.city.CityArray;
-import com.ledungcobra.cafo.models.common.Restaurant;
-import com.ledungcobra.cafo.models.restaurant_detail.RestaurantWrapper;
-import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
-import com.ledungcobra.cafo.models.restaurants.RestaurantArray;
+import com.ledungcobra.cafo.models.city.City;
+import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
+import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.network.RestaurantService;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,15 +22,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
 
-    private static final String BASE_URL = "https://cafo-dev-api.herokuapp.com/";
-    private MutableLiveData<RestaurantArray> arrayRestaurants = new MutableLiveData<RestaurantArray>();
+    private static final String BASE_URL = "https://cafo-api.herokuapp.com/";
+    private MutableLiveData<ArrayList<BriefRestaurantInfo>> listRestaurants = new MutableLiveData<>(new ArrayList<BriefRestaurantInfo>());
     private static Repository INSTANCE;
     private RestaurantService restaurantService;
-    private MutableLiveData<CityArray> cites;
-    public static Repository getInstance(){
-        if(INSTANCE == null){
-            synchronized (Repository.class){
-                if(INSTANCE == null){
+    private MutableLiveData<ArrayList<City>> cites = new MutableLiveData<>(new ArrayList<City>());
+
+    public static Repository getInstance() {
+        if (INSTANCE == null) {
+            synchronized (Repository.class) {
+                if (INSTANCE == null) {
                     INSTANCE = new Repository();
                 }
             }
@@ -38,90 +39,88 @@ public class Repository {
 
         return INSTANCE;
     }
-    private Repository(){
+
+    private Repository() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(
                         new GsonBuilder()
-                        .create()))
+                                .create()))
                 .build();
 
         restaurantService = retrofit.create(RestaurantService.class);
 
     }
 
-    public LiveData<RestaurantArray> fetchAllRestaurants(final UIThreadCallBack<List<BriefRestaurantInfo>, Error> callBack){
+    public LiveData<ArrayList<BriefRestaurantInfo>> fetchAllRestaurants(int page, int limit, final UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error> callBack) {
 
-        if(arrayRestaurants.getValue() == null){
 
-            callBack.startProgressIndicator();
-            restaurantService.getRestaurants().enqueue(new Callback<RestaurantArray>() {
-                @Override
-                public void onResponse(Call<RestaurantArray> call, Response<RestaurantArray> response) {
-                    callBack.stopProgressIndicator();
-                    arrayRestaurants.setValue(response.body());
-                    callBack.onResult(response.body().getRestaurants());
-                }
+        callBack.startProgressIndicator();
+        restaurantService.getRestaurants(page, limit).enqueue(new Callback<ArrayList<BriefRestaurantInfo>>() {
+            @Override
+            public void onResponse(Call<ArrayList<BriefRestaurantInfo>> call, Response<ArrayList<BriefRestaurantInfo>> response) {
+                callBack.stopProgressIndicator();
+                listRestaurants.setValue(response.body());
+                callBack.onResult(response.body());
+            }
 
-                @Override
-                public void onFailure(Call<RestaurantArray> call, Throwable t) {
-                    callBack.onFailure(new Error(t.getMessage()));
-                }
-            });
+            @Override
+            public void onFailure(Call<ArrayList<BriefRestaurantInfo>> call, Throwable t) {
+                callBack.onFailure(new Error(t.getMessage()));
+            }
+        });
 
-        }else{
-            callBack.onResult(arrayRestaurants.getValue().getRestaurants());
-        }
-        return arrayRestaurants;
+
+        return listRestaurants;
     }
 
-    public LiveData<RestaurantArray> getAllRestaurants(){
-        return this.arrayRestaurants;
+    public LiveData<ArrayList<BriefRestaurantInfo>> getAllRestaurants() {
+        return this.listRestaurants;
     }
 
-    public LiveData<CityArray> fetchAllCities(final UIThreadCallBack<CityArray,Error> callBack){
+    public LiveData<ArrayList<City>> fetchAllCities(final UIThreadCallBack<ArrayList<City>, Error> callBack) {
 
-//        callBack.startProgressIndicator();
-//        restaurantService.getCities().enqueue(new Callback<CityArray>() {
-//            @Override
-//            public void onResponse(Call<CityArray> call, Response<CityArray> response) {
-//                callBack.stopProgressIndicator();
-//                callBack.onResult(response.body());
-//                cites.setValue(response.body());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CityArray> call, Throwable t) {
-//                callBack.onFailure(new Error(t.getMessage()));
-//            }
-//        });
+        callBack.startProgressIndicator();
+        restaurantService.getCities().enqueue(new Callback<ArrayList<City>>() {
+            @Override
+            public void onResponse(Call<ArrayList<City>> call, Response<ArrayList<City>> response) {
+                cites.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<City>> call, Throwable t) {
+                callBack.onFailure(new Error(t.getMessage()));
+            }
+        });
 
         return cites;
 
     }
 
-    public LiveData<CityArray> getCityArray(){
+    public LiveData<ArrayList<City>> getCityArray() {
         return cites;
     }
 
-    public void getRestaurant(String id, final UIThreadCallBack<Restaurant,Error> callback){
-       callback.startProgressIndicator();
-       restaurantService.getRestaurant(id).enqueue(new Callback<RestaurantWrapper>() {
-           @Override
-           public void onResponse(Call<RestaurantWrapper> call, Response<RestaurantWrapper> response) {
-               callback.stopProgressIndicator();
-               callback.onResult(response.body().getRestaurant());
-           }
+    public void getRestaurant(String id, final UIThreadCallBack<RestaurantDetail, Error> callback) {
+        callback.startProgressIndicator();
+        Log.d("CALL_API", "getRestaurant: "+id);
+        restaurantService.getRestaurant(id).enqueue(new Callback<RestaurantDetail>() {
+            @Override
+            public void onResponse(Call<RestaurantDetail> call, Response<RestaurantDetail> response) {
+                callback.stopProgressIndicator();
+                callback.onResult(response.body());
+            }
 
-           @Override
-           public void onFailure(Call<RestaurantWrapper> call, Throwable t) {
-               callback.onFailure(new Error(t.getMessage()));
-           }
-       });
+            @Override
+            public void onFailure(Call<RestaurantDetail> call, Throwable t) {
+                callback.onFailure(new Error(t.getMessage()));
+            }
+        });
+
     }
 
-    public RestaurantService getRestaurantService (){
+    public RestaurantService getRestaurantService() {
         return this.restaurantService;
     }
 

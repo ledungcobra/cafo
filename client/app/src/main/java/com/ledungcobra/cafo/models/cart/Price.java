@@ -1,5 +1,4 @@
-
-package com.ledungcobra.cafo.models.common;
+package com.ledungcobra.cafo.models.cart;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
