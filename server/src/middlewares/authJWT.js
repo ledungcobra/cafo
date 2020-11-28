@@ -3,17 +3,18 @@ const config = require("../config/auth/auth");
 const Role = require('../app/model/Role');
 const User = require('../app/model/User');
 
+const getMessageForClient = require('../utils/message');
+
 verifyToken = (req, res, next) => {
-    let token = req.headers["x-cafo-client-access-token"];
+    let token = req.headers['x-cafo-client-access-token'];
     if (!token) {
-        return res.status(403).send({ message: "No token provided!" });
+        return res.status(403).send(getMessageForClient('No token provided!'));
     }
     jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
-            return res.status(401).send({ message: "Unauthorized!" });
+            return res.status(401).send(getMessageForClient('Unauthorized'));
         }
         req.userID = decoded.id;
-        //console.log(req.userId)
         next();
     });
 };
@@ -21,7 +22,7 @@ verifyToken = (req, res, next) => {
 isAdmin = (req, res, next) => {
     User.findById(req.userID).exec((err, user) => {
         if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).send(getMessageForClient(err));
             return;
         }
         Role.find({
@@ -29,18 +30,18 @@ isAdmin = (req, res, next) => {
             },
             (err, roles) => {
                 if (err) {
-                    res.status(500).send({ message: err });
+                    res.status(500).send(getMessageForClient(err));
                     return;
                 }
                 for (let i = 0; i < roles.length; i++) {
-                    if (roles[i].name === "admin") {
-                        req.permision = "admin"
+                    if (roles[i].name === 'admin') {
+                        req.permision = 'admin';
                         next();
                         return;
                     }
                 }
+                res.status(403).send(getMessageForClient('Require Admin Role!'));
                 return;
-                //res.status(403).send({ message: "Require Admin Role!" });
             }
         );
     });
@@ -50,7 +51,7 @@ isAdmin = (req, res, next) => {
 isCustomer = (req, res, next) => {
     User.findById(req.userID).exec((err, user) => {
         if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).send(getMessageForClient(err));
             return;
         }
         Role.find({
@@ -58,18 +59,18 @@ isCustomer = (req, res, next) => {
             },
             (err, roles) => {
                 if (err) {
-                    res.status(500).send({ message: err });
+                    res.status(500).send(getMessageForClient(err));
                     return;
                 }
                 for (let i = 0; i < roles.length; i++) {
-                    if (roles[i].name === "customer") {
-                        req.permision = "customer"
+                    if (roles[i].name === 'customer') {
+                        req.permision = 'customer';
                         next();
                         return;
                     }
                 }
+                res.status(403).send(getMessageForClient('Require Customer Role!'));
                 return;
-                //res.status(403).send({ message: "Require Moderator Role!" });
             }
         );
     });
@@ -80,7 +81,7 @@ isCustomer = (req, res, next) => {
 isShipper = (req, res, next) => {
     User.findById(req.userID).exec((err, user) => {
         if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).send(getMessageForClient(err));
             return;
         }
         Role.find({
@@ -88,18 +89,18 @@ isShipper = (req, res, next) => {
             },
             (err, roles) => {
                 if (err) {
-                    res.status(500).send({ message: err });
+                    res.status(500).send(getMessageForClient(err));
                     return;
                 }
                 for (let i = 0; i < roles.length; i++) {
-                    if (roles[i].name === "shipper") {
-                        req.permision = "shipper"
+                    if (roles[i].name === 'shipper') {
+                        req.permision = 'shipper';
                         next();
                         return;
                     }
                 }
+                res.status(403).send(getMessageForClient('Require Shipper Role!'));
                 return;
-                //res.status(403).send({ message: "Require Moderator Role!" });
             }
         );
     });
