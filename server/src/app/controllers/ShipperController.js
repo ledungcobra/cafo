@@ -1,4 +1,4 @@
-const Ordering = require('../model/Ordering');
+const Ordering = require('../model/Order');
 const { mongooseToObject, multipleMongooseToObject } = require('../../utils/mongoose');
 const Restaurant = require('../model/Restaurant');
 const Food = require('../model/Food');
@@ -12,24 +12,24 @@ class ShipperController {
         let long = parseFloat(req.query.long);
         let lat = parseFloat(req.query.lat);
 
-        let orderings = await Ordering.find({
+        let orders = await Ordering.find({
             status: "WAITING",
         }, 'restaurant_id orderPosition');
 
         let distanceArr = new Array();
 
-        for (let i = 0; i < orderings.length; i++) {
-            let rest = await Restaurant.findOne({ _id: orderings[i].restaurant_id }, 'position');
+        for (let i = 0; i < orders.length; i++) {
+            let rest = await Restaurant.findOne({ _id: orders[i].restaurant_id }, 'position');
 
-            let distanceToCus = getDistanceFromLatLonInKm(lat, long, orderings[i].orderPosition.latitude, orderings[i].orderPosition.longitude);
+            let distanceToCus = getDistanceFromLatLonInKm(lat, long, orders[i].orderPosition.latitude, orders[i].orderPosition.longitude);
             let distanceToRes = getDistanceFromLatLonInKm(lat, long, rest.position.latitude, rest.position.longitude);
 
-            let ordering = new Object();
-            ordering._id = orderings[i]._id;
-            ordering.distanceToCus = distanceToCus;
-            ordering.distanceToRes = distanceToRes;
+            let order = new Object();
+            order._id = orders[i]._id;
+            order.distanceToCus = distanceToCus;
+            order.distanceToRes = distanceToRes;
 
-            distanceArr.push(ordering);
+            distanceArr.push(order);
         }
 
         //selection sort distance
@@ -60,24 +60,24 @@ class ShipperController {
 
         let results = new Array();
         for (let i = 0; i < n; i++) {
-            let ordering = await Ordering.findOne({ _id: distanceArr[i]._id }, '-__v -updatedAt -createdAt')
-            ordering = mongooseToObject(ordering);
-            ordering.distanceToCus = distanceArr[i].distanceToCus;
-            ordering.distanceToRes = distanceArr[i].distanceToRes;
-            let rest = await Restaurant.findOne({ _id: ordering.restaurant_id }, '-_id name address operating phones image');
+            let order = await Ordering.findOne({ _id: distanceArr[i]._id }, '-__v -updatedAt -createdAt')
+            order = mongooseToObject(order);
+            order.distanceToCus = distanceArr[i].distanceToCus;
+            order.distanceToRes = distanceArr[i].distanceToRes;
+            let rest = await Restaurant.findOne({ _id: order.restaurant_id }, '-_id name address operating phones image');
             rest = mongooseToObject(rest);
             let foods = new Array();
 
-            for (let i = 0; i < ordering.foods.length; i++) {
-                let food = await Food.findOne({ _id: ordering.foods[i].foodID }, '-_id -__v -category_id -createdAt -updatedAt');
+            for (let i = 0; i < order.foods.length; i++) {
+                let food = await Food.findOne({ _id: order.foods[i].foodID }, '-_id -__v -category_id -createdAt -updatedAt');
                 food = mongooseToObject(food);
                 foods.push(food);
-                foods[i].amount = ordering.foods[i].count;
+                foods[i].amount = order.foods[i].count;
             }
 
-            ordering.foods = foods;
-            ordering.restaurant = rest;
-            results.push(ordering);
+            order.foods = foods;
+            order.restaurant = rest;
+            results.push(order);
         }
 
         res.send(results);
@@ -88,11 +88,11 @@ class ShipperController {
         const order_id = req.body.order_id;
 
         Ordering.findOne({ _id: order_id })
-            .then(ordering => {
-                if (ordering.shipper_id === null && ordering.status === 'WAITING') {
-                    ordering.shipper_id = (req.userID);
-                    ordering.status = "SHIPPING";
-                    ordering.save();
+            .then(order => {
+                if (order.shipper_id === null && order.status === 'WAITING') {
+                    order.shipper_id = (req.userID);
+                    order.status = "SHIPPING";
+                    order.save();
                     res.send({ message: "Get order successfuly!" });
                 } else {
                     res.send({ message: "Get order unsuccessfuly!" });
@@ -103,20 +103,20 @@ class ShipperController {
 
     cancelOrder = async(req, res, next) => {
         const order_id = req.body.order_id;
-        let ordering = await Ordering.findOne({ _id: order_id });
+        let order = await Ordering.findOne({ _id: order_id });
 
-        if (req.userID.toString() === String(ordering.shipper_id) && ordering.status === 'SHIPPING') {
-            ordering.status = 'WAITING';
+        if (req.userID.toString() === String(order.shipper_id) && order.status === 'SHIPPING') {
+            order.status = 'WAITING';
             console.log('lololo')
-            ordering.shipper_id = null;
-            (await ordering).save();
+            order.shipper_id = null;
+            (await order).save();
 
             res.send({
-                message: "Cancel ordering successfuly!"
+                message: "Cancel order successfuly!"
             })
         } else {
             res.send({
-                message: "Cancel ordering unsuccessfuly!"
+                message: "Cancel order unsuccessfuly!"
             })
         }
     }

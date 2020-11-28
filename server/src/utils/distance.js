@@ -1,5 +1,3 @@
-const { model } = require("../app/model/Role");
-
 deg2rad = (deg) => {
     return deg * (Math.PI / 180)
 }
