@@ -4,7 +4,9 @@ package com.ledungcobra.cafo.models.restaurant_detail_new;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Position {
+import java.io.Serializable;
+
+public class Position implements Serializable {
 
     @SerializedName("latitude")
     @Expose

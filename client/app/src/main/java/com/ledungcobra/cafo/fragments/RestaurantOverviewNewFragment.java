@@ -2,6 +2,7 @@ package com.ledungcobra.cafo.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
@@ -47,7 +48,7 @@ public class RestaurantOverviewNewFragment extends Fragment {
 
 
     }
-
+    String TAG = "CALL_API";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class RestaurantOverviewNewFragment extends Fragment {
         adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
             @Override
             public void onClick(String restaurantID) {
+                Log.d(TAG, "onClick: "+restaurantID);
                 Intent intent = new Intent(getContext(), RestaurantDetailScreen.class);
                 intent.putExtra(EXTRA_KEY,restaurantID);
                 startActivity(intent);
@@ -68,7 +70,7 @@ public class RestaurantOverviewNewFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Repository.getInstance().fetchAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>, Error>() {
+        Repository.getInstance().fetchAllRestaurants(1,9,new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
             @Override
             public void stopProgressIndicator() {
 
@@ -80,7 +82,7 @@ public class RestaurantOverviewNewFragment extends Fragment {
             }
 
             @Override
-            public void onResult(List<BriefRestaurantInfo> result) {
+            public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 adapter.setRestaurants(result);
             }
 

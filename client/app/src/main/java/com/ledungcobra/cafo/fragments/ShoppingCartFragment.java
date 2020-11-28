@@ -4,25 +4,23 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.common.CartShop;
-import com.ledungcobra.cafo.models.common.Price;
+import com.ledungcobra.cafo.models.cart.Price;
+import com.ledungcobra.cafo.models.common_new.CartShop;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
 import com.ledungcobra.cafo.view_adapter.CartInformationShipping;
 
-import java.io.Serializable;
 import java.util.List;
 
 

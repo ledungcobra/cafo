@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.models.restaurants.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
@@ -69,7 +69,7 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Repository.getInstance().fetchAllRestaurants(new UIThreadCallBack<List<BriefRestaurantInfo>, Error>() {
+        Repository.getInstance().fetchAllRestaurants(1, 20, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
             @Override
             public void stopProgressIndicator() {
 
@@ -81,7 +81,7 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
             }
 
             @Override
-            public void onResult(List<BriefRestaurantInfo> result) {
+            public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 adapter.setRestaurants(result);
             }
 

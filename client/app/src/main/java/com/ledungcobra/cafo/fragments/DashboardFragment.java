@@ -39,7 +39,7 @@ public class DashboardFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.drawer_fragment,container,false);
+        View view = inflater.inflate(R.layout.fragment_drawer,container,false);
         CardView cardFindOrders = view.findViewById(R.id.cardFindOrders);
         CardView cardStatistic = view.findViewById(R.id.cardViewStatistic);
 

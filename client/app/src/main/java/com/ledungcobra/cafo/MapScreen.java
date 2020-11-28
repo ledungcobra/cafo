@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,6 +111,8 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 //        }
 
 
+
+
     }
 
     @Override
@@ -134,11 +138,82 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         googleMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title("Marker in Sydney"));
-        moveCamera(lat, long_, "Start");
 
+        moveCamera(lat, long_, "Start");
+//
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://dev.virtualearth.net/")
+//                .addConverterFactory(GsonConverterFactory.create(
+//                        new GsonBuilder()
+//                                .create()))
+//                .build();
+//
+//        FindRouteService findRouteService  = retrofit.create(FindRouteService.class);
+//        final ArrayList<LatLng> locations = new ArrayList<>();
+//        moveCamera(10.8830014,106.7795138,"dsd");
+//        findRouteService.getMapRoute("10.8800706,106.8086773",
+//                "10.8830014,106.7795138",
+//                "Am3HEJkqwNwrNzEWDBEpvxScysCUadoI854xMNk4bfCy8Ud_HAQQEIRgRvTElxIr").enqueue(
+//                new Callback<MapRouteInfo>() {
+//                    @RequiresApi(api = Build.VERSION_CODES.N)
+//                    @Override
+//                    public void onResponse(Call<MapRouteInfo> call, retrofit2.Response<MapRouteInfo> response) {
+//                        MapRouteInfo data = response.body();
+//                        if(data.getResourceSets().size()>0){
+//
+//                            data.getResourceSets().get(0).getResources().get(0).
+//                                            getRouteLegs().get(0).getItineraryItems().forEach(new Consumer<ItineraryItem>() {
+//                                @Override
+//                                public void accept(ItineraryItem itineraryItem) {
+//                                    Double lat = itineraryItem.getManeuverPoint().getCoordinates().get(0);
+//                                    Double long_ = itineraryItem.getManeuverPoint().getCoordinates().get(1);
+//                                    LatLng latLng = new LatLng(lat,long_ );
+//                                    locations.add(latLng);
+//                                }
+//                            });
+//
+//                            Log.d(TAG, "onResponse: "+locations);
+//
+//                            drawALine(locations);
+//
+//
+//
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<MapRouteInfo> call, Throwable t) {
+//                        Log.d(TAG, "onFailure: "+t);
+//                    }
+//                }
+//        );
 
     }
 
+    public void drawALine(ArrayList<LatLng> listLocsToDraw){
+
+        moveCamera(listLocsToDraw.get(0).latitude,listLocsToDraw.get(0).longitude,"");
+        if ( listLocsToDraw.size() < 2 )
+        {
+            return;
+        }
+
+        PolylineOptions options = new PolylineOptions();
+
+        options.color( Color.parseColor( "#CC0000FF" ) );
+        options.width( 5 );
+        options.visible( true );
+
+        for ( LatLng locRecorded : listLocsToDraw )
+        {
+            options.add(locRecorded);
+        }
+
+
+        mMap.addPolyline(options );
+
+    }
     public void getNewLocation(final String searchTerm) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);

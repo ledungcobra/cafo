@@ -3,9 +3,10 @@ package com.ledungcobra.cafo.models.map;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MapInfo {
+public class MapInfo implements Serializable {
 
     @SerializedName("place_id")
     @Expose

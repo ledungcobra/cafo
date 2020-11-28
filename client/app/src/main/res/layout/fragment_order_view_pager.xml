@@ -48,7 +48,7 @@
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
                 android:layout_gravity="right"
-                app:backgroundTint="#4caf50"
+                app:backgroundTint="@color/colorPrimary"
                 android:id="@+id/btnAcceptOrder"
                 android:text="Nhận đơn"
                 android:layout_height="wrap_content"/>

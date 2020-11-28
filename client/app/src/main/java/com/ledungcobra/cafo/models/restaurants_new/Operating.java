@@ -4,7 +4,9 @@ package com.ledungcobra.cafo.models.restaurants_new;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Operating {
+import java.io.Serializable;
+
+public class Operating  implements Serializable {
 
     @SerializedName("close_time")
     @Expose

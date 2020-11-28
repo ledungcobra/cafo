@@ -1,4 +1,5 @@
-package com.ledungcobra.cafo.models.common;
+package com.ledungcobra.cafo.models.common_new;
+
 
 import java.io.Serializable;
 
@@ -30,3 +31,4 @@ public class CartShop implements Serializable {
     }
 
 }
+
