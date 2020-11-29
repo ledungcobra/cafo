@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo.models.order;
+package com.ledungcobra.cafo.models.order.customer;
 
 import java.io.Serializable;
 

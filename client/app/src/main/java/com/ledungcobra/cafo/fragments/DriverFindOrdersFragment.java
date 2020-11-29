@@ -1,5 +1,10 @@
 package com.ledungcobra.cafo.fragments;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,9 +27,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.database.UserApiHandler;
+import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCallback, ViewPager.PageTransformer{
+public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCallback, ViewPager.PageTransformer {
 
     private GoogleMap mMap;
 
@@ -29,6 +43,7 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
     ViewPager viewPager;
 
+    MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders =new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
 
     public DriverFindOrdersFragment() {
         // Required empty public constructor
@@ -47,6 +62,36 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("CALL_API", "onCreate: PERMISSION PROBLEM");
+
+            return;
+        }
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        UserApiHandler.getInstance().fetchFiveOrdersNearCustomerByShipper(userLocation.getLatitude(),
+                userLocation.getLongitude(), new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
+                    @Override
+                    public void stopProgressIndicator() {
+
+                    }
+
+                    @Override
+                    public void startProgressIndicator() {
+
+                    }
+
+                    @Override
+                    public void onResult(List<DetailOrderResponse> result) {
+                        listCustomerOrders.setValue((ArrayList<DetailOrderResponse>) result);
+                    }
+
+                    @Override
+                    public void onFailure(Error error) {
+
+                    }
+                });
+
     }
 
     @Override
@@ -57,9 +102,11 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.myMap2);
         mapFragment.getMapAsync( this);
-        viewPager = view.findViewById(R.id.pager);
 
-        viewPager.setAdapter(new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager()));
+        viewPager = view.findViewById(R.id.pager);
+        
+        final ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, this);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -78,6 +125,14 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
             }
         });
+
+        listCustomerOrders.observe(getViewLifecycleOwner(), new Observer<ArrayList<DetailOrderResponse>>() {
+            @Override
+            public void onChanged(ArrayList<DetailOrderResponse> detailOrderResponses) {
+                adapter.setListCustomerOrders(detailOrderResponses);
+            }
+        });
+
         return  view;
     }
 
@@ -85,19 +140,28 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
+        private ArrayList<DetailOrderResponse> orders = new ArrayList<>();
 
         @Override
         public Fragment getItem(int position) {
-            OrderViewPager viewPager = new OrderViewPager();
+            Log.d("CALL_API", "getItem: "+position);
+            OrderViewPager viewPager =  OrderViewPager.newInstance(orders.get(position));
             viewPager.setCallback((OrderViewPager.OrderViewPagerCallback) getActivity());
             return viewPager;
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return orders.size();
+        }
+
+        public void setListCustomerOrders(ArrayList<DetailOrderResponse> orders){
+            this.orders = orders;
+            notifyDataSetChanged();
         }
     }
+
+
 
     @Override
     public void transformPage(@NonNull View view, float position) {

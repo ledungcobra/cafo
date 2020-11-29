@@ -53,21 +53,21 @@ public class Repository {
 
     }
 
-    public LiveData<ArrayList<BriefRestaurantInfo>> fetchAllRestaurants(int page, int limit, final UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error> callBack) {
+    public LiveData<ArrayList<BriefRestaurantInfo>> fetchAllRestaurants(int page, int limit, final UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error> callback) {
 
 
-        callBack.startProgressIndicator();
+        callback.startProgressIndicator();
         restaurantService.getRestaurants(page, limit).enqueue(new Callback<ArrayList<BriefRestaurantInfo>>() {
             @Override
             public void onResponse(Call<ArrayList<BriefRestaurantInfo>> call, Response<ArrayList<BriefRestaurantInfo>> response) {
-                callBack.stopProgressIndicator();
+                callback.stopProgressIndicator();
                 listRestaurants.setValue(response.body());
-                callBack.onResult(response.body());
+                callback.onResult(response.body());
             }
 
             @Override
             public void onFailure(Call<ArrayList<BriefRestaurantInfo>> call, Throwable t) {
-                callBack.onFailure(new Error(t.getMessage()));
+                callback.onFailure(new Error(t.getMessage()));
             }
         });
 
@@ -79,9 +79,9 @@ public class Repository {
         return this.listRestaurants;
     }
 
-    public LiveData<ArrayList<City>> fetchAllCities(final UIThreadCallBack<ArrayList<City>, Error> callBack) {
+    public LiveData<ArrayList<City>> fetchAllCities(final UIThreadCallBack<ArrayList<City>, Error> callback) {
 
-        callBack.startProgressIndicator();
+        callback.startProgressIndicator();
         restaurantService.getCities().enqueue(new Callback<ArrayList<City>>() {
             @Override
             public void onResponse(Call<ArrayList<City>> call, Response<ArrayList<City>> response) {
@@ -90,7 +90,7 @@ public class Repository {
 
             @Override
             public void onFailure(Call<ArrayList<City>> call, Throwable t) {
-                callBack.onFailure(new Error(t.getMessage()));
+                callback.onFailure(new Error(t.getMessage()));
             }
         });
 
@@ -123,5 +123,6 @@ public class Repository {
     public RestaurantService getRestaurantService() {
         return this.restaurantService;
     }
+
 
 }

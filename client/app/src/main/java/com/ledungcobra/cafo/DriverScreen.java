@@ -1,14 +1,24 @@
 package com.ledungcobra.cafo;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +37,8 @@ import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 public class DriverScreen extends AppCompatActivity implements
                                 DrawerAdapter.OnItemSelectedListener,
                                     OrderViewPager.OrderViewPagerCallback {
@@ -35,6 +47,7 @@ public class DriverScreen extends AppCompatActivity implements
     private static final int POS_PROFILE = 1;
     private static final int POS_LOGOUT = 2;
     private String[] screenTitles = new String[]{"Dashboard","Profile","Logout"};
+    private final int REQUEST_CODE = 9999;
 
     private Drawable[] screenIcons;
     private SlidingRootNav slidingRootNav;
@@ -47,6 +60,19 @@ public class DriverScreen extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_screen);
 
+        initUI(savedInstanceState);
+
+        //Request for location permission
+        requestPermission();
+
+//       LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+
+
+
+    }
+
+    private void initUI(Bundle savedInstanceState){
         //Setting up SlidingRootNav
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,7 +91,7 @@ public class DriverScreen extends AppCompatActivity implements
                 createItemFor(POS_DASHBOARD).setChecked(true),
                 createItemFor(POS_PROFILE),
                 createItemFor(POS_LOGOUT)
-                ));
+        ));
 
         adapter.setListener(this);
 
@@ -74,6 +100,56 @@ public class DriverScreen extends AppCompatActivity implements
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
         adapter.setSelected(POS_DASHBOARD);
+    }
+    private boolean requestPermission(){
+        boolean wasEnabledNavigationLocation = checkForEnabledLocation();
+        if(wasEnabledNavigationLocation){
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_CODE);
+            }
+        }else{
+            // notify user
+            new AlertDialog.Builder(this)
+                    .setMessage("Navigation has not been enabled yet")
+                    .setPositiveButton("Open Location Setting", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton("Cancel",null)
+                    .show();
+        }
+        return wasEnabledNavigationLocation;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE && grantResults.length == 2 && grantResults[1] == PERMISSION_GRANTED  && grantResults[0] == PERMISSION_GRANTED){
+            Toast.makeText(this,"Location permission granted",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public boolean checkForEnabledLocation(){
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        boolean isEnable = true;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+
+            isEnable = false;
+
+        }
+        return isEnable;
     }
 
 

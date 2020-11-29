@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.order.CustomerOrder;
+import com.ledungcobra.cafo.models.order.customer.CustomerOrder;
 import com.ledungcobra.cafo.view_adapter.CustomerOrdersAdapter;
 
 import java.util.ArrayList;

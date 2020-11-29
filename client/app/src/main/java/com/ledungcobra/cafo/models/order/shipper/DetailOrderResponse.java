@@ -1,17 +1,17 @@
 
-package com.ledungcobra.cafo.models.order;
+package com.ledungcobra.cafo.models.order.shipper;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.ledungcobra.cafo.models.order.OrderPosition;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class OrderDetail implements Serializable {
+public class DetailOrderResponse implements Serializable {
 
-    @SerializedName("foods")
     @Expose
-    private List<Object> foods = null;
+    private List<Food> foods = null;
     @SerializedName("_id")
     @Expose
     private String id;
@@ -30,18 +30,21 @@ public class OrderDetail implements Serializable {
     @SerializedName("shipper_id")
     @Expose
     private Object shipperId;
-    @SerializedName("total")
+    @SerializedName("distanceToCus")
     @Expose
-    private Integer total;
-    @SerializedName("count")
+    private Double distanceToCus;
+    @SerializedName("distanceToRes")
     @Expose
-    private Integer count;
+    private Double distanceToRes;
+    @SerializedName("restaurant")
+    @Expose
+    private Restaurant restaurant;
 
-    public List<Object> getFoods() {
+    public List<Food> getFoods() {
         return foods;
     }
 
-    public void setFoods(List<Object> foods) {
+    public void setFoods(List<Food> foods) {
         this.foods = foods;
     }
 
@@ -93,25 +96,33 @@ public class OrderDetail implements Serializable {
         this.shipperId = shipperId;
     }
 
-    public Integer getTotal() {
-        return total;
+    public Double getDistanceToCus() {
+        return distanceToCus;
     }
 
-    public void setTotal(Integer total) {
-        this.total = total;
+    public void setDistanceToCus(Double distanceToCus) {
+        this.distanceToCus = distanceToCus;
     }
 
-    public Integer getCount() {
-        return count;
+    public Double getDistanceToRes() {
+        return distanceToRes;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setDistanceToRes(Double distanceToRes) {
+        this.distanceToRes = distanceToRes;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     @Override
     public String toString() {
-        return "OrderDetail{" +
+        return "DetailOrderResponse{" +
                 "foods=" + foods +
                 ", id='" + id + '\'' +
                 ", status='" + status + '\'' +
@@ -119,8 +130,9 @@ public class OrderDetail implements Serializable {
                 ", userId='" + userId + '\'' +
                 ", restaurantId='" + restaurantId + '\'' +
                 ", shipperId=" + shipperId +
-                ", total=" + total +
-                ", count=" + count +
+                ", distanceToCus=" + distanceToCus +
+                ", distanceToRes=" + distanceToRes +
+                ", restaurant=" + restaurant +
                 '}';
     }
 }

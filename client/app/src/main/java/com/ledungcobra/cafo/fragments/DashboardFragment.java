@@ -30,7 +30,6 @@ public class DashboardFragment extends Fragment {
 
         Bundle data = new Bundle();
         data.putString("title",title);
-
         DashboardFragment fragment = new DashboardFragment();
         fragment.setArguments(data);
         return fragment;
