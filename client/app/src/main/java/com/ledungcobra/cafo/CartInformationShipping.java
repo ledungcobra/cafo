@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo.view_adapter;
+package com.ledungcobra.cafo;
 
 import android.os.Bundle;
 import android.widget.TextView;
