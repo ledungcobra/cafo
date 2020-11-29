@@ -1,94 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    >
+    android:background="@color/colorBackgroundAccent">
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbarInfoShip"
-        android:background="@color/colorPrimaryDark">
-
+        android:background="@drawable/gradient_background">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shipping Infomation"
+            android:textColor="@android:color/white"/>
     </androidx.appcompat.widget.Toolbar>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:layout_marginBottom="24dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your shipping information"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_margin="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="@android:color/white">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    android:hint="Fullname">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editFullNameShip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    android:hint="Address (House number, Street, Ward, District, Province)">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editAddressShip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    android:hint="Phone number">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Note"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:layout_margin="8dp"/>
+
+            <EditText
+                android:id="@+id/editNote"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@android:color/white"
+                android:gravity="start"
+                android:padding="8dp"
+                android:hint="Notes for the shipper"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:background="@android:color/white"
+                app:boxBackgroundColor="@android:color/transparent"
+                android:layout_marginVertical="8dp"
+                android:hint="Freeship code"
+                android:padding="8dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editFreeShipCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/gradient_background"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:id="@+id/editFirstNameShip"
-            android:hint="First Name"
-            android:textColorHint="@color/colorPrimaryDark"/>
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Last Name"
-            android:textColorHint="@color/colorPrimaryDark"
-            android:id="@+id/editLastNameShip"/>
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:padding="8dp"
+        android:background="#CCFFFFFF">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cost"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="xx.000 d"
+                    android:gravity="right"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:id="@+id/tvCostFoodShip"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shipping Fee"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="xx.000 d"
+                    android:gravity="right"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:id="@+id/tvFeeShip"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
+                    android:text="Total"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="xx.000 d"
+                    android:gravity="right"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorCart"
+                    android:textStyle="bold"
+                    android:id="@+id/tvTotalCost"/>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnOrderShip"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:theme="@style/AppTheme"
+                android:text="Order"
+                android:layout_marginHorizontal="16dp"
+                android:layout_gravity="right"/>
     </LinearLayout>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Address"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:id="@+id/editAddressShip"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:id="@+id/editPhone"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="FreeShip Code"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:id="@+id/editFreeShipCode"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Note"
-        android:id="@+id/tvNote"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:id="@+id/editNote"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cost: xx.000 d"
-        android:gravity="right"
-        android:id="@+id/tvCostFoodShip"
-        android:padding="5dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fee Ship: xx.000 d"
-        android:gravity="right"
-        android:id="@+id/tvFeeShip"
-        android:padding="5dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fee Ship: xx.000 d"
-        android:gravity="right"
-        android:id="@+id/tvTotalCostShip"
-        android:padding="5dp"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnOrderShip"
-        android:text="Order"
-        android:layout_margin="10dp"
-        android:layout_gravity="right"/>
-
 </LinearLayout>

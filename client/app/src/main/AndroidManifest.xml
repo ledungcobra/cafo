@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view_adapter.CartInformationShipping"
+            android:name=".CartInformationShipping"
             android:label="@string/title_activity_cart_infomation_shipping">
         </activity>
         <meta-data
