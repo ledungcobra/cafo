@@ -19,7 +19,7 @@ import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.cart.Price;
 import com.ledungcobra.cafo.models.common_new.CartShop;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
-import com.ledungcobra.cafo.view_adapter.CartInformationShipping;
+import com.ledungcobra.cafo.CartInformationShipping;
 
 import java.util.List;
 
