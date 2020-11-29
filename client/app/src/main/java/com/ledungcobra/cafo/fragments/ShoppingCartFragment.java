@@ -21,6 +21,7 @@ import com.ledungcobra.cafo.models.common_new.CartShop;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
 import com.ledungcobra.cafo.CartInformationShipping;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -108,7 +109,7 @@ public class ShoppingCartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CartInformationShipping.class);
-                //intent.putExtra("Info", (Serializable) cartShops);
+                intent.putExtra("Info", (Serializable) cartShops);
                 startActivity(intent);
             }
         });
