@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +37,10 @@ import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +53,10 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
     private static final int NUM_PAGES = 5;
 
     ViewPager viewPager;
+    MutableLiveData<Integer> currentPage = new MutableLiveData<>(-1);
 
-    MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders =new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
+
+    MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders = new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
 
     public DriverFindOrdersFragment() {
         // Required empty public constructor
@@ -92,6 +105,19 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
                     }
                 });
 
+
+        currentPage.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(final Integer integer) {
+
+                if (integer != -1 && listCustomerOrders.getValue() != null) {
+
+                    getNewLocation(listCustomerOrders.getValue().get(integer).getRestaurant().getAddress());
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -101,10 +127,10 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         View view = inflater.inflate(R.layout.fragment_driver_find_orders, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.myMap2);
-        mapFragment.getMapAsync( this);
+        mapFragment.getMapAsync(this);
 
         viewPager = view.findViewById(R.id.pager);
-        
+
         final ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, this);
@@ -112,12 +138,13 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("VIEWPAGER", "onPageScrolled: "+position);
+                Log.d("VIEWPAGER", "onPageScrolled: " + position);
             }
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("VIEWPAGER", "onPageScrolled: "+position);
+                Log.d("CALL_API", "onPageScrolled: " + position);
+                currentPage.setValue(position);
             }
 
             @Override
@@ -133,19 +160,19 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             }
         });
 
-        return  view;
+        return view;
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
         private ArrayList<DetailOrderResponse> orders = new ArrayList<>();
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("CALL_API", "getItem: "+position);
-            OrderViewPager viewPager =  OrderViewPager.newInstance(orders.get(position));
+            OrderViewPager viewPager = OrderViewPager.newInstance(orders.get(position));
             viewPager.setCallback((OrderViewPager.OrderViewPagerCallback) getActivity());
             return viewPager;
         }
@@ -155,12 +182,11 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             return orders.size();
         }
 
-        public void setListCustomerOrders(ArrayList<DetailOrderResponse> orders){
+        public void setListCustomerOrders(ArrayList<DetailOrderResponse> orders) {
             this.orders = orders;
             notifyDataSetChanged();
         }
     }
-
 
 
     @Override
@@ -199,20 +225,19 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
     }
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(11,106), 50));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(11, 106), 50));
         googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(11,106))
+                .position(new LatLng(11, 106))
                 .title("Marker in Sydney"));
 
     }
 
 
-    public void moveCamera(double latitude,double longitude,String title){
+    public void moveCamera(double latitude, double longitude, String title) {
 
         final LatLng pos = new LatLng(latitude, longitude);
 
@@ -220,6 +245,42 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         mMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title(title));
+
+    }
+
+    public void getNewLocation(final String searchTerm) {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        JsonArrayRequest jsonArrayRequest =
+                new JsonArrayRequest(Request.Method.GET,
+                        "https://ledung-google-map-scraping.herokuapp.com/?search=" + Uri.encode(searchTerm.toString()), null,
+                        new Response.Listener<JSONArray>() {
+
+
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                try {
+                                    final double latitude = Double.parseDouble((String) (
+                                            ((JSONObject) response.get(0)).get("lat")
+                                    ));
+                                    final double longitude = Double.parseDouble((String) (
+                                            ((JSONObject) response.get(0)).get("long")
+                                    ));
+
+                                    moveCamera(latitude, longitude, searchTerm);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+        requestQueue.add(jsonArrayRequest);
+
 
     }
 }

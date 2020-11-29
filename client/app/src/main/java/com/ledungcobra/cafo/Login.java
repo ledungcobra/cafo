@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,25 +33,28 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class Login extends AppCompatActivity {
 
-    MaterialButton buttonSignIn;
-    MaterialButton buttonCreateAccount;
-//    TextInputEditText textFieldFullName;
-    TextInputEditText textFieldUsername;
-    TextInputEditText textFieldEmail;
-    TextInputEditText textFieldPassword;
-    TextInputEditText textFieldConfirmPassword;
-//    TextInputLayout fullnameLayout;
-    TextInputLayout emailLayout;
-    TextInputLayout confirmPasswordLayout;
+    MaterialButton btnSignIn;
+    MaterialButton btnCreateAccount;
+    TextInputEditText edtFullName;
+    TextInputEditText edtUsername;
+    TextInputEditText edtEmail;
+    TextInputEditText edtPassword;
+    TextInputEditText edtConfirmPassword;
+    TextInputLayout lFullname;
+    TextInputLayout lEmail;
+    TextInputLayout lConfirmPassword;
 
     TextInputEditText edtPhoneNumber;
-    TextInputLayout phoneNumberLayout;
+    TextInputLayout lPhoneNumber;
 
+    TextView tvSignUp;
     RadioGroup radioGroupLoginAs;
     boolean signInClicked = false;
     private static final String SHARED_PREF_NAME = "USER_ACCESS_TOKEN";
     SharedPreferences pref;
     String TAG = "CALL_API";
+
+    View lnSignInAs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,27 +109,33 @@ public class Login extends AppCompatActivity {
         }
 
 
+
+
     }
 
     private void initUI() {
-        buttonSignIn = findViewById(R.id.buttonSignIn);
-        buttonCreateAccount = findViewById(R.id.buttonCreateAccount);
-//        textFieldFullName = findViewById(R.id.textFieldFullName);
-        textFieldConfirmPassword = findViewById(R.id.textFieldConfirmPassword);
-        textFieldUsername = findViewById(R.id.textFieldUsername);
-        textFieldEmail = findViewById(R.id.textFieldEmail);
-        textFieldPassword = findViewById(R.id.textFieldPassword);
+        btnSignIn = findViewById(R.id.buttonSignIn);
+        btnCreateAccount = findViewById(R.id.buttonCreateAccount);
+        edtFullName = findViewById(R.id.textFieldFullName);
+        edtConfirmPassword = findViewById(R.id.textFieldConfirmPassword);
+        edtUsername = findViewById(R.id.textFieldUsername);
+        edtEmail = findViewById(R.id.textFieldEmail);
+        edtPassword = findViewById(R.id.textFieldPassword);
         radioGroupLoginAs = findViewById(R.id.radioGroupLoginAs);
 
-//        fullnameLayout = findViewById(R.id.fullname_layout);
-        emailLayout = findViewById(R.id.email_layout);
-        confirmPasswordLayout = findViewById(R.id.confirm_password_layout);
+        lFullname = findViewById(R.id.fullname_layout);
+        lEmail = findViewById(R.id.email_layout);
+        lConfirmPassword = findViewById(R.id.confirm_password_layout);
 
         edtPhoneNumber = findViewById(R.id.textFieldPhoneNumber);
-        phoneNumberLayout = findViewById(R.id.phone_number_layout);
+        lPhoneNumber = findViewById(R.id.phone_number_layout);
+
+        tvSignUp = findViewById(R.id.tvSignUp);
+
+        lnSignInAs = findViewById(R.id.ln_sign_as);
 
 
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signInClicked = !signInClicked;
@@ -138,7 +148,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
+        btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -146,13 +156,13 @@ public class Login extends AppCompatActivity {
                     //User want to login
                     boolean shouldRun = true;
 
-                    if (textFieldUsername.getText().equals("") || textFieldPassword.getText().equals("")) {
+                    if (edtUsername.getText().equals("") || edtPassword.getText().equals("")) {
                         shouldRun = false;
                     }
 
                     if (shouldRun) {
-                        UserApiHandler.getInstance().signIn(textFieldUsername.getText().toString(),
-                                textFieldPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
+                        UserApiHandler.getInstance().signIn(edtUsername.getText().toString(),
+                                edtPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
                                     @Override
                                     public void stopProgressIndicator() {
 
@@ -194,9 +204,9 @@ public class Login extends AppCompatActivity {
                     //TODO: CHECK
                     ArrayList<String> roles = new ArrayList<>();
                     roles.add(radioGroupLoginAs.getCheckedRadioButtonId() == R.id.radioCustomer ? "customer" : "shipper");
-                    UserApiHandler.getInstance().signUp( textFieldUsername.getText().toString(),
-                            textFieldPassword.getText().toString(),
-                            textFieldEmail.getText().toString(), roles, edtPhoneNumber.getText().toString(), new UIThreadCallBack<Void, Error>() {
+                    UserApiHandler.getInstance().signUp( edtUsername.getText().toString(),
+                            edtPassword.getText().toString(),
+                            edtEmail.getText().toString(), roles, edtPhoneNumber.getText().toString(), new UIThreadCallBack<Void, Error>() {
                                 @Override
                                 public void stopProgressIndicator() {
 
@@ -210,8 +220,8 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onResult(Void result) {
 
-                                    UserApiHandler.getInstance().signIn(textFieldUsername.getText().toString(),
-                                            textFieldPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
+                                    UserApiHandler.getInstance().signIn(edtUsername.getText().toString(),
+                                            edtPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
                                                 @Override
                                                 public void stopProgressIndicator() {
 
@@ -271,29 +281,43 @@ public class Login extends AppCompatActivity {
     }
 
     private void changeLayoutForSignIn() {
-        buttonCreateAccount.setText("Sign In");
-        buttonSignIn.setText("Create An Account");
-//        textFieldFullName.setVisibility(View.GONE);
-//        animateView(fullnameLayout);
-        textFieldEmail.setVisibility(View.GONE);
-        animateView(emailLayout);
-        textFieldConfirmPassword.setVisibility(View.GONE);
-        animateView(confirmPasswordLayout);
-        animateView(phoneNumberLayout);
+        btnCreateAccount.setText("Sign In");
+        btnSignIn.setText("Create An Account");
 
+        edtFullName.setVisibility(View.GONE);
+        animateView(lFullname);
+
+        edtEmail.setVisibility(View.GONE);
+        animateView(lEmail);
+
+        edtConfirmPassword.setVisibility(View.GONE);
+        animateView(lConfirmPassword);
+
+        edtPhoneNumber.setVisibility(View.GONE);
+        animateView(lPhoneNumber);
+
+        tvSignUp.setText(R.string.sign_in);
+
+        lnSignInAs.setVisibility(View.GONE);
     }
 
     private void changeLayoutForCreateAccount() {
-        buttonCreateAccount.setText("Create an account");
+        btnCreateAccount.setText("Create an account");
 
-        buttonSignIn.setText("Sign In");
-//        textFieldFullName.setVisibility(View.VISIBLE);
-//        animateView(fullnameLayout);
-        textFieldEmail.setVisibility(View.VISIBLE);
-        animateView(emailLayout);
-        textFieldConfirmPassword.setVisibility(View.VISIBLE);
-        animateView(confirmPasswordLayout);
-        animateView(phoneNumberLayout);
+        btnSignIn.setText("Sign In");
+        edtFullName.setVisibility(View.VISIBLE);
+        animateView(lFullname);
+        edtEmail.setVisibility(View.VISIBLE);
+        animateView(lEmail);
+        edtConfirmPassword.setVisibility(View.VISIBLE);
+        animateView(lConfirmPassword);
+        edtPhoneNumber.setVisibility(View.VISIBLE);
+        animateView(lPhoneNumber);
+
+        tvSignUp.setText(R.string.sign_up);
+
+        lnSignInAs.setVisibility(View.VISIBLE);
+
 
     }
 

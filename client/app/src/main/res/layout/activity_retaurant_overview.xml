@@ -16,7 +16,8 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/toolbarOverviewTop"
     android:background="@color/colorPrimary"
-    app:tabSelectedTextColor="@color/colorPrimaryDark"
+    app:tabSelectedTextColor="@color/white"
+    app:tabTextColor="@color/black"
     app:tabMode="fixed"
     android:id="@+id/tabLayout"/>
     <androidx.viewpager.widget.ViewPager

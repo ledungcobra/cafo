@@ -27,7 +27,6 @@ public class UserApiHandler {
     private UserService userService;
     private static UserApiHandler INSTANCE = null;
     private final String BASE_URL = "https://cafo-api.herokuapp.com/";
-    private final MutableLiveData<Boolean> regSuccess = new MutableLiveData<>(false);
     private final MutableLiveData<String> userAccessToken = new MutableLiveData<>(null);
 
     public MutableLiveData<String> getUserAccessToken() {
@@ -69,7 +68,6 @@ public class UserApiHandler {
                     callback.stopProgressIndicator();
                     callback.onResult(response.body());
                 }
-
 
             }
 

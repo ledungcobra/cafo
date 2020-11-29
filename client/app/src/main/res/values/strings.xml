@@ -28,4 +28,6 @@
     <string name="cart_items">CART</string>
     <string name="ListFood">ListFood</string>
     <string name="res_id">resID</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
 </resources>

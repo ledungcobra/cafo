@@ -68,6 +68,11 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     private boolean isShowCard = true;
     private String resID = null;
     int cardHeight = -100;
+    TextView tvAddressRestaurant;
+    TextView tvTimeOpenOff;
+    TextView tvDistance;
+    Toolbar toolbar;
+    ViewGroup detailViewGroup;
 
 
     @Override
@@ -75,8 +80,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail_screen);
 
-        restaurantCard = findViewById(R.id.restaurantCard);
-
+        bindViews();
 
         Intent intent = getIntent();
         resID = intent.getStringExtra(EXTRA_KEY);
@@ -85,7 +89,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         if (cartShops == null) {
             cartShops = new ArrayList<CartItem>();
         }
-        final List<Food> foods;
 
         //adapter List
         adapter = new MenuListViewAdapter(this, new ArrayList<Food>());
@@ -130,17 +133,11 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             }
         });
 
-        lvMenu = findViewById(R.id.lvMenu);
 
-        ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
-
-        tvRestaurantName = findViewById(R.id.tvRestaurantName);
 
         lvMenu.setLayoutManager(new LinearLayoutManager(this));
         lvMenu.setAdapter(adapter);
 
-        tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
-        phoneContainer = findViewById(R.id.phoneContainer);
         phoneContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,14 +148,12 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         });
 
 
-        ivLoc = findViewById(R.id.ivLoc);
-        ivDist = findViewById(R.id.ivDist);
+
 
         LayoutInflater layoutInflater = getLayoutInflater();
         final View view = layoutInflater.inflate(R.layout.progress_indicator, null, false);
         final ProgressBar progressBar = view.findViewById(R.id.progress_circular);
 
-        final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
 
 
         Repository.getInstance().getRestaurant(resID, new UIThreadCallBack<RestaurantDetail, Error>() {
@@ -203,7 +198,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             }
         });
         //Toolbar setup menu
-        Toolbar toolbar = findViewById(R.id.toolbarDetail);
+
         setSupportActionBar(toolbar);
         toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
         //Transition from ListView to GridView and vice versa
@@ -228,6 +223,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
             }
         });
+        final boolean[] shouldMove = {false};
 
         lvMenu.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
@@ -260,15 +256,14 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                     } else if (scrollY - oldScrollY < 0 && isShowCard == false) {
                         Log.d(TAGKEO, "Keo xuong: " + "Y old: " + oldScrollY + " Y: " + scrollY);
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
-                        boolean shouldMove = false;
                         if(isListView[0]){
-                            shouldMove = 0 == ((LinearLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
+                            shouldMove[0] = 0 == ((LinearLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
 
                         }else{
-                            shouldMove = 0 == ((GridLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
+                            shouldMove[0] = 0 == ((GridLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
 
                         }
-                        if(shouldMove){
+                        if(shouldMove[0]){
                             restaurantCard.startAnimation(animation);
                             animation.setAnimationListener(new Animation.AnimationListener() {
                                 @Override
@@ -287,13 +282,33 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                                 }
                             });
                             isShowCard = !isShowCard;
-                            shouldMove = !shouldMove;
+                            shouldMove[0] = !shouldMove[0];
                         }
                     }
                 }
 
             }
         });
+
+    }
+
+    private void bindViews() {
+        restaurantCard = findViewById(R.id.restaurantCard);
+        tvAddressRestaurant = findViewById(R.id.address_restaurant);
+        tvTimeOpenOff = findViewById(R.id.timeOpenOff);
+        tvDistance = findViewById(R.id.distance);
+
+        lvMenu = findViewById(R.id.lvMenu);
+        ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
+        tvRestaurantName = findViewById(R.id.tvRestaurantName);
+
+        tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
+        phoneContainer = findViewById(R.id.phoneContainer);
+
+        ivLoc = findViewById(R.id.ivLoc);
+        ivDist = findViewById(R.id.ivDist);
+        toolbar = findViewById(R.id.toolbarDetail);
+        detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
 
     }
 

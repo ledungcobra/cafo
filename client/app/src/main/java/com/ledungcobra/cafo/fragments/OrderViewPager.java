@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
@@ -63,13 +65,16 @@ public class OrderViewPager extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order_view_pager, container, false);
         btnAcceptOrder = view.findViewById(R.id.btnAcceptOrder);
 
+        ImageView imgRestaurant = view.findViewById(R.id.imgRestaurant);
+        Picasso.get().load(detailOrderResponse.getRestaurant().getImage().getValue()).into(imgRestaurant);
+
         TextView restaurantName = view.findViewById(R.id.tvRestaurantName);
         TextView restaurantAddress = view.findViewById(R.id.tvAddress);
         TextView distanceToRes = view.findViewById(R.id.tvDistanceToRestaurant);
 
         restaurantName.setText(detailOrderResponse.getRestaurant().getName());
         restaurantAddress.setText(detailOrderResponse.getRestaurant().getAddress());
-        distanceToRes.setText(new DecimalFormat("#######.##").format(detailOrderResponse.getDistanceToRes())+" m");
+        distanceToRes.setText(new DecimalFormat("#######.##").format(detailOrderResponse.getDistanceToRes())+" km");
 
         btnAcceptOrder.setOnClickListener(new View.OnClickListener() {
             @Override

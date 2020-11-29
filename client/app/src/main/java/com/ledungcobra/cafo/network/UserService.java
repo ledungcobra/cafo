@@ -24,8 +24,8 @@ public interface UserService  {
 
     @GET("user")
     Call <DetailUserInfo> getUser(@Header("x-cafo-client-access-token") String token);
-    @POST("auth/signup")
 
+    @POST("auth/signup")
     Call<Object> signUp(
             @Body UserLogin userLogin
             );

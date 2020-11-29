@@ -11,4 +11,5 @@
     <color name="backgroundCart">#d3dbe2</color>
     <color name="drawer_selected_color">#defabb</color>
     <color  name="drawer_unselected_color">#41c300</color>
+    <color name="sign_in_text_color">#ffc5cceb</color>
 </resources>

@@ -2,10 +2,12 @@ package com.ledungcobra.cafo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,14 +22,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.order.customer.OrderResponse;
+import com.ledungcobra.cafo.models.user.DetailUserInfo;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +45,7 @@ import retrofit2.Response;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class CartInformationShipping extends Activity {
+public class CartInformationShipping extends AppCompatActivity {
     //Views
 
 
@@ -43,6 +53,9 @@ public class CartInformationShipping extends Activity {
     private static final int REQUEST_LOCATION_CODE = 12345;
     LocationManager locationManager;
     ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
+    MutableLiveData<String> username = new MutableLiveData<>(null);
+    MutableLiveData<String> phoneNumber = new MutableLiveData<>(null);
+
 
     protected EditText
             edtFullname,
@@ -88,8 +101,8 @@ public class CartInformationShipping extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_infomation_shipping);
-
         bindViews();
+
         btnOrderShip.setEnabled(false);
 
         Intent intent = getIntent();
@@ -138,6 +151,22 @@ public class CartInformationShipping extends Activity {
         edtAddress.addTextChangedListener(textWatcher);
         edtPhoneNumber.addTextChangedListener(textWatcher);
 
+
+        if (ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
+            Log.d("CALL_API", "LOCATION PERMISION");
+            ActivityCompat.requestPermissions(CartInformationShipping.this,new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_LOCATION_CODE);
+
+        }else{
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, locationListener);
+//            doOrder();a
+            Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(loc != null) edtAddress.setText(getAddress(this,loc.getLatitude(),loc.getLongitude()));
+
+        }
+
+
         btnOrderShip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,21 +195,48 @@ public class CartInformationShipping extends Activity {
                                     foodOrderItems.add(new FoodOrderItem(cartItem.getFood().getId(), cartItem.getNumber()));
                                 }
 
-                                if (ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-                                    Log.d("CALL_API", "LOCATION PERMISION");
-                                    ActivityCompat.requestPermissions(CartInformationShipping.this,new String[]
-                                            {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_LOCATION_CODE);
-
-                                }else{
-                                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, locationListener);
-                                    doOrder();
-                                }
+                                doOrder();
                                 finish();
-                                //Intent browser = new Intent(Intent.ACTION_VIEW, null);
-                                //startActivity(browser);
                             }})
                         .setNegativeButton("Cancel", null) //setNegativeButton
                         .show();
+            }
+        });
+
+        UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
+            @Override
+            public void stopProgressIndicator() {
+
+            }
+
+            @Override
+            public void startProgressIndicator() {
+
+            }
+
+            @Override
+            public void onResult(DetailUserInfo result) {
+                username.setValue(result.getUsername());
+                phoneNumber.setValue(result.getPhoneNumber());
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
+
+        username.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+               edtFullname.setText(s);
+            }
+        });
+
+        phoneNumber.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                edtPhoneNumber.setText(s);
             }
         });
 
@@ -215,12 +271,31 @@ public class CartInformationShipping extends Activity {
             if(grantResults.length == 2 && grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED){
                 //Permission granted
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, locationListener);
-                doOrder();
+//                doOrder();
+                Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(loc != null) edtAddress.setText(getAddress(this,loc.getLatitude(),loc.getLongitude()));
 
             }else{
                 //User refuse to location
                 Toast.makeText(this,"Cannot get your location",Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public String getAddress(Context context, double lat, double lng) {
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+
+            String add = obj.getAddressLine(0);
+
+
+            return add;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
         }
     }
 
