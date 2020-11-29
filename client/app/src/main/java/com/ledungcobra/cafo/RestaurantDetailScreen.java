@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.fragments.ShoppingCartFragment;
-import com.ledungcobra.cafo.models.common_new.CartShop;
+import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.common_new.Food;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.ui_calllback.OnAnimationEnd;
@@ -64,9 +64,9 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     TextView tvRestaurantPhone;
     LinearLayout restaurantCard;
     FragmentManager fm;
-    List<CartShop> cartShops;
+    List<CartItem> cartShops;
     private boolean isShowCard = true;
-
+    private String resID = null;
     int cardHeight = -100;
 
 
@@ -79,10 +79,11 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
 
         Intent intent = getIntent();
-        final String restaurantID = intent.getStringExtra(EXTRA_KEY);
-        cartShops = (List<CartShop>) intent.getSerializableExtra("CartShop");
+        resID = intent.getStringExtra(EXTRA_KEY);
+
+        cartShops = (List<CartItem>) intent.getSerializableExtra("CartShop");
         if (cartShops == null) {
-            cartShops = new ArrayList<CartShop>();
+            cartShops = new ArrayList<CartItem>();
         }
         final List<Food> foods;
 
@@ -95,14 +96,14 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                 Toast toast = Toast.makeText(getApplicationContext(), "Added " + adapter.getFood(position).getName(), LENGTH_SHORT);
                 toast.show();
                 int sameFood = 0;
-                for (CartShop cartShop : cartShops) {
+                for (CartItem cartShop : cartShops) {
                     if (cartShop.getFood().equals(adapter.getFood(position))) {
                         cartShop.setNumber(cartShop.getNumber() + 1);
                         sameFood++;
                     }
                 }
                 if (sameFood == 0) {
-                    CartShop cartShop = new CartShop(adapter.getFood(position), 1);
+                    CartItem cartShop = new CartItem(adapter.getFood(position), 1);
                     cartShops.add(cartShop);
                 }
             }
@@ -116,14 +117,14 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                 Toast toast = Toast.makeText(getApplicationContext(), "Added " + adapter.getFood(position).getName(), LENGTH_SHORT);
                 toast.show();
                 int sameFood = 0;
-                for (CartShop cartShop : cartShops) {
+                for (CartItem cartShop : cartShops) {
                     if (cartShop.getFood().equals(adapter.getFood(position))) {
                         cartShop.setNumber(cartShop.getNumber() + 1);
                         sameFood++;
                     }
                 }
                 if (sameFood == 0) {
-                    CartShop cartShop = new CartShop(adapter.getFood(position), 1);
+                    CartItem cartShop = new CartItem(adapter.getFood(position), 1);
                     cartShops.add(cartShop);
                 }
             }
@@ -160,7 +161,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
 
 
-        Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<RestaurantDetail, Error>() {
+        Repository.getInstance().getRestaurant(resID, new UIThreadCallBack<RestaurantDetail, Error>() {
             @Override
             public void stopProgressIndicator() {
                 detailViewGroup.removeView(view);
@@ -379,12 +380,14 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         int id = item.getItemId();
         if (id == R.id.shopCart) {
             fm = getSupportFragmentManager();
-            ArrayList<CartShop> al_Food;
+            ArrayList<CartItem> al_Food;
             al_Food = new ArrayList<>(cartShops.size());
             al_Food.addAll(cartShops);
-
+            assert  resID!=null;
             Bundle bundleFragment = new Bundle();
-            bundleFragment.putSerializable("ListFood", al_Food);
+            bundleFragment.putString(getString(R.string.res_id),resID);
+
+            bundleFragment.putSerializable(getString(R.string.ListFood), al_Food);
             FragmentTransaction ft_add = fm.beginTransaction();
             ft_add.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example).replace(R.id.flrestaurant_detail_view, ShoppingCartFragment.
                     newInstance(bundleFragment))
@@ -395,7 +398,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     }
 
     @Override
-    public void callBackActivity(List<CartShop> cartShopList) {
+    public void callBackActivity(List<CartItem> cartShopList) {
         this.cartShops = cartShopList;
     }
 }

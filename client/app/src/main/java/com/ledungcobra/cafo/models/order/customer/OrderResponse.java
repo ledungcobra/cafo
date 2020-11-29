@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo.models.order;
+package com.ledungcobra.cafo.models.order.customer;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

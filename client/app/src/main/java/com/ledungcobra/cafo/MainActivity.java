@@ -7,7 +7,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 
 import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 //Having
-                Log.d(TAG, "onResult: " + result.toString());
                 Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
                 finish();
                 startActivity(intent);
@@ -61,12 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        restaurants.observe(this, new Observer<ArrayList<BriefRestaurantInfo>>() {
-            @Override
-            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
-                Log.d(TAG, "onChanged: " + briefRestaurantInfos);
-            }
-        });
+
 
     }
 

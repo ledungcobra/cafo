@@ -3,12 +3,12 @@ package com.ledungcobra.cafo.models.common_new;
 
 import java.io.Serializable;
 
-public class CartShop implements Serializable {
+public class CartItem implements Serializable {
     Food food;
     int number;
 
 
-    public CartShop(Food food, int number) {
+    public CartItem(Food food, int number) {
         this.food = food;
         this.number = number;
 

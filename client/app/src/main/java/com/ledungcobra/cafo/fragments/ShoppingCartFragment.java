@@ -17,19 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.cart.Price;
-import com.ledungcobra.cafo.models.common_new.CartShop;
+import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
 import com.ledungcobra.cafo.view_adapter.CartInformationShipping;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 public class ShoppingCartFragment extends Fragment {
-    List<CartShop> cartShops;
+    List<CartItem> cartShops;
 
     public interface callBack{
-        void callBackActivity(List<CartShop> cartShopList);
+        void callBackActivity(List<CartItem> cartShopList);
     }
+
+    private String resID;
     callBack listCart;
 
     public static ShoppingCartFragment newInstance(Bundle bundle){
@@ -43,6 +46,9 @@ public class ShoppingCartFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(getArguments()!=null){
+            resID = getArguments().getString("resID");
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -51,7 +57,7 @@ public class ShoppingCartFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         assert this.getArguments() != null;
-        cartShops= (List<CartShop>) this.getArguments().getSerializable("ListFood");
+        cartShops= (List<CartItem>) this.getArguments().getSerializable("ListFood");
 
         final View rootView = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
 
@@ -62,7 +68,7 @@ public class ShoppingCartFragment extends Fragment {
 
         recyclerView.setAdapter(cartAdapterRecyclerView);
         int sumOfCost = 0;
-        for (CartShop cartShop: cartShops){
+        for (CartItem cartShop: cartShops){
             sumOfCost += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
         }
         //Click event
@@ -70,7 +76,7 @@ public class ShoppingCartFragment extends Fragment {
             @Override
             public void onAddClick(int position) {
                 int sumOfCostNew=0;
-                for (CartShop cartShop: cartShops){
+                for (CartItem cartShop: cartShops){
                     sumOfCostNew += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
                 }
 
@@ -89,7 +95,7 @@ public class ShoppingCartFragment extends Fragment {
                 }
 
                 int sumOfCostNew=0;
-                for (CartShop cartShop: cartShops){
+                for (CartItem cartShop: cartShops){
                     sumOfCostNew += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
                 }
 
@@ -108,7 +114,8 @@ public class ShoppingCartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CartInformationShipping.class);
-                //intent.putExtra("Info", (Serializable) cartShops);
+                intent.putExtra(getActivity().getString(R.string.cart_items), (Serializable) cartShops);
+                intent.putExtra(getActivity().getString(R.string.res_id),resID);
                 startActivity(intent);
             }
         });

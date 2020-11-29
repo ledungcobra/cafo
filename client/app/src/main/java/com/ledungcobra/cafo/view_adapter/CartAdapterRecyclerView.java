@@ -12,14 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.common_new.CartShop;
+import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRecyclerView.CartViewHolder> {
     LayoutInflater mInflater;
-    List<CartShop> cartShops;
+    List<CartItem> cartShops;
     OnItemClickListener mListener;
     int count = 1;
 
@@ -31,7 +31,7 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
     public void setOnClickListener(OnItemClickListener listener){mListener = listener;};
 
 
-    public CartAdapterRecyclerView(Context context, List<CartShop> cartShops) {
+    public CartAdapterRecyclerView(Context context, List<CartItem> cartShops) {
         this.mInflater = LayoutInflater.from(context);
         this.cartShops = cartShops;
     }
@@ -67,7 +67,7 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
         ImageView ivFoodPhoto;
         ImageView ivPlus;
         ImageView ivSub;
-        CartShop cartShop;
+        CartItem cartShop;
 
         public CartViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -112,7 +112,7 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
         }
 
         @SuppressLint("SetTextI18n")
-        public void bindData(CartShop cartShop, int serial){
+        public void bindData(CartItem cartShop, int serial){
             this.cartShop = cartShop;
 
             tvSTT = itemView.findViewById(R.id.tvSTT);

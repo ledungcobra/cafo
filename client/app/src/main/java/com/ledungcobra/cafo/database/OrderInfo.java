@@ -7,12 +7,12 @@ import java.util.List;
 public class OrderInfo {
     private String resID;
     private UserPos userPos;
-    private List<FoodOrderItem> food;
+    private List<FoodOrderItem> foods;
 
-    public OrderInfo(String resID, UserPos userPos, List<FoodOrderItem> food) {
+    public OrderInfo(String resID, UserPos userPos, List<FoodOrderItem> foods) {
         this.resID = resID;
         this.userPos = userPos;
-        this.food = food;
+        this.foods = foods;
     }
 
     public String getResID() {
@@ -31,11 +31,11 @@ public class OrderInfo {
         this.userPos = userPos;
     }
 
-    public List<FoodOrderItem> getFood() {
-        return food;
+    public List<FoodOrderItem> getFoods() {
+        return foods;
     }
 
-    public void setFood(List<FoodOrderItem> food) {
-        this.food = food;
+    public void setFoods(List<FoodOrderItem> foods) {
+        this.foods = foods;
     }
 }
