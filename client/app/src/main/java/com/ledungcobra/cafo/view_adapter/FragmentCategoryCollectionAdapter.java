@@ -7,24 +7,29 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.ledungcobra.cafo.fragments.RestaurantCategoryFoodFragment;
 import com.ledungcobra.cafo.models.common_new.Food;
+import com.ledungcobra.cafo.models.restaurant_detail_new.Menu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentCategoryCollectionAdapter extends FragmentStatePagerAdapter {
-    int numOfTabs;
+    int numOfMenu;
     Fragment fragment = null;
-    List<Food> foodList;
-    public FragmentCategoryCollectionAdapter(@NonNull FragmentManager fm, int behavior, int numOfCategory) {
+    List<Menu> menuList;
+    public FragmentCategoryCollectionAdapter(@NonNull FragmentManager fm, int behavior, List<Menu> menuList) {
         super(fm, behavior);
-        this.numOfTabs =numOfCategory;
+        this.numOfMenu = menuList.size();
+        this.menuList = new ArrayList<>();
+        this.menuList.addAll(menuList);
+
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        for (int i=0; i<numOfTabs; i++){
+        for (int i=0; i<numOfMenu; i++){
             if (i==position){
-                fragment = RestaurantCategoryFoodFragment.newInstance(foodList);
+                fragment = RestaurantCategoryFoodFragment.newInstance(menuList.get(position).getFoods());
                 break;
             }
         }
@@ -33,15 +38,16 @@ public class FragmentCategoryCollectionAdapter extends FragmentStatePagerAdapter
 
     @Override
     public int getCount() {
-        return numOfTabs;
+        return numOfMenu;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Tab "+ String.valueOf(position);
+        return menuList.get(position).getName();
     }
 
-    public void getFoods(List<Food> foods){
-        this.foodList = foods;
+    public void getMenu(List<Menu> menuList){
+
     }
+
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@null"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -10,8 +11,10 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@null"
         app:tabMode="fixed"
+        android:layout_marginBottom="10dp"
+        app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white" />
 
     <androidx.viewpager.widget.ViewPager

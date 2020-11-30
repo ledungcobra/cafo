@@ -190,7 +190,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@android:color/white"
+            android:background="@null"
             android:elevation="16dp"
             android:orientation="horizontal"
             android:padding="5dp">
@@ -201,7 +201,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:text="Menu"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
 
@@ -217,8 +217,11 @@
             android:id="@+id/categoryTabLayout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:layout_marginBottom="10dp"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/colorPrimaryDark" />
+            android:background="@null"
+            app:tabIndicatorColor="@color/white"
+            app:tabSelectedTextColor="@color/white" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/categoryViewPager"
@@ -226,20 +229,6 @@
             android:layout_height="match_parent">
 
         </androidx.viewpager.widget.ViewPager>
-
-
-        <!--        <FrameLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:id="@+id/flRecyclerView">-->
-        <!--            <androidx.recyclerview.widget.RecyclerView-->
-        <!--                android:id="@+id/lvMenu"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                android:divider="@android:color/transparent"-->
-        <!--                android:dividerHeight="10dp" />-->
-        <!--        </FrameLayout>-->
-
 
     </LinearLayout>
 </FrameLayout>

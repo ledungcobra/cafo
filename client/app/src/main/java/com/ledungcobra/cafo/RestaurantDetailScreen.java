@@ -59,7 +59,7 @@ import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 public class RestaurantDetailScreen extends AppCompatActivity implements ShoppingCartFragment.callBack, RestaurantCategoryFoodFragment.DataUpdateListener {
 
     private static final String TAGKEO = "SCROLL" ;
-    RecyclerView lvMenu;
+//    RecyclerView lvMenu;
     ImageView ivLoc;
     ImageView ivDist;
     MenuListViewAdapter adapter;
@@ -72,6 +72,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     FragmentManager fm;
     List<CartItem> cartShops;
     private boolean isShowCard = true;
+    private boolean isListView = true;
 
     int cardHeight = -100;
 
@@ -138,14 +139,9 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
         final TabLayout tabLayout= findViewById(R.id.categoryTabLayout);
         final ViewPager viewPager = findViewById(R.id.categoryViewPager);
-//        lvMenu = findViewById(R.id.lvMenu);
+
         ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
-
         tvRestaurantName = findViewById(R.id.tvRestaurantName);
-//
-//        lvMenu.setLayoutManager(new LinearLayoutManager(this));
-//        lvMenu.setAdapter(adapter);
-
         tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
         phoneContainer = findViewById(R.id.phoneContainer);
         phoneContainer.setOnClickListener(new View.OnClickListener() {
@@ -167,8 +163,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
         final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
 
-        final FragmentCategoryCollectionAdapter collectionAdapter = new FragmentCategoryCollectionAdapter(getSupportFragmentManager(),
-                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,8);;
+
 
 
 
@@ -190,8 +185,15 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             @Override
             public void onResult(final RestaurantDetail result) {
                 //Menu theo loai
-                adapter.setFoods(result.getMenu().get(0).getFoods());
-                collectionAdapter.getFoods(result.getMenu().get(0).getFoods());
+
+                final FragmentCategoryCollectionAdapter collectionAdapter = new FragmentCategoryCollectionAdapter(getSupportFragmentManager(),
+                        FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,result.getMenu());
+
+
+                viewPager.setAdapter(collectionAdapter);
+                tabLayout.setupWithViewPager(viewPager);
+
+
                 Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
                 tvRestaurantName.setText(result.getName());
 
@@ -215,8 +217,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             }
         });
 
-        viewPager.setAdapter(collectionAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+
         //Toolbar setup menu
         Toolbar toolbar = findViewById(R.id.toolbarDetail);
         setSupportActionBar(toolbar);
@@ -244,142 +245,76 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 //            }
 //        });
 //
-//        lvMenu.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if( Math.abs(scrollY - oldScrollY)<400 && Math.abs(scrollY - oldScrollY)>50) {
-//                    if (scrollY - oldScrollY > 0 && isShowCard == true) {
-//                        Log.d(TAGKEO, "Keo len: " + "Y old: " + oldScrollY + " Y: " + scrollY);
-//                        Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card);
-//                        restaurantCard.startAnimation(animation);
-//
-//                        animation.setAnimationListener(new Animation.AnimationListener() {
-//                            @Override
-//                            public void onAnimationStart(Animation animation) {
-//                                hideComponents();
-//                            }
-//
-//                            @Override
-//                            public void onAnimationEnd(Animation animation) {
-//
-//                            }
-//
-//                            @Override
-//                            public void onAnimationRepeat(Animation animation) {
-//
-//                            }
-//                        });
-//                        isShowCard = !isShowCard;
-//
-//
-//                    } else if (scrollY - oldScrollY < 0 && isShowCard == false) {
-//                        Log.d(TAGKEO, "Keo xuong: " + "Y old: " + oldScrollY + " Y: " + scrollY);
-//                        Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
-//                        boolean shouldMove = false;
-//                        if(isListView[0]){
-//                            shouldMove = 0 == ((LinearLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
-//
-//                        }else{
-//                            shouldMove = 0 == ((GridLayoutManager)lvMenu.getLayoutManager()).findFirstVisibleItemPosition();
-//
-//                        }
-//                        if(shouldMove){
-//                            restaurantCard.startAnimation(animation);
-//                            animation.setAnimationListener(new Animation.AnimationListener() {
-//                                @Override
-//                                public void onAnimationStart(Animation animation) {
-//                                    showComponents();
-//                                }
-//
-//                                @Override
-//                                public void onAnimationEnd(Animation animation) {
-//
-//                                }
-//
-//                                @Override
-//                                public void onAnimationRepeat(Animation animation) {
-//
-//                                }
-//                            });
-//                            isShowCard = !isShowCard;
-//                            shouldMove = !shouldMove;
-//                        }
-//                    }
-//                }
-//
-//            }
-//        });
 
     }
 
-//    public void slideView(final View view,
-//                          int currentHeight,
-//                          final int newHeight,
-//                          final OnAnimationEnd callback
-//    ) {
-//        ValueAnimator slideAnimator = ValueAnimator
-//                .ofInt(currentHeight, newHeight)
-//                .setDuration(1000);
-//
-//        /* We use an update listener which listens to each tick
-//         * and manually updates the height of the view  */
-//
-//        slideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                int value = (Integer) animation.getAnimatedValue();
-//
-//                view.getLayoutParams().height = value;
-//                view.requestLayout();
-//
-//                if(newHeight == value){
-//                    callback.onEnd();
-//                }
-//
-//            }
-//        });
-//
-//        AnimatorSet animationSet = new AnimatorSet();
-//        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-//        animationSet.play(slideAnimator);
-//        animationSet.start();
-//    }
-//    private void showComponents() {
-//
-//        slideView(restaurantCard, 0, cardHeight, new OnAnimationEnd() {
-//            @Override
-//            public void onEnd() {
-//                ViewGroup.LayoutParams layoutParams = restaurantCard.getLayoutParams();
-//
-//
-//                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                restaurantCard.setLayoutParams(layoutParams);
-//            }
-//        });
-//
-//
-//
-//    }
-//
-//
-//    private void hideComponents() {
-//
-//        if(cardHeight == -100){
-//            cardHeight = restaurantCard.getMeasuredHeight();
-//        }
-//
-//        slideView(restaurantCard, cardHeight, 0, new OnAnimationEnd() {
-//            @Override
-//            public void onEnd() {
-//
-//            }
-//        });
+    public void slideView(final View view,
+                          int currentHeight,
+                          final int newHeight,
+                          final OnAnimationEnd callback
+    ) {
+        ValueAnimator slideAnimator = ValueAnimator
+                .ofInt(currentHeight, newHeight)
+                .setDuration(1000);
 
-//        ViewGroup.LayoutParams layoutParams= restaurantCard.getLayoutParams();
-//        layoutParams.height=0;
-//        restaurantCard.setVisibility(View.INVISIBLE);
-//        restaurantCard.setLayoutParams(layoutParams);
+        /* We use an update listener which listens to each tick
+         * and manually updates the height of the view  */
 
+        slideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+
+                view.getLayoutParams().height = value;
+                view.requestLayout();
+
+                if(newHeight == value){
+                    callback.onEnd();
+                }
+
+            }
+        });
+
+        AnimatorSet animationSet = new AnimatorSet();
+        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animationSet.play(slideAnimator);
+        animationSet.start();
+    }
+    private void showComponents() {
+
+        slideView(restaurantCard, 0, cardHeight, new OnAnimationEnd() {
+            @Override
+            public void onEnd() {
+                ViewGroup.LayoutParams layoutParams = restaurantCard.getLayoutParams();
+
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                restaurantCard.setLayoutParams(layoutParams);
+            }
+        });
+
+
+
+    }
+
+
+    private void hideComponents() {
+
+        if (cardHeight == -100) {
+            cardHeight = restaurantCard.getMeasuredHeight();
+        }
+
+        slideView(restaurantCard, cardHeight, 0, new OnAnimationEnd() {
+            @Override
+            public void onEnd() {
+
+            }
+        });
+
+        ViewGroup.LayoutParams layoutParams = restaurantCard.getLayoutParams();
+        layoutParams.height = 0;
+        restaurantCard.setVisibility(View.INVISIBLE);
+        restaurantCard.setLayoutParams(layoutParams);
+    }
 
 
 
@@ -434,5 +369,77 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     @Override
     public void onDataInit(List<Food> foods) {
         foods = adapter.getListFood();
+    }
+
+    @Override
+    public void onScrollChangeListener(final RecyclerView rvMenuFood) {
+        rvMenuFood.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if( Math.abs(scrollY - oldScrollY)<400 && Math.abs(scrollY - oldScrollY)>50) {
+                    if (scrollY - oldScrollY > 0 && isShowCard == true) {
+                        Log.d(TAGKEO, "Keo len: " + "Y old: " + oldScrollY + " Y: " + scrollY);
+                        Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card);
+                        restaurantCard.startAnimation(animation);
+
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                hideComponents();
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        isShowCard = !isShowCard;
+
+
+                    } else if (scrollY - oldScrollY < 0 && isShowCard == false) {
+                        Log.d(TAGKEO, "Keo xuong: " + "Y old: " + oldScrollY + " Y: " + scrollY);
+                        Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
+                        boolean shouldMove = false;
+
+                        if(isListView){
+                            shouldMove = 0 == ((LinearLayoutManager)rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+
+                        }else{
+                            shouldMove = 0 == ((GridLayoutManager)rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+
+                        }
+                        if(shouldMove){
+                            restaurantCard.startAnimation(animation);
+                            animation.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                    showComponents();
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                            isShowCard = !isShowCard;
+                            shouldMove = !shouldMove;
+                        }
+                    }
+                }
+
+            }
+        });
+
+
     }
 }

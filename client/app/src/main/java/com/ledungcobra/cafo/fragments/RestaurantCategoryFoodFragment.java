@@ -2,18 +2,23 @@ package com.ledungcobra.cafo.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 
+import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.common_new.Food;
 import com.ledungcobra.cafo.view_adapter.MenuGridViewAdapter;
@@ -29,26 +34,30 @@ import static android.widget.Toast.LENGTH_SHORT;
  * Use the {@link RestaurantCategoryFoodFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestaurantCategoryFoodFragment extends Fragment  {
+public class RestaurantCategoryFoodFragment extends Fragment {
 
     MenuListViewAdapter adapter;
     MenuGridViewAdapter adapterGrid;
-    List<CartItem> cartShops  = new ArrayList<CartItem>();
-    RecyclerView MenuFood;
-     List<Food> foods = new ArrayList<Food>();
+    List<CartItem> cartShops = new ArrayList<CartItem>();
+    RecyclerView rvMenuFood;
+    List<Food> foods = new ArrayList<Food>();
     private boolean isShowCard = true;
 
     public interface DataUpdateListener {
         void onDataUpdate(List<CartItem> mData);
+
         void onDataInit(List<Food> foods);
+
+        void onScrollChangeListener(RecyclerView rvMenuFood);
     }
 
     DataUpdateListener dataListener;
 
 
-    public interface callBackCategory{
+    public interface callBackCategory {
         void callBackActivity(List<CartItem> cartShopList);
     }
+
     ShoppingCartFragment.callBack listCart;
 
     public RestaurantCategoryFoodFragment() {
@@ -107,9 +116,11 @@ public class RestaurantCategoryFoodFragment extends Fragment  {
 //        });
         //adapter List
         adapter.setFoods(foods);
-        MenuFood =  view.findViewById(R.id.foodListRecyclerView);
-        MenuFood.setLayoutManager(new LinearLayoutManager(getContext()));
-        MenuFood.setAdapter(adapter);
+        rvMenuFood = view.findViewById(R.id.foodListRecyclerView);
+        rvMenuFood.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvMenuFood.setAdapter(adapter);
+        dataListener = (DataUpdateListener) getActivity();
+
         adapter.setOnClickListener(new MenuListViewAdapter.OnItemClickListener() {
             @Override
             public void onAddClick(int position) {
@@ -131,17 +142,17 @@ public class RestaurantCategoryFoodFragment extends Fragment  {
                 cartShops.removeAll(cartShops);
             }
         });
+
+
+        rvMenuFood.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                dataListener.onScrollChangeListener(rvMenuFood);
+            }
+        });
+
         return view;
     }
-    @Override
-    public void onAttach(@NonNull Activity activity) {
-        super.onAttach(activity);
 
-        if (activity instanceof DataUpdateListener){
-            dataListener = (DataUpdateListener) activity;
-        } else {
-            throw new ClassCastException(activity.toString());
-        }
-    }
 }
 
