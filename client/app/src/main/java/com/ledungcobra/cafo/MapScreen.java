@@ -38,6 +38,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.GsonBuilder;
+import com.ledungcobra.cafo.models.routing.Routing;
+import com.ledungcobra.cafo.network.MapService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +50,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
     private GoogleMap mMap;
@@ -128,10 +136,48 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         });
 
 
+
         Intent intent = getIntent();
         double lat = intent.getDoubleExtra("lat", 0);
         double long_ = intent.getDoubleExtra("long", 0);
         final LatLng pos = new LatLng(lat, long_);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.geoapify.com/")
+                .addConverterFactory(GsonConverterFactory.create(
+                        new GsonBuilder()
+                                .create()))
+                .build();
+
+        MapService mapService = retrofit.create(MapService.class);
+
+        mapService.getRoute("11.2240687,106.6674681|11.3397343,106.75436033775114",
+                "drive","e39be72fa4a1417db83845d0c9e238ce")
+                .enqueue(new Callback<Routing>() {
+                    @Override
+                    public void onResponse(Call<Routing> call, retrofit2.Response<Routing> response) {
+                        Log.d(TAG, "onResponse: "+response.body().toString());
+                        ArrayList<LatLng> locs = new ArrayList<>();
+                        try{
+                            for (List<Double> cord: response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)){
+                                locs.add(new LatLng(cord.get(1),cord.get(0)));
+                            }
+
+                            drawALine(locs);
+                        }catch (Exception e){
+                            Log.d(TAG, "Error"+e) ;
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Routing> call, Throwable t)
+                    {
+                        Log.d(TAG, "onFailure: "+t);
+
+                    }
+                }
+                );
 
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
@@ -139,56 +185,11 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .position(pos)
                 .title("Marker in Sydney"));
 
-        moveCamera(lat, long_, "Start");
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://dev.virtualearth.net/")
-//                .addConverterFactory(GsonConverterFactory.create(
-//                        new GsonBuilder()
-//                                .create()))
-//                .build();
-//
-//        FindRouteService findRouteService  = retrofit.create(FindRouteService.class);
-//        final ArrayList<LatLng> locations = new ArrayList<>();
-//        moveCamera(10.8830014,106.7795138,"dsd");
-//        findRouteService.getMapRoute("10.8800706,106.8086773",
-//                "10.8830014,106.7795138",
-//                "Am3HEJkqwNwrNzEWDBEpvxScysCUadoI854xMNk4bfCy8Ud_HAQQEIRgRvTElxIr").enqueue(
-//                new Callback<MapRouteInfo>() {
-//                    @RequiresApi(api = Build.VERSION_CODES.N)
-//                    @Override
-//                    public void onResponse(Call<MapRouteInfo> call, retrofit2.Response<MapRouteInfo> response) {
-//                        MapRouteInfo data = response.body();
-//                        if(data.getResourceSets().size()>0){
-//
-//                            data.getResourceSets().get(0).getResources().get(0).
-//                                            getRouteLegs().get(0).getItineraryItems().forEach(new Consumer<ItineraryItem>() {
-//                                @Override
-//                                public void accept(ItineraryItem itineraryItem) {
-//                                    Double lat = itineraryItem.getManeuverPoint().getCoordinates().get(0);
-//                                    Double long_ = itineraryItem.getManeuverPoint().getCoordinates().get(1);
-//                                    LatLng latLng = new LatLng(lat,long_ );
-//                                    locations.add(latLng);
-//                                }
-//                            });
-//
-//                            Log.d(TAG, "onResponse: "+locations);
-//
-//                            drawALine(locations);
-//
-//
-//
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<MapRouteInfo> call, Throwable t) {
-//                        Log.d(TAG, "onFailure: "+t);
-//                    }
-//                }
-//        );
+        moveCamera(11.2240687,106.6674681, "Start");
 
+
+//
+//
     }
 
     public void drawALine(ArrayList<LatLng> listLocsToDraw){
