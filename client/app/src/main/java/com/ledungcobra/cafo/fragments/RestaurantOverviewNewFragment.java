@@ -20,6 +20,7 @@ import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
@@ -28,15 +29,26 @@ import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
  */
 public class RestaurantOverviewNewFragment extends Fragment {
 
+    ArrayList<BriefRestaurantInfo> restaurantList;
+    fragmentCallBack fragmentCallBack;
+
+    public interface fragmentCallBack{
+        void onNavigateToOverviewScreen(String restaurantID);
+    }
+
 
     public RestaurantOverviewNewFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static RestaurantOverviewNewFragment newInstance() {
+    public static RestaurantOverviewNewFragment newInstance(List<BriefRestaurantInfo> restaurantList) {
         RestaurantOverviewNewFragment fragment = new RestaurantOverviewNewFragment();
         Bundle args = new Bundle();
+
+        ArrayList<BriefRestaurantInfo> restaurantArrayList = new ArrayList<BriefRestaurantInfo>();
+        restaurantArrayList.addAll(restaurantList);
+        args.putSerializable("RestaurantNewList",restaurantArrayList);
 
         fragment.setArguments(args);
         return fragment;
@@ -55,13 +67,15 @@ public class RestaurantOverviewNewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_restaurant_overview_new_list, container, false);
 
         final RestaurantOverviewItemAdapter adapter = new RestaurantOverviewItemAdapter(getContext());
-
+        restaurantList = new ArrayList<BriefRestaurantInfo>();
+        restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantNewList");
+        adapter.setRestaurants(restaurantList);
         RecyclerView recyclerView =   (RecyclerView)view;
+//        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack)getActivity();
         adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
             @Override
             public void onClick(String restaurantID) {
-                Log.d(TAG, "onClick: "+restaurantID);
-                Intent intent = new Intent(getContext(), RestaurantDetailScreen.class);
+                Intent intent = new Intent(getActivity(), RestaurantDetailScreen.class);
                 intent.putExtra(EXTRA_KEY,restaurantID);
                 startActivity(intent);
             }
@@ -69,30 +83,6 @@ public class RestaurantOverviewNewFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        Repository.getInstance().fetchAllRestaurants(1,9,new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
-            @Override
-            public void stopProgressIndicator() {
-
-            }
-
-            @Override
-            public void startProgressIndicator() {
-
-            }
-
-            @Override
-            public void onResult(ArrayList<BriefRestaurantInfo> result) {
-                adapter.setRestaurants(result);
-            }
-
-            @Override
-            public void onFailure(Error error) {
-
-            }
-        });
-
-
 
 
         return view;
