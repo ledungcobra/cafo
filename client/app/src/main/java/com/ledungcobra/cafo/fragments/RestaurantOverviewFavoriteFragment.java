@@ -20,6 +20,7 @@ import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
@@ -28,14 +29,20 @@ import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
  */
 public class RestaurantOverviewFavoriteFragment extends Fragment {
 
+    ArrayList<BriefRestaurantInfo> restaurantList;
+
 
     public RestaurantOverviewFavoriteFragment() {
     }
 
 
-    public static RestaurantOverviewFavoriteFragment newInstance() {
+    public static RestaurantOverviewFavoriteFragment newInstance(List<BriefRestaurantInfo> restaurantList) {
         RestaurantOverviewFavoriteFragment fragment = new RestaurantOverviewFavoriteFragment();
         Bundle args = new Bundle();
+        ArrayList<BriefRestaurantInfo> restaurantArrayList = new ArrayList<BriefRestaurantInfo>();
+        restaurantArrayList.addAll(restaurantList);
+        args.putSerializable("RestaurantFavoriteList",restaurantArrayList);
+
 
         fragment.setArguments(args);
         return fragment;
@@ -56,44 +63,25 @@ public class RestaurantOverviewFavoriteFragment extends Fragment {
 
 
         final RestaurantOverviewItemAdapter adapter = new RestaurantOverviewItemAdapter(getContext());
+        restaurantList = new ArrayList<BriefRestaurantInfo>();
+        restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantFavoriteList");
 
+        adapter.setRestaurants(restaurantList);
         RecyclerView recyclerView =   (RecyclerView)view;
+//        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack) getActivity();
+//        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
+//            @Override
+//            public void onClick(String restaurantID) {
+//                fragmentCallBack.onNavigateToOverviewScreen(restaurantID);
+//            }
+//        });
         recyclerView.setAdapter(adapter);
-
-        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
-            @Override
-            public void onClick(String restaurantID) {
-                Intent intent = new Intent(getContext(), RestaurantDetailScreen.class);
-                intent.putExtra(EXTRA_KEY,restaurantID);
-                startActivity(intent);
-
-            }
-        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Repository.getInstance().fetchAllRestaurants(2, 20, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
-            @Override
-            public void stopProgressIndicator() {
 
-            }
 
-            @Override
-            public void startProgressIndicator() {
 
-            }
-
-            @Override
-            public void onResult(ArrayList<BriefRestaurantInfo> result) {
-
-                adapter.setRestaurants(result);
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                Log.d("CALL_API", "onFailure: "+error);
-            }
-        });
         return view;
     }
 }

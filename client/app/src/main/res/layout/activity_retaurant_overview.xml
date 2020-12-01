@@ -1,39 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:id="@+id/toolbarOverviewTop">
-
-    </androidx.appcompat.widget.Toolbar>
-<com.google.android.material.tabs.TabLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/toolbarOverviewTop"
-    android:background="@color/colorPrimary"
-    app:tabSelectedTextColor="@color/white"
-    app:tabTextColor="@color/black"
-    app:tabMode="fixed"
-    android:id="@+id/tabLayout"/>
-    <androidx.viewpager.widget.ViewPager
+    android:background="@drawable/gradient_background"
+    android:layout_height="match_parent">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/overviewDrawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tabLayout"
-        android:layout_above="@id/bottomOverviewToolbar"
-        android:id="@+id/vpRestaurant"/>
+        android:layout_gravity="start">
 
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:id="@+id/bottomOverviewToolbar"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content">
 
-    </androidx.appcompat.widget.Toolbar>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarOverviewTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null">
+
+            </androidx.appcompat.widget.Toolbar>
+            <FrameLayout
+                android:id="@+id/OverViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            </FrameLayout>
+        </LinearLayout>
+
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/overviewNav"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimaryDark"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|bottom"
+                        android:layout_weight="1"
+                        android:fontFamily="cursive"
+                        android:text="Cafo"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:layout_weight="1"
+                        android:src="@drawable/cafo" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listMenuRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:background="#d3dbe2" />
+            </LinearLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</LinearLayout>
