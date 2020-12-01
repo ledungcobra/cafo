@@ -17,7 +17,7 @@ public class Step {
     private Integer toIndex;
     @SerializedName("distance")
     @Expose
-    private Integer distance;
+    private Double distance;
     @SerializedName("time")
     @Expose
     private Integer time;
@@ -46,11 +46,11 @@ public class Step {
         this.toIndex = toIndex;
     }
 
-    public Integer getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(Integer distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 

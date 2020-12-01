@@ -61,9 +61,14 @@ public class Repository {
             @Override
             public void onResponse(Call<ArrayList<BriefRestaurantInfo>> call, Response<ArrayList<BriefRestaurantInfo>> response) {
                 callback.stopProgressIndicator();
-                listRestaurants.setValue(response.body());
-                callback.onResult(response.body());
+                if (response.code() == 200) {
+                    listRestaurants.setValue(response.body());
+                    callback.onResult(response.body());
+                }else{
+                    callback.onFailure(new Error("Something went wrong"));
+                }
             }
+
 
             @Override
             public void onFailure(Call<ArrayList<BriefRestaurantInfo>> call, Throwable t) {
@@ -85,7 +90,14 @@ public class Repository {
         restaurantService.getCities().enqueue(new Callback<ArrayList<City>>() {
             @Override
             public void onResponse(Call<ArrayList<City>> call, Response<ArrayList<City>> response) {
-                cites.setValue(response.body());
+                callback.stopProgressIndicator();
+                if(response.code() == 200){
+
+                    cites.setValue(response.body());
+
+                }else{
+                    callback.onFailure(new Error("Something went wrong"));
+                }
             }
 
             @Override
@@ -104,13 +116,19 @@ public class Repository {
 
     public void getRestaurant(String id, final UIThreadCallBack<RestaurantDetail, Error> callback) {
         callback.startProgressIndicator();
-        Log.d("CALL_API", "getRestaurant: "+id);
+        Log.d("CALL_API", "getRestaurant: " + id);
         restaurantService.getRestaurant(id).enqueue(new Callback<RestaurantDetail>() {
             @Override
             public void onResponse(Call<RestaurantDetail> call, Response<RestaurantDetail> response) {
                 callback.stopProgressIndicator();
-                callback.onResult(response.body());
+
+                if(response.code() == 200){
+                    callback.onResult(response.body());
+                }else{
+                    callback.onFailure(new Error("Something went wrong"));
+                }
             }
+
 
             @Override
             public void onFailure(Call<RestaurantDetail> call, Throwable t) {
