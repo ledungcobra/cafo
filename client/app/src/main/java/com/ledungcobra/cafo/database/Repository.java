@@ -1,18 +1,22 @@
 package com.ledungcobra.cafo.database;
 
+import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.GsonBuilder;
+import com.ledungcobra.cafo.dao.TrackingRestaurantDao;
 import com.ledungcobra.cafo.models.city.City;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.network.RestaurantService;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,12 +25,15 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
+    private TrackingRestaurantDao trackingRestaurantDao;
+    private LiveData<List<TrackingRestaurant>> trackingRestaurants;
 
     private static final String BASE_URL = "https://cafo-api.herokuapp.com/";
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> listRestaurants = new MutableLiveData<>(new ArrayList<BriefRestaurantInfo>());
     private static Repository INSTANCE;
     private RestaurantService restaurantService;
     private MutableLiveData<ArrayList<City>> cites = new MutableLiveData<>(new ArrayList<City>());
+
 
     public static Repository getInstance() {
         if (INSTANCE == null) {
@@ -141,6 +148,22 @@ public class Repository {
     public RestaurantService getRestaurantService() {
         return this.restaurantService;
     }
+    public void initDb(Application app){
+        TrackingRestaurantRoomDatabase db = TrackingRestaurantRoomDatabase.getDatabase(app);
+        this.trackingRestaurantDao = db.trackingRestaurantDao();
+        trackingRestaurants = trackingRestaurantDao.getAllTrackingRestaurants();
+    }
 
+    public LiveData<List<TrackingRestaurant>> getAllTrackingRestaurants(){
+        return trackingRestaurants;
+    }
 
+    public void insert(final TrackingRestaurant restaurant){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                trackingRestaurantDao.insert(restaurant);
+            }
+        }) .start();
+    }
 }

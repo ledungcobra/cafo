@@ -13,7 +13,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
+import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.view_adapter.OverviewViewPagerAdapter;
 
@@ -75,7 +77,7 @@ public class RestaurantOverViewFragment extends Fragment implements RestaurantCl
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         ViewPager viewPager = view.findViewById(R.id.vpRestaurant);
-        OverviewViewPagerAdapter viewPagerAdapter = new OverviewViewPagerAdapter(getChildFragmentManager(),FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,restaurantList);
+        OverviewViewPagerAdapter viewPagerAdapter = new OverviewViewPagerAdapter(getChildFragmentManager(),FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,restaurantList,getActivity());
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);

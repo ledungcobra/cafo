@@ -1,47 +1,46 @@
 package com.ledungcobra.cafo.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.RestaurantDetailScreen;
-import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
-import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
-import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
-
 /**
  * A fragment representing a list of Items.
  */
 public class RestaurantOverviewVisitedFragment extends Fragment {
-    ArrayList<BriefRestaurantInfo> restaurantList;
+    LiveData<List<BriefRestaurantInfo>> restaurantList = new MutableLiveData<List<BriefRestaurantInfo>>(new ArrayList<BriefRestaurantInfo>());
+    RestaurantOverviewItemAdapter adapter;
 
     public RestaurantOverviewVisitedFragment() {
     }
 
+    public  LiveData<List<BriefRestaurantInfo>>  getRestaurantList() {
+        return restaurantList;
+    }
 
-    public static RestaurantOverviewVisitedFragment newInstance(List<BriefRestaurantInfo> restaurantList) {
+    public void setRestaurantList( LiveData<List<BriefRestaurantInfo>>  restaurantList) {
+        this.restaurantList = restaurantList;
+    }
+
+    public static RestaurantOverviewVisitedFragment newInstance(MutableLiveData<List<BriefRestaurantInfo>> restaurantList) {
         RestaurantOverviewVisitedFragment fragment = new RestaurantOverviewVisitedFragment();
         Bundle args = new Bundle();
-        ArrayList<BriefRestaurantInfo> restaurantArrayList = new ArrayList<BriefRestaurantInfo>();
-        restaurantArrayList.addAll(restaurantList);
-        args.putSerializable("RestaurantVisitedList",restaurantArrayList);
-
-
-
+        fragment.setRestaurantList(restaurantList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,6 +49,16 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        restaurantList.observe(this, new Observer<List<BriefRestaurantInfo>>() {
+            @Override
+            public void onChanged(List<BriefRestaurantInfo> briefRestaurantInfos) {
+                if(briefRestaurantInfos!=null){
+                    adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
+                }
+            }
+        });
+
+
 
     }
 
@@ -57,13 +66,13 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_overview_visited_list, container, false);
-        restaurantList = new ArrayList<BriefRestaurantInfo>();
-        restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantVisitedList");
+//        List<BriefRestaurantInfo> tRestaurantList = new ArrayList<BriefRestaurantInfo>();
+//        tRestaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantVisitedList");
+//
 
+         adapter = new RestaurantOverviewItemAdapter(getContext());
 
-        final RestaurantOverviewItemAdapter adapter = new RestaurantOverviewItemAdapter(getContext());
-
-        adapter.setRestaurants(restaurantList);
+        adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) restaurantList.getValue());
         RecyclerView recyclerView =   (RecyclerView)view;
 //        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack) getActivity();
 //        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {

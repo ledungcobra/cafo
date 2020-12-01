@@ -30,4 +30,6 @@
     <string name="res_id">resID</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
+    <string name="create_an_account">Create An Account</string>
+    <string name="user_info">USER_INFO</string>
 </resources>
