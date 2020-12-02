@@ -2,7 +2,6 @@ package com.ledungcobra.cafo.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,8 @@ import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
-import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
 import java.util.ArrayList;
@@ -76,6 +75,7 @@ public class RestaurantOverviewNewFragment extends Fragment {
             @Override
             public void onClick(String restaurantID) {
                 Intent intent = new Intent(getActivity(), RestaurantDetailScreen.class);
+                Repository.getInstance().insert(new TrackingRestaurant(restaurantID,TrackingRestaurant.VISITED));
                 intent.putExtra(EXTRA_KEY,restaurantID);
                 startActivity(intent);
             }

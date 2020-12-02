@@ -2,6 +2,8 @@ package com.ledungcobra.cafo;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -10,17 +12,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.models.user.UserInfo;
@@ -55,6 +58,8 @@ public class Login extends AppCompatActivity {
     String TAG = "CALL_API";
 
     View lnSignInAs;
+    ProgressBar progressBar;
+    private String currentButtonText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,8 @@ public class Login extends AppCompatActivity {
         final String ROLE= pref.getString(getString(R.string.role), "");
         //Initial
         initUI();
+        //Init database
+        Repository.getInstance().initDb(getApplication());
 
 
         if (!TOKEN.equals("") && !ROLE.equals("")) {
@@ -75,12 +82,12 @@ public class Login extends AppCompatActivity {
             UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
                 @Override
                 public void stopProgressIndicator() {
-
+                    stopProgressBar();
                 }
 
                 @Override
                 public void startProgressIndicator() {
-
+                    startProgressBar();
                 }
 
                 @Override
@@ -97,11 +104,10 @@ public class Login extends AppCompatActivity {
                 public void onFailure(Error error) {
 
                     Toast.makeText(Login.this, "User session expired", Toast.LENGTH_SHORT).show();
-                    //Clean all data stored Shared pref when session expired
                     Editor editor = pref.edit();
                     editor.clear();
                     editor.apply();
-
+                    showErrorDialog("User hết hạn, đăng nhập thất bại");
 
                 }
             });
@@ -113,6 +119,18 @@ public class Login extends AppCompatActivity {
 
     }
 
+    private void startProgressBar(){
+        progressBar.setVisibility(View.VISIBLE);
+        currentButtonText = btnCreateAccount.getText().toString();
+        btnCreateAccount.setText("");
+    }
+
+    private void stopProgressBar(){
+        progressBar.setVisibility(View.GONE);
+        if (currentButtonText != null) {
+            btnCreateAccount.setText(currentButtonText);
+        }
+    }
     private void initUI() {
         btnSignIn = findViewById(R.id.buttonSignIn);
         btnCreateAccount = findViewById(R.id.buttonCreateAccount);
@@ -133,6 +151,8 @@ public class Login extends AppCompatActivity {
         tvSignUp = findViewById(R.id.tvSignUp);
 
         lnSignInAs = findViewById(R.id.ln_sign_as);
+
+        progressBar = findViewById(R.id.progress_circular);
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -161,116 +181,136 @@ public class Login extends AppCompatActivity {
                     }
 
                     if (shouldRun) {
-                        UserApiHandler.getInstance().signIn(edtUsername.getText().toString(),
-                                edtPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
-                                    @Override
-                                    public void stopProgressIndicator() {
-
-                                    }
-
-                                    @Override
-                                    public void startProgressIndicator() {
-
-                                    }
-
-                                    @Override
-                                    public void onResult(UserInfo result) {
-
-                                        try {
-
-                                            storeUserData(result.getAccessToken(), result.getRoles().get(0));
-                                            if (result.getRoles().get(0).equals("customer")) {
-                                                startActivity(new Intent(Login.this, MainActivity.class));
-                                            } else if (result.getRoles().get(0).equals("shipper")) {
-                                                startActivity(new Intent(Login.this, DriverScreen.class));
-                                            }
-                                        } catch (Exception e) {
-                                            Log.d("CALL_API", "onResult: " + e);
-                                            Toast.makeText(Login.this, "Server Error", Toast.LENGTH_SHORT).show();
+                        if(validateUserSignIn()){
+                            UserApiHandler.getInstance().signIn(edtUsername.getText().toString(),
+                                    edtPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
+                                        @Override
+                                        public void stopProgressIndicator() {
+                                            stopProgressBar();
                                         }
 
-                                    }
+                                        @Override
+                                        public void startProgressIndicator() {
+                                            startProgressBar();
+                                        }
 
-                                    @Override
-                                    public void onFailure(Error error) {
-                                        Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                        @Override
+                                        public void onResult(UserInfo result) {
+                                            onSignInResult(result);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Error error) {
+                                            Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
+                                            showErrorDialog("Đăng nhập thất bại");
+                                        }
+                                    });
+                        }else{
+                            showErrorDialog("Input nhập vào không hợp lệ");
+                        }
                     } else {
                         Toast.makeText(Login.this, "You must complete all field", Toast.LENGTH_SHORT).show();
                     }
 
                 } else { // User want to Create an account
-                    //TODO: CHECK
-                    ArrayList<String> roles = new ArrayList<>();
-                    roles.add(radioGroupLoginAs.getCheckedRadioButtonId() == R.id.radioCustomer ? "customer" : "shipper");
-                    UserApiHandler.getInstance().signUp( edtUsername.getText().toString(),
-                            edtPassword.getText().toString(),
-                            edtEmail.getText().toString(), roles, edtPhoneNumber.getText().toString(), new UIThreadCallBack<Void, Error>() {
-                                @Override
-                                public void stopProgressIndicator() {
+                    if(validateUserSignUp()){
+                        ArrayList<String> roles = new ArrayList<>();
+                        roles.add(radioGroupLoginAs.getCheckedRadioButtonId() == R.id.radioCustomer ? "customer" : "shipper");
+                        UserApiHandler.getInstance().signUp( edtUsername.getText().toString(),
+                                edtPassword.getText().toString(),
+                                edtEmail.getText().toString(), roles, edtPhoneNumber.getText().toString(), new UIThreadCallBack<Void, Error>() {
+                                    @Override
+                                    public void stopProgressIndicator() {
+                                        stopProgressBar();
+                                    }
 
-                                }
+                                    @Override
+                                    public void startProgressIndicator() {
+                                        startProgressBar();
+                                    }
 
-                                @Override
-                                public void startProgressIndicator() {
+                                    @Override
+                                    public void onResult(Void result) {
 
-                                }
-
-                                @Override
-                                public void onResult(Void result) {
-
-                                    UserApiHandler.getInstance().signIn(edtUsername.getText().toString(),
-                                            edtPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
-                                                @Override
-                                                public void stopProgressIndicator() {
-
-                                                }
-
-                                                @Override
-                                                public void startProgressIndicator() {
-
-                                                }
-
-                                                @Override
-                                                public void onResult(UserInfo result) {
-                                                    Log.d(TAG, "onResult: "+result);
-                                                    assert  result!=null;
-                                                    storeUserData(result.getAccessToken(), result.getRoles().get(0));
-
-                                                    if (result.getRoles().get(0).equals("shipper")) {
-                                                        startActivity(new Intent(Login.this, DriverScreen.class));
-                                                    } else if (result.getRoles().get(0).equals("customer")) {
-                                                        startActivity(new Intent(Login.this, MainActivity.class));
+                                        UserApiHandler.getInstance().signIn(edtUsername.getText().toString(),
+                                                edtPassword.getText().toString(), new UIThreadCallBack<UserInfo, Error>() {
+                                                    @Override
+                                                    public void stopProgressIndicator() {
+                                                        stopProgressBar();
                                                     }
-                                                }
 
-                                                @Override
-                                                public void onFailure(Error error) {
-                                                    Log.d(TAG, "onFailure: "+error);
-                                                }
-                                            });
-                                }
+                                                    @Override
+                                                    public void startProgressIndicator() {
+                                                        startProgressBar();
+                                                    }
 
-                                @Override
-                                public void onFailure(Error error) {
-                                    Log.d(TAG, "onFailure: "+error);
+                                                    @Override
+                                                    public void onResult(UserInfo result) {
+                                                        onSignInResult(result);
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Error error) {
+                                                        showErrorDialog("Đăng nhập thất bại");
+                                                    }
+                                                });
+                                    }
+
+                                    @Override
+                                    public void onFailure(Error error) {
+                                        Log.d(TAG, "onFailure: "+error);
+                                        showErrorDialog("Đăng nhập thất bại");
+                                    }
                                 }
-                            }
-                    );
+                        );
+                    }else{
+                        showErrorDialog("Thông tin nhập vào không đúng vui lòng kiểm tra lại");
+                    }
 
                 }
 
             }
         });
 
-        UserApiHandler.getInstance().getUserAccessToken().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                Log.d(TAG, "User token "+ s);
-            }
-        });
 
+    }
+
+    private boolean validateUserSignUp() {
+        return !edtFullName.getText().toString().equals("")&&
+                !edtUsername.getText().toString().equals("")&&
+                !edtEmail.getText().toString().equals("")&&
+                !edtPassword.getText().toString().equals("")
+                && edtPassword.getText().toString().equals(edtConfirmPassword.getText().toString());
+    }
+
+    private void onSignInResult(UserInfo result){
+        try {
+
+            storeUserData(result.getAccessToken(), result.getRoles().get(0));
+            if (result.getRoles().get(0).equals("customer")) {
+                startActivity(new Intent(Login.this, MainActivity.class));
+            } else if (result.getRoles().get(0).equals("shipper")) {
+                startActivity(new Intent(Login.this, DriverScreen.class));
+            }
+        } catch (Exception e) {
+            Log.d("CALL_API", "onResult: " + e);
+            Toast.makeText(Login.this, "Server Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private boolean validateUserSignIn(){
+        return !edtUsername.getText().toString().equals("") && !edtPassword.getText().toString().equals("");
+    }
+    private void showErrorDialog(String message){
+        new AlertDialog.Builder(this).setTitle("Đăng nhập thất bại")
+                .setMessage(message)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+
+                .show();
     }
 
     private void storeUserData(String accessToken, String role) {
