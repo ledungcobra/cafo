@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
-
+            <!-- API can't handle this yet
             <TextView
                 android:id="@+id/tvNote"
                 android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                     android:id="@+id/editFreeShipCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>-->
         </LinearLayout>
     </ScrollView>
 
