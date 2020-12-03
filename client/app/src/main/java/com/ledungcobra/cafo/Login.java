@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -26,11 +27,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
+import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.models.user.UserInfo;
 import com.ledungcobra.cafo.ui_calllback.OnAnimationEnd;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -76,6 +79,12 @@ public class Login extends AppCompatActivity {
         //Init database
         Repository.getInstance().initDb(getApplication());
 
+        Repository.getInstance().getAllTrackingRestaurants().observe(this, new Observer<List<TrackingRestaurant>>() {
+            @Override
+            public void onChanged(List<TrackingRestaurant> trackingRestaurants) {
+                Log.d(TAG, "Tracking: "+trackingRestaurants);
+            }
+        });
 
         if (!TOKEN.equals("") && !ROLE.equals("")) {
             UserApiHandler.getInstance().setUserAccessToken(TOKEN);

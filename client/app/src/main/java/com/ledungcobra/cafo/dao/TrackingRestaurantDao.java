@@ -13,9 +13,9 @@ import java.util.List;
 @Dao
 public interface TrackingRestaurantDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(TrackingRestaurant trackingRestaurant);;
-
+    //TODO: Gọi khi người dùng đăng nhập account mới
     @Query("DELETE FROM tracking_restaurant_table")
     void deleteAll();
 

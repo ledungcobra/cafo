@@ -1,88 +1,96 @@
 package com.ledungcobra.cafo.view_adapter;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.fragments.RestaurantOverviewFavoriteFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverviewNewFragment;
-import com.ledungcobra.cafo.fragments.RestaurantOverviewVisitedFragment;
+import com.ledungcobra.cafo.fragments.RestaurantOverviewTabViewFragment;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ledungcobra.cafo.models.user.TrackingRestaurant.FAVORITE;
 import static com.ledungcobra.cafo.models.user.TrackingRestaurant.VISITED;
 
 public class OverviewViewPagerAdapter extends FragmentPagerAdapter {
 
+    //TODO: Dũng Filter
     List<BriefRestaurantInfo> newBriefRestaurantInfoList;
-    LifecycleOwner activity;
+    LifecycleOwner lifecycleOwner;
 
     public OverviewViewPagerAdapter(@NonNull FragmentManager fm,
                                     int behavior,
                                     List<BriefRestaurantInfo> newBriefRestaurantInfoList,
                                     LifecycleOwner activity) {
         super(fm, behavior);
-        this.newBriefRestaurantInfoList = new ArrayList<BriefRestaurantInfo>();
-        this.activity = activity;
+        lifecycleOwner = activity;
+        this.newBriefRestaurantInfoList = newBriefRestaurantInfoList;
         this.newBriefRestaurantInfoList.addAll(newBriefRestaurantInfoList);
     }
 
-    Fragment newFragment,visitedFragment,favoriteFragment;
-    private MutableLiveData<List<BriefRestaurantInfo>> filter(final int type, final List<BriefRestaurantInfo> data){
-        final MutableLiveData<List<BriefRestaurantInfo>> result = new MutableLiveData<List<BriefRestaurantInfo>>(new ArrayList<BriefRestaurantInfo>());
+    Fragment newFragment, visitedFragment, favoriteFragment;
 
-        Repository.getInstance().getAllTrackingRestaurants().observe(activity, new Observer<List<TrackingRestaurant>>() {
+    public LiveData<ArrayList<BriefRestaurantInfo>> filter(final int type) {
+        final MutableLiveData<ArrayList<BriefRestaurantInfo>> filterResult = new MutableLiveData<>(new ArrayList<BriefRestaurantInfo>());
+        Repository.getInstance().getAllTrackingRestaurants().observe(lifecycleOwner, new Observer<List<TrackingRestaurant>>() {
             @Override
-            public void onChanged(List<TrackingRestaurant> trackingRestaurants) {
-                List<BriefRestaurantInfo> listFav = new ArrayList<>();
-                for(TrackingRestaurant trackingRestaurant: trackingRestaurants){
-                    if(trackingRestaurant.getType() != type ) continue;
-                    boolean exist = false;
-                    BriefRestaurantInfo currentRes = null;
-                    for(BriefRestaurantInfo res: data){
-                        if(res.getId().equals(trackingRestaurant.getId())){
-                            exist = true;
-                            currentRes = res;
-                            break;
+            public void onChanged(final List<TrackingRestaurant> trackingRestaurants) {
+                Log.d("CALL_API", "Number of tracking ress " + trackingRestaurants.size());
+                if (trackingRestaurants != null && trackingRestaurants.size() > 0) {
+                    List<BriefRestaurantInfo> filterData = new ArrayList<>();
+
+                    for (BriefRestaurantInfo briefRes : newBriefRestaurantInfoList) {
+                        boolean exist = false;
+                        for (TrackingRestaurant res : trackingRestaurants) {
+                            if (res.getType() == type && res.getId().equals( briefRes.getId())) {
+                                exist = true;
+                                break;
+                            }
                         }
+
+                        if (exist) {
+                            filterData.add(briefRes);
+
+                            Log.d("CALL_APU", "onChanged: " + briefRes);
+                        }
+
                     }
-                    if(exist){
-
-                        listFav.add(currentRes);
-
-                    }
-
+                    filterResult.setValue((ArrayList<BriefRestaurantInfo>) filterData);
                 }
 
-                result.setValue(listFav);
+
+
+
             }
         });
-        return result;
+        return filterResult;
     }
+
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (position==0){
+        if (position == 0) {
 
-            newFragment = newFragment == null? RestaurantOverviewNewFragment.newInstance(newBriefRestaurantInfoList):newFragment;
+            newFragment = newFragment == null ? RestaurantOverviewNewFragment.newInstance(newBriefRestaurantInfoList) : newFragment;
+
             return newFragment;
-        }
-        else if(position==1){
-            visitedFragment = visitedFragment == null? RestaurantOverviewVisitedFragment.newInstance(filter(VISITED,newBriefRestaurantInfoList)):visitedFragment;
+        } else if (position == 1) {
+            visitedFragment = visitedFragment == null ? RestaurantOverviewTabViewFragment.newInstance(filter(VISITED)) : visitedFragment;
             return visitedFragment;
-        }
-        else if (position==2){
-
-            favoriteFragment = favoriteFragment == null? RestaurantOverviewFavoriteFragment.newInstance(newBriefRestaurantInfoList):favoriteFragment;
+        } else if (position == 2) {
+            favoriteFragment = favoriteFragment == null ? RestaurantOverviewTabViewFragment.newInstance(filter(FAVORITE)) : favoriteFragment;
             return favoriteFragment;
         }
 
@@ -97,13 +105,11 @@ public class OverviewViewPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        if (position==0){
+        if (position == 0) {
             return "New";
-        }
-        else if(position==1){
+        } else if (position == 1) {
             return "Visited";
-        }
-        else if (position==2){
+        } else if (position == 2) {
             return "Favorite";
         }
         return null;

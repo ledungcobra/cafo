@@ -3,6 +3,8 @@ package com.ledungcobra.cafo;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,7 @@ import java.util.Objects;
 public class RestaurantsOverviewScreen extends AppCompatActivity implements RestaurantClickListener, RestaurantOverviewNewFragment.fragmentCallBack {
     //    RecyclerView recyclerView;
 //    RestaurantOverviewItemAdapter adapter;
+    //TODO: Xử lí phân trang  ..Khi user kéo hết list thì load thêm thông qua class Repository
     RecyclerView.LayoutManager layoutManager;
     ImageButton btnInfo;
 
@@ -53,6 +56,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders"};
+    //TODO: Thay đổi ICON cho phù hợp
     public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24};
 
     FragmentManager fm = getSupportFragmentManager();
@@ -197,8 +201,10 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
         adapter.setOnClickListener(new MenuNavigationDrawerAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                if (position == 1) {
 
+                if (position == 1) {
+                    //TODO: Chèn thêm hình vào User profile
+                    closeDrawer();
                     final Fragment fragment = ProfileUserFragment.newInstance();
                     UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
                         @Override
@@ -231,8 +237,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
                         }
                     });
 
-                }
-                if (position == 0) {
+                }else if (position == 0) {
                     if (fm.findFragmentByTag("Overview") == null) {
                         ft = fm.beginTransaction();
                         ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
@@ -242,6 +247,10 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
                     }
 
+                }else if(position == 2){
+                    Log.d("CALL_API", "Customer Order Screen");
+                    //TODO: thiết kế màn hình user order và gọi api user order
+                    //chèn dữ liệu vào trong
                 }
             }
         });
@@ -308,5 +317,9 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
     @Override
     public void onNavigateToOverviewScreen(String restaurantID) {
 
+    }
+
+    public void closeDrawer(){
+        drawerLayout.closeDrawer(Gravity.LEFT,true);
     }
 }

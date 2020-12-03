@@ -1,24 +1,16 @@
 package com.ledungcobra.cafo.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-
-import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.common_new.Food;
 import com.ledungcobra.cafo.view_adapter.MenuGridViewAdapter;
@@ -41,11 +33,12 @@ public class RestaurantCategoryFoodFragment extends Fragment {
     List<CartItem> cartShops = new ArrayList<CartItem>();
     RecyclerView rvMenuFood;
     List<Food> foods = new ArrayList<Food>();
+
     private boolean isShowCard = true;
 
     public interface DataUpdateListener {
         void onDataUpdate(List<CartItem> mData);
-
+        //THUA: có thừa không ?
         void onDataInit(List<Food> foods);
 
         void onScrollChangeListener(RecyclerView rvMenuFood);

@@ -67,6 +67,8 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     TextView tvRestaurantName;
     LinearLayout phoneContainer;
     TextView tvRestaurantPhone;
+    //TODO: fix bug Card view khi recycler view không thể kéo được
+    //TODO: xử lí
     LinearLayout restaurantCard;
     FragmentManager fm;
     List<CartItem> cartShops;
@@ -94,6 +96,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         imvLove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("CALL_API", "add love");
                 Repository.getInstance().insert(new TrackingRestaurant(restaurantID,TrackingRestaurant.FAVORITE));
 
             }

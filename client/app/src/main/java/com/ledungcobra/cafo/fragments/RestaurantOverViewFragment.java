@@ -13,9 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.RestaurantDetailScreen;
-import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
-import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.view_adapter.OverviewViewPagerAdapter;
 
@@ -30,21 +28,16 @@ import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
  * create an instance of this fragment.
  */
 public class RestaurantOverViewFragment extends Fragment implements RestaurantClickListener {
-
-    // TODO: Rename parameter arguments, choose names that match
+    //TODO:
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    List<BriefRestaurantInfo> restaurantList;
+    ArrayList<BriefRestaurantInfo> restaurantList = new ArrayList<>();
 
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
 
     public RestaurantOverViewFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static RestaurantOverViewFragment newInstance(List<BriefRestaurantInfo> restaurantList) {
         RestaurantOverViewFragment fragment = new RestaurantOverViewFragment();
         Bundle args = new Bundle();
@@ -60,10 +53,7 @@ public class RestaurantOverViewFragment extends Fragment implements RestaurantCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
 
-        }
     }
 
     @Override
@@ -71,13 +61,14 @@ public class RestaurantOverViewFragment extends Fragment implements RestaurantCl
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_over_view, container, false);
 
-        restaurantList = new ArrayList<BriefRestaurantInfo>();
-        restaurantList = (List<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantList");
+        restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantList");
 
 
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         ViewPager viewPager = view.findViewById(R.id.vpRestaurant);
-        OverviewViewPagerAdapter viewPagerAdapter = new OverviewViewPagerAdapter(getChildFragmentManager(),FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,restaurantList,getActivity());
+
+        OverviewViewPagerAdapter viewPagerAdapter = new OverviewViewPagerAdapter(getChildFragmentManager(),
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,restaurantList,getActivity());
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);

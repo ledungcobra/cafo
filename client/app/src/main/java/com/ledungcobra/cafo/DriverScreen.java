@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;
+import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
 import com.ledungcobra.cafo.view_adapter.SimpleItem;
@@ -35,7 +37,6 @@ import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -45,8 +46,10 @@ public class DriverScreen extends AppCompatActivity implements
 
     private static final int POS_DASHBOARD = 0;
     private static final int POS_PROFILE = 1;
-    private static final int POS_LOGOUT = 2;
-    private String[] screenTitles = new String[]{"Dashboard","Profile","Logout"};
+    private static final int POS_ORDERS = 2;
+    private static final int POS_LOGOUT = 3;
+
+    private String[] screenTitles = new String[]{"Dashboard","Profile","Your orders","Logout"};
     private final int REQUEST_CODE = 9999;
 
     private Drawable[] screenIcons;
@@ -65,7 +68,6 @@ public class DriverScreen extends AppCompatActivity implements
         //Request for location permission
         requestPermission();
 
-//       LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 
 
@@ -90,6 +92,7 @@ public class DriverScreen extends AppCompatActivity implements
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
                 createItemFor(POS_DASHBOARD).setChecked(true),
                 createItemFor(POS_PROFILE),
+                createItemFor(POS_ORDERS),
                 createItemFor(POS_LOGOUT)
         ));
 
@@ -100,6 +103,7 @@ public class DriverScreen extends AppCompatActivity implements
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
         adapter.setSelected(POS_DASHBOARD);
+
     }
     private boolean requestPermission(){
         boolean wasEnabledNavigationLocation = checkForEnabledLocation();
@@ -155,13 +159,21 @@ public class DriverScreen extends AppCompatActivity implements
 
     @Override
     public void onItemSelected(int position) {
+        Log.d("CALL_API", "onItemSelected: "+ position);
+        Fragment fragment  = null;
+
         if (position == POS_LOGOUT) {
             finish();
+        }else if(position == POS_ORDERS){
+
+        }else if(position == POS_PROFILE){
+            fragment = ProfileUserFragment.newInstance();
+        }else if(position == POS_DASHBOARD){
+            fragment = DashboardFragment.getInstance(screenTitles[position]);
         }
+
         slidingRootNav.closeMenu();
-        HashMap<String,String> data = new HashMap<>();
-        Fragment selectedScreen = DashboardFragment.getInstance(screenTitles[position]);
-        showFragment(selectedScreen);
+        showFragment(fragment);
     }
 
     private DrawerItem createItemFor(int position) {

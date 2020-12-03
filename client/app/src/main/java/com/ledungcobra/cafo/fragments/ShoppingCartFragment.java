@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ShoppingCartFragment extends Fragment {
     List<CartItem> cartShops;
-
+    //TODO : xử lí shopping cart khi không có gì thì disable nút đặt hàng
     public interface callBack{
         void callBackActivity(List<CartItem> cartShopList);
     }

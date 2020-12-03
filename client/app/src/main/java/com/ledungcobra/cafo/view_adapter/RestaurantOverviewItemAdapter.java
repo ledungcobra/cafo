@@ -68,7 +68,6 @@ public class RestaurantOverviewItemAdapter
     }
 
 
-    // Provide a reference to the views for each data item
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imgRestaurant;

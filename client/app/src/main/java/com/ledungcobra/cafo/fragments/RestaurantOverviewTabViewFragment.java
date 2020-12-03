@@ -1,5 +1,6 @@
 package com.ledungcobra.cafo.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,38 +8,38 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.RestaurantDetailScreen;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
+import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
+
 /**
  * A fragment representing a list of Items.
  */
-public class RestaurantOverviewVisitedFragment extends Fragment {
-    LiveData<List<BriefRestaurantInfo>> restaurantList = new MutableLiveData<List<BriefRestaurantInfo>>(new ArrayList<BriefRestaurantInfo>());
+public class RestaurantOverviewTabViewFragment extends Fragment {
+    private LiveData<ArrayList<BriefRestaurantInfo>> restaurantList;
     RestaurantOverviewItemAdapter adapter;
 
-    public RestaurantOverviewVisitedFragment() {
+
+    public RestaurantOverviewTabViewFragment() {
     }
 
-    public  LiveData<List<BriefRestaurantInfo>>  getRestaurantList() {
-        return restaurantList;
-    }
-
-    public void setRestaurantList( LiveData<List<BriefRestaurantInfo>>  restaurantList) {
+    public void setRestaurantList( LiveData<ArrayList<BriefRestaurantInfo>>  restaurantList) {
         this.restaurantList = restaurantList;
     }
 
-    public static RestaurantOverviewVisitedFragment newInstance(MutableLiveData<List<BriefRestaurantInfo>> restaurantList) {
-        RestaurantOverviewVisitedFragment fragment = new RestaurantOverviewVisitedFragment();
+    public static RestaurantOverviewTabViewFragment newInstance(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList) {
+        RestaurantOverviewTabViewFragment fragment = new RestaurantOverviewTabViewFragment();
         Bundle args = new Bundle();
         fragment.setRestaurantList(restaurantList);
         fragment.setArguments(args);
@@ -52,6 +53,7 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
         restaurantList.observe(this, new Observer<List<BriefRestaurantInfo>>() {
             @Override
             public void onChanged(List<BriefRestaurantInfo> briefRestaurantInfos) {
+
                 if(briefRestaurantInfos!=null){
                     adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
                 }
@@ -74,13 +76,15 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
 
         adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) restaurantList.getValue());
         RecyclerView recyclerView =   (RecyclerView)view;
-//        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack) getActivity();
-//        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
-//            @Override
-//            public void onClick(String restaurantID) {
-//                fragmentCallBack.onNavigateToOverviewScreen(restaurantID);
-//            }
-//        });
+
+        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
+            @Override
+            public void onClick(String restaurantID) {
+                Intent intent = new Intent(getContext(), RestaurantDetailScreen.class);
+                intent.putExtra(EXTRA_KEY, restaurantID);
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

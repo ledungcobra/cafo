@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".fragments.RestaurantOverviewVisitedFragment"
+    tools:context=".fragments.RestaurantOverviewTabViewFragment"
     tools:listitem="@layout/fragment_restaurant_overview_visited" />
