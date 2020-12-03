@@ -1,10 +1,9 @@
 package com.ledungcobra.cafo;
 
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -38,6 +37,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.GsonBuilder;
+import com.ledungcobra.cafo.models.routing.Routing;
+import com.ledungcobra.cafo.network.MapService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,12 +50,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
     private GoogleMap mMap;
     MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
     LocationManager locationManager;
     String TAG = "GOOGLE_MAP";
 
+    MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
+
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,26 +107,19 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        boolean shouldContinue = true;
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 9999);
-            shouldContinue = false;
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}, 9999);
         }
 
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 8888);
-            shouldContinue = false;
-        }
 
-//        if (shouldContinue) {
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-//        }
+
 
 
 
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -128,66 +133,67 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         });
 
 
+
         Intent intent = getIntent();
         double lat = intent.getDoubleExtra("lat", 0);
         double long_ = intent.getDoubleExtra("long", 0);
         final LatLng pos = new LatLng(lat, long_);
-
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
         googleMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title("Marker in Sydney"));
 
-        moveCamera(lat, long_, "Start");
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://dev.virtualearth.net/")
-//                .addConverterFactory(GsonConverterFactory.create(
-//                        new GsonBuilder()
-//                                .create()))
-//                .build();
-//
-//        FindRouteService findRouteService  = retrofit.create(FindRouteService.class);
-//        final ArrayList<LatLng> locations = new ArrayList<>();
-//        moveCamera(10.8830014,106.7795138,"dsd");
-//        findRouteService.getMapRoute("10.8800706,106.8086773",
-//                "10.8830014,106.7795138",
-//                "Am3HEJkqwNwrNzEWDBEpvxScysCUadoI854xMNk4bfCy8Ud_HAQQEIRgRvTElxIr").enqueue(
-//                new Callback<MapRouteInfo>() {
-//                    @RequiresApi(api = Build.VERSION_CODES.N)
-//                    @Override
-//                    public void onResponse(Call<MapRouteInfo> call, retrofit2.Response<MapRouteInfo> response) {
-//                        MapRouteInfo data = response.body();
-//                        if(data.getResourceSets().size()>0){
-//
-//                            data.getResourceSets().get(0).getResources().get(0).
-//                                            getRouteLegs().get(0).getItineraryItems().forEach(new Consumer<ItineraryItem>() {
-//                                @Override
-//                                public void accept(ItineraryItem itineraryItem) {
-//                                    Double lat = itineraryItem.getManeuverPoint().getCoordinates().get(0);
-//                                    Double long_ = itineraryItem.getManeuverPoint().getCoordinates().get(1);
-//                                    LatLng latLng = new LatLng(lat,long_ );
-//                                    locations.add(latLng);
-//                                }
-//                            });
-//
-//                            Log.d(TAG, "onResponse: "+locations);
-//
-//                            drawALine(locations);
+
+        moveCamera(10.8830067,106.7795138, "Start");
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
+
 //
 //
-//
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<MapRouteInfo> call, Throwable t) {
-//                        Log.d(TAG, "onFailure: "+t);
-//                    }
-//                }
-//        );
+    }
+
+    private void requestRoute(LatLng userLocation, LatLng destLocation){
+        if(mMap !=null)  mMap.clear();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.geoapify.com/")
+                .addConverterFactory(GsonConverterFactory.create(
+                        new GsonBuilder()
+                                .create()))
+                .build();
+
+        MapService mapService = retrofit.create(MapService.class);
+        mapService.getRoute(userLocation.latitude+","+userLocation.longitude+"|"
+                +destLocation.latitude+","+destLocation.longitude,
+                "drive","e39be72fa4a1417db83845d0c9e238ce")
+                .enqueue(new Callback<Routing>() {
+                             @Override
+                             public void onResponse(Call<Routing> call, retrofit2.Response<Routing> response) {
+
+                                 ArrayList<LatLng> locs = new ArrayList<>();
+                                 try{
+                                     Log.d(TAG, "onResponse: "+response.body().getFeatures().get(0).getGeometry().getCoordinates().size());
+                                     Log.d(TAG, "onResponse: "+response.body().toString());
+                                     for (List<Double> cord: response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)){
+                                         locs.add(new LatLng(cord.get(1),cord.get(0)));
+                                     }
+                                     drawALine(locs);
+                                 }catch (Exception e){
+                                     Log.d(TAG, "Error"+e) ;
+                                 }
+
+                             }
+
+                             @Override
+                             public void onFailure(Call<Routing> call, Throwable t)
+                             {
+                                 Log.d(TAG, "onFailure: "+t);
+
+                             }
+                         }
+                );
+
+        mMap.addMarker(new MarkerOptions().position(userLocation)
+        .title("You are here"));
 
     }
 
@@ -202,8 +208,10 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         PolylineOptions options = new PolylineOptions();
 
         options.color( Color.parseColor( "#CC0000FF" ) );
-        options.width( 5 );
+        options.width(10);
         options.visible( true );
+
+
 
         for ( LatLng locRecorded : listLocsToDraw )
         {
@@ -279,29 +287,23 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         }
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 9999 && grantResults.length > 0 && grantResults[0] == Activity.RESULT_OK) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                return;
-            }
+        if (requestCode == 9999 && grantResults.length  ==  2 && grantResults[0] == PERMISSION_GRANTED &&grantResults[1] == PERMISSION_GRANTED ) {
+            Log.d(TAG, "PERMISSION");
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
         }
 
-        if (requestCode == 8888 && grantResults.length > 0 && grantResults[0] == Activity.RESULT_OK) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: ");
-        String address = getAddress(this,location.getLatitude(),location.getLongitude());
+        requestRoute(new LatLng(location.getLatitude(),location.getLongitude()),new LatLng(10.8830067,106.7795138));
+        moveCamera(location.getLatitude(),location.getLongitude(),"");
 
-        Log.d(TAG, "Your address"+ address);
+
     }
 
     @Override

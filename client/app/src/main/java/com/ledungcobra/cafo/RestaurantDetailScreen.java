@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,11 +35,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.fragments.RestaurantCategoryFoodFragment;
-import com.ledungcobra.cafo.fragments.RestaurantOverviewNewFragment;
 import com.ledungcobra.cafo.fragments.ShoppingCartFragment;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.common_new.Food;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
+import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.ui_calllback.OnAnimationEnd;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.FragmentCategoryCollectionAdapter;
@@ -85,9 +84,21 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         restaurantCard = findViewById(R.id.restaurantCard);
 
 
+
+
         Intent intent = getIntent();
         final String restaurantID = intent.getStringExtra(EXTRA_KEY);
         cartShops = (List<CartItem>) intent.getSerializableExtra("CartShop");
+        ImageView imvLove = findViewById(R.id.imAddToFavorite);
+
+        imvLove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Repository.getInstance().insert(new TrackingRestaurant(restaurantID,TrackingRestaurant.FAVORITE));
+
+            }
+        });
+
         if (cartShops == null) {
             cartShops = new ArrayList<CartItem>();
         }

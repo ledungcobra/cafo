@@ -15,27 +15,27 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverViewFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverviewNewFragment;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
+import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.MenuNavigationDrawerAdapter;
-import com.ledungcobra.cafo.view_adapter.OverviewViewPagerAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class RestaurantsOverviewScreen extends AppCompatActivity implements RestaurantClickListener, RestaurantOverviewNewFragment.fragmentCallBack {
@@ -52,7 +52,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Contact"};
+    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders"};
     public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24};
 
     FragmentManager fm = getSupportFragmentManager();
@@ -61,6 +61,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
     MenuItem searchButton;
     MenuItem infoButton;
+    MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>(null);
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -81,9 +82,29 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retaurant_overview);
 
-        final ArrayList<BriefRestaurantInfo> restaurantList = new ArrayList<BriefRestaurantInfo>();
-        //get data
-        Repository.getInstance().fetchAllRestaurants(1, 9, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
+        initUI();
+        //Fetch data
+
+        fetchRestaurantData(1,10);
+
+        restaurantList.observe(this, new Observer<ArrayList<BriefRestaurantInfo>>() {
+            @Override
+            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
+                if(briefRestaurantInfos!=null){
+                    ft
+                            .add(R.id.OverViewLayout, RestaurantOverViewFragment.newInstance(briefRestaurantInfos), "Overview")
+                            .addToBackStack("Overview")
+                            .commit();
+
+                }
+            }
+        });
+
+
+    }
+
+    private void fetchRestaurantData(int page, int limit ){
+        Repository.getInstance().fetchAllRestaurants(page, limit, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
             @Override
             public void stopProgressIndicator() {
 
@@ -96,8 +117,8 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
             @Override
             public void onResult(ArrayList<BriefRestaurantInfo> result) {
-                restaurantList.addAll(result);
-                ft.add(R.id.OverViewLayout, RestaurantOverViewFragment.newInstance(restaurantList), "Overview").addToBackStack("Overview").commit();
+                restaurantList.setValue(result);
+
             }
 
             @Override
@@ -105,14 +126,16 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
             }
         });
+    }
 
 
+    private void initUI(){
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarOverviewTop);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getColor(R.color.white));
         toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_baseline_dehaze_24));
+        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_baseline_dehaze_24));
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +160,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
                 return true;
             }
         });
+
 
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -174,17 +198,45 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
             @Override
             public void onClick(int position) {
                 if (position == 1) {
-                    if (fm.findFragmentByTag("Profile") == null) {
-                        ft = fm.beginTransaction();
-                        ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
-                                .replace(R.id.OverViewLayout, ProfileUserFragment.newInstance(), "Profile").addToBackStack("Profile").commit();
-                    } else getSupportFragmentManager().popBackStack("Profile", 0);
+
+                    final Fragment fragment = ProfileUserFragment.newInstance();
+                    UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
+                        @Override
+                        public void stopProgressIndicator() {
+
+                        }
+
+                        @Override
+                        public void startProgressIndicator() {
+
+                        }
+
+                        @Override
+                        public void onResult(DetailUserInfo result) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(getString(R.string.user_info),result);
+                            fragment.setArguments(bundle);
+
+                            if (fm.findFragmentByTag("Profile") == null) {
+                                ft = fm.beginTransaction();
+                                ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
+                                        .replace(R.id.OverViewLayout,fragment , "Profile").addToBackStack("Profile").commit();
+                            } else getSupportFragmentManager().popBackStack("Profile", 0);
+
+                        }
+
+                        @Override
+                        public void onFailure(Error error) {
+
+                        }
+                    });
+
                 }
                 if (position == 0) {
                     if (fm.findFragmentByTag("Overview") == null) {
                         ft = fm.beginTransaction();
                         ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
-                                .replace(R.id.OverViewLayout, RestaurantOverViewFragment.newInstance(restaurantList), "Overview").addToBackStack("Overview").commit();
+                                .replace(R.id.OverViewLayout, RestaurantOverViewFragment.newInstance(restaurantList.getValue()), "Overview").addToBackStack("Overview").commit();
                     } else {
                         getSupportFragmentManager().popBackStack("Overview", 0);
 
@@ -193,8 +245,6 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
                 }
             }
         });
-
-
     }
 
 

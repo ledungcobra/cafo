@@ -51,22 +51,25 @@ public class UserApiHandler {
         return INSTANCE;
     }
 
-    public void setUserAccessToken(String token){
+    public void setUserAccessToken(String token) {
         userAccessToken.setValue(token);
     }
 
-    public void signIn(final String username, String password, final UIThreadCallBack<UserInfo,Error> callback) {
+    public void signIn(final String username, String password, final UIThreadCallBack<UserInfo, Error> callback) {
 
         callback.startProgressIndicator();
         Call<UserInfo> call = userService.signIn(username, password);
         call.enqueue(new Callback<UserInfo>() {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                if(response.code() == 200){
-                    Log.d("CALL_API", "onResponse: "+response);
+                callback.stopProgressIndicator();
+
+                if (response.code() == 200) {
+                    Log.d("CALL_API", "onResponse: " + response);
                     userAccessToken.setValue(response.body() != null ? response.body().getAccessToken() : null);
-                    callback.stopProgressIndicator();
                     callback.onResult(response.body());
+                } else {
+                    callback.onFailure(new Error("Something went wrong"));
                 }
 
             }
@@ -79,17 +82,20 @@ public class UserApiHandler {
         });
     }
 
-    public void signUp( String username, String password, String email, List<String> roles,
-                                    String phoneNumber,final UIThreadCallBack<Void,Error> callback) {
+    public void signUp(String username, String password, String email, List<String> roles,
+                       String phoneNumber, final UIThreadCallBack<Void, Error> callback) {
         callback.startProgressIndicator();
         Call<Object> call = userService.signUp(new UserLogin(username,
-                password,email, (ArrayList<String>) roles,phoneNumber));
+                password, email, (ArrayList<String>) roles, phoneNumber));
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.d("CALL_API", "onResponse: "+response);
-                callback.onResult(null);
                 callback.stopProgressIndicator();
+                if (response.code() == 200) {
+                    callback.onResult(null);
+                } else {
+                    callback.onFailure(new Error("Something went wrong"));
+                }
             }
 
             @Override
@@ -120,7 +126,11 @@ public class UserApiHandler {
                              @Override
                              public void onResponse(Call<List<DetailOrderResponse>> call, Response<List<DetailOrderResponse>> response) {
                                  callback.stopProgressIndicator();
-                                 callback.onResult(response.body());
+                                 if (response.code() == 200) {
+                                     callback.onResult(response.body());
+                                 } else {
+                                     callback.onFailure(new Error("Something error"));
+                                 }
                              }
 
                              @Override
@@ -137,8 +147,11 @@ public class UserApiHandler {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
                 callback.stopProgressIndicator();
-                assert response.body() != null;
-                callback.onResult(response.body().getMessage());
+                if (response.code() == 200) {
+                    callback.onResult(response.body().getMessage());
+                } else {
+                    callback.onFailure(new Error("Something went wrong"));
+                }
             }
 
             @Override
@@ -156,7 +169,13 @@ public class UserApiHandler {
                     @Override
                     public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
                         callback.stopProgressIndicator();
-                        callback.onResult(response.body());
+
+                        if (response.code() == 200) {
+                            callback.onResult(response.body());
+                        } else {
+                            callback.onFailure(new Error("Something went wrong"));
+                        }
+
                     }
 
                     @Override
@@ -174,7 +193,11 @@ public class UserApiHandler {
                     @Override
                     public void onResponse(Call<ArrayList<DetailOrderResponse>> call, Response<ArrayList<DetailOrderResponse>> response) {
                         callback.stopProgressIndicator();
-                        callback.onResult(response.body());
+                        if (response.code() == 200) {
+                            callback.onResult(response.body());
+                        } else {
+                            callback.onFailure(new Error("Something went wrong"));
+                        }
                     }
 
                     @Override
@@ -185,6 +208,7 @@ public class UserApiHandler {
                 });
     }
 
+
     public void getOrderByUser(String id, final UIThreadCallBack<DetailOrderResponse, Error> callback) {
         callback.startProgressIndicator();
         userService.getOrder(userAccessToken.getValue(), id)
@@ -192,7 +216,11 @@ public class UserApiHandler {
                              @Override
                              public void onResponse(Call<DetailOrderResponse> call, Response<DetailOrderResponse> response) {
                                  callback.stopProgressIndicator();
-                                 callback.onResult(response.body());
+                                 if (response.code() == 200) {
+                                     callback.onResult(response.body());
+                                 } else {
+                                     callback.onFailure(new Error("Something went wrong"));
+                                 }
                              }
 
                              @Override
@@ -204,15 +232,19 @@ public class UserApiHandler {
                 );
     }
 
-    public void getUser(final UIThreadCallBack<DetailUserInfo,Error> callBack){
+    public void getUser(final UIThreadCallBack<DetailUserInfo, Error> callBack) {
         callBack.startProgressIndicator();
         userService.getUser(userAccessToken.getValue()).enqueue(
                 new Callback<DetailUserInfo>() {
                     @Override
                     public void onResponse(Call<DetailUserInfo> call, Response<DetailUserInfo> response) {
                         callBack.stopProgressIndicator();
-                        callBack.onResult(response.body());
+                        if (response.code() == 200) {
+                            callBack.onResult(response.body());
+                        } else {
+                            callBack.onFailure(new Error("Something went wrong"));
                         }
+                    }
 
                     @Override
                     public void onFailure(Call<DetailUserInfo> call, Throwable t) {
