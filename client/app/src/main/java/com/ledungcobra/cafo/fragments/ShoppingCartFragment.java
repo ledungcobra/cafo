@@ -81,7 +81,8 @@ public class ShoppingCartFragment extends Fragment {
                 }
 
                 TextView CostTotal = rootView.findViewById(R.id.tvResult);
-                CostTotal.setText(Integer.toString(sumOfCostNew));
+                CostTotal.setText(
+                        String.format("%,d",Integer.toString(sumOfCostNew)) + " " + R.string.currency);
 
 
             }
@@ -107,7 +108,7 @@ public class ShoppingCartFragment extends Fragment {
 
         TextView tvSum = rootView.findViewById(R.id.tvResult);
         Price priceTotal = new Price(sumOfCost);
-        tvSum.setText(Integer.toString(priceTotal.getValue()) + " " + getString(R.string.currency));
+        tvSum.setText(String.format("%,d",priceTotal.getValue()) + " " + getString(R.string.currency));
 
         Button Order = rootView.findViewById(R.id.btnOrderFood);
         Order.setOnClickListener(new View.OnClickListener() {
