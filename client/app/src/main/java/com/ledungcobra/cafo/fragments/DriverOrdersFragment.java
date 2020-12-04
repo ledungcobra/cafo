@@ -11,23 +11,19 @@ import com.ledungcobra.cafo.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link UserOrdersFragment#newInstance} factory method to
+ * Use the {@link DriverOrdersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserOrdersFragment extends Fragment {
+public class DriverOrdersFragment extends Fragment {
 
-
-    //TODO: must implement chứa danh sách Order của user gọi thông qua UserApiHandler.getInstance().getOrdersByCustomer(uiCallback);
-
-
-    public UserOrdersFragment() {
+    public DriverOrdersFragment() {
         // Required empty public constructor
     }
 
-
-    public static UserOrdersFragment newInstance() {
-        UserOrdersFragment fragment = new UserOrdersFragment();
+    public static DriverOrdersFragment newInstance(String param1, String param2) {
+        DriverOrdersFragment fragment = new DriverOrdersFragment();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -35,18 +31,13 @@ public class UserOrdersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_user_orders, container, false);
-
-
-        return view;
+        return inflater.inflate(R.layout.fragment_driver_orders, container, false);
     }
 }

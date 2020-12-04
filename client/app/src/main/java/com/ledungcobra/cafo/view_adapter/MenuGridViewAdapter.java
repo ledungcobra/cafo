@@ -24,8 +24,13 @@ import java.util.List;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class MenuGridViewAdapter extends RecyclerView.Adapter<MenuGridViewAdapter.MenuGridViewHolder> {
+
+    public interface OnItemClickListener {
+        void onAddClick(int position);
+    }
     Context context;
     List<Food> foods;
+
     OnItemClickListener onItemClickListener;
 
     @NonNull
@@ -55,10 +60,6 @@ public class MenuGridViewAdapter extends RecyclerView.Adapter<MenuGridViewAdapte
     @Override
     public int getItemCount() {
         return foods.size();
-    }
-
-    public interface OnItemClickListener {
-        void onAddClick(int position);
     }
 
     public void setOnClickListener(OnItemClickListener listener) {
@@ -118,4 +119,6 @@ public class MenuGridViewAdapter extends RecyclerView.Adapter<MenuGridViewAdapte
         this.foods = foods;
         notifyDataSetChanged();
     }
+
+
 }

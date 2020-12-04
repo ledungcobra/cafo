@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.ledungcobra.cafo.dao.TrackingRestaurantDao;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 
-@Database(entities = {TrackingRestaurant.class},version = 1,exportSchema = false)
+@Database(entities = {TrackingRestaurant.class},version = 2,exportSchema = false)
 public abstract class TrackingRestaurantRoomDatabase extends RoomDatabase {
     private static TrackingRestaurantRoomDatabase INSTANCE = null;
     public abstract TrackingRestaurantDao trackingRestaurantDao();

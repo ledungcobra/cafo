@@ -9,6 +9,25 @@ import java.io.Serializable;
 
 public class Food implements Serializable {
 
+
+    private String foodID;
+    private int count;
+
+    public String getFoodID() {
+        return foodID;
+    }
+
+    public void setFoodID(String foodID) {
+        this.foodID = foodID;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
     @SerializedName("name")
     @Expose
     private String name;
@@ -68,7 +87,9 @@ public class Food implements Serializable {
     @Override
     public String toString() {
         return "Food{" +
-                "name='" + name + '\'' +
+                "foodID='" + foodID + '\'' +
+                ", count=" + count +
+                ", name='" + name + '\'' +
                 ", decription='" + decription + '\'' +
                 ", price=" + price +
                 ", image=" + image +

@@ -15,6 +15,7 @@ import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.network.RestaurantService;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class Repository {
                 if (response.code() == 200) {
                     listRestaurants.setValue(response.body());
                     callback.onResult(response.body());
-                }else{
+                } else {
                     callback.onFailure(new Error("Something went wrong"));
                 }
             }
@@ -98,11 +99,11 @@ public class Repository {
             @Override
             public void onResponse(Call<ArrayList<City>> call, Response<ArrayList<City>> response) {
                 callback.stopProgressIndicator();
-                if(response.code() == 200){
+                if (response.code() == 200) {
 
                     cites.setValue(response.body());
 
-                }else{
+                } else {
                     callback.onFailure(new Error("Something went wrong"));
                 }
             }
@@ -129,9 +130,9 @@ public class Repository {
             public void onResponse(Call<RestaurantDetail> call, Response<RestaurantDetail> response) {
                 callback.stopProgressIndicator();
 
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     callback.onResult(response.body());
-                }else{
+                } else {
                     callback.onFailure(new Error("Something went wrong"));
                 }
             }
@@ -148,22 +149,67 @@ public class Repository {
     public RestaurantService getRestaurantService() {
         return this.restaurantService;
     }
-    public void initDb(Application app){
+
+    public void initDb(Application app) {
         TrackingRestaurantRoomDatabase db = TrackingRestaurantRoomDatabase.getDatabase(app);
         this.trackingRestaurantDao = db.trackingRestaurantDao();
         trackingRestaurants = trackingRestaurantDao.getAllTrackingRestaurants();
     }
 
-    public LiveData<List<TrackingRestaurant>> getAllTrackingRestaurants(){
+    public LiveData<List<TrackingRestaurant>> getAllTrackingRestaurants() {
         return trackingRestaurants;
     }
 
-    public void insert(final TrackingRestaurant restaurant){
+    public void insert(final TrackingRestaurant restaurant) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 trackingRestaurantDao.insert(restaurant);
             }
-        }) .start();
+        }).start();
+    }
+
+    public LiveData<ArrayList<RestaurantDetail>> searchRestaurant(String searchKeyword, int page, int limit) {
+        final MutableLiveData<ArrayList<RestaurantDetail>> result = new MutableLiveData<>(new ArrayList<RestaurantDetail>());
+
+        restaurantService.searchRestaurant(searchKeyword, page, limit, "5fbd364afe0a1616a91994bb").enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, final Response<List<String>> response) {
+                if (response.code() == 200) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ArrayList<RestaurantDetail> list = new ArrayList<>();
+                            for (String resID : response.body()) {
+                                try {
+
+                                    Response<RestaurantDetail> resDetail= restaurantService.getRestaurant(resID).execute();
+
+                                    if(resDetail.code() == 200){
+                                        list.add(resDetail.body());
+                                    }else{
+                                        return;
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            result.setValue(list);
+                        }
+                    }).start();
+
+
+                } else {
+                    result.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                result.setValue(null);
+            }
+        });
+        return result;
     }
 }

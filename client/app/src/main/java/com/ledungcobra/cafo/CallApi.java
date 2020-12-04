@@ -7,9 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.models.user.UserInfo;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class CallApi extends AppCompatActivity {
 
@@ -19,10 +20,22 @@ public class CallApi extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_api2);
+        UserApiHandler.getInstance().signIn("helloxxa", "123456", new UIThreadCallBack<UserInfo, Error>() {
+            @Override
+            public void stopProgressIndicator() {
 
-        UserApiHandler.getInstance().setUserAccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYzMzMTQyZDNhOWMyMDAxNzdlNGI0MSIsImlhdCI6MTYwNjYyNzY3NSwiZXhwIjoxNjA3MjMyNDc1fQ.IeCJMLre7o2MgFwIyFgcJrlQ-9Afxdkw3uWy3Arn1fc");
-        UserApiHandler.getInstance().fetchFiveOrdersNearCustomerByShipper(10.8899,
-                106.999, new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
+            }
+
+            @Override
+            public void startProgressIndicator() {
+
+            }
+
+            @Override
+            public void onResult(UserInfo result) {
+
+                Log.d(TAG, "onResult: "+result);
+                UserApiHandler.getInstance().getOrdersByCustomer(new UIThreadCallBack<ArrayList<DetailOrderResponse>, Error>() {
                     @Override
                     public void stopProgressIndicator() {
 
@@ -34,7 +47,7 @@ public class CallApi extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResult(List<DetailOrderResponse> result) {
+                    public void onResult(ArrayList<DetailOrderResponse> result) {
                         Log.d(TAG, "onResult: "+result);
                     }
 
@@ -42,8 +55,14 @@ public class CallApi extends AppCompatActivity {
                     public void onFailure(Error error) {
 
                     }
-                }
-        );
+                });
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
 
     }
 

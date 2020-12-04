@@ -1,12 +1,12 @@
 package com.ledungcobra.cafo;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,7 +18,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,40 +27,32 @@ import com.ledungcobra.cafo.database.Repository;
 import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverViewFragment;
-import com.ledungcobra.cafo.fragments.RestaurantOverviewNewFragment;
+import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
-import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.MenuNavigationDrawerAdapter;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RestaurantsOverviewScreen extends AppCompatActivity implements RestaurantClickListener, RestaurantOverviewNewFragment.fragmentCallBack {
-    //    RecyclerView recyclerView;
-//    RestaurantOverviewItemAdapter adapter;
-    RecyclerView.LayoutManager layoutManager;
-    ImageButton btnInfo;
+public class RestaurantsOverviewScreen extends AppCompatActivity  {
 
-    boolean isShowActionBar = true;
-
-    public static String DATA_KEY = "DATA";
     public static String EXTRA_KEY = "RESTAURANT";
-    int height = 0;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders"};
+    //TODO: Thay đổi ICON cho phù hợp
     public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24};
 
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction ft = fm.beginTransaction();
 
+    ArrayList<RestaurantDetail> backupListNewRestaurant;
 
     MenuItem searchButton;
     MenuItem infoButton;
-    MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>(null);
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -82,54 +73,27 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retaurant_overview);
 
+        //Initial View Element
         initUI();
-        //Fetch data
 
-        fetchRestaurantData(1,10);
+        //CREATE A FRAGMENT TO HOLD VIEWPAGER
+        //THEN PASS DATA WAS PASSED FROM MAIN ACTIVITY BY FETCHING DATA THROUGH API
+        Fragment restaurantOverViewFragment = RestaurantOverViewFragment.newInstance();
+        ArrayList<BriefRestaurantInfo> res = (ArrayList<BriefRestaurantInfo>) getIntent()
+                .getSerializableExtra(getString(R.string.list_restaurants));
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getString(R.string.list_restaurants), res);
+        restaurantOverViewFragment.setArguments(bundle);
 
-        restaurantList.observe(this, new Observer<ArrayList<BriefRestaurantInfo>>() {
-            @Override
-            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
-                if(briefRestaurantInfos!=null){
-                    ft
-                            .add(R.id.OverViewLayout, RestaurantOverViewFragment.newInstance(briefRestaurantInfos), "Overview")
-                            .addToBackStack("Overview")
-                            .commit();
-
-                }
-            }
-        });
-
+        //Add the created fragment to backstack that behalf for the ui of this activity
+        ft
+                .add(R.id.OverViewLayout, restaurantOverViewFragment, "Overview")
+                .addToBackStack("Overview")
+                .commit();
 
     }
 
-    private void fetchRestaurantData(int page, int limit ){
-        Repository.getInstance().fetchAllRestaurants(page, limit, new UIThreadCallBack<ArrayList<BriefRestaurantInfo>, Error>() {
-            @Override
-            public void stopProgressIndicator() {
-
-            }
-
-            @Override
-            public void startProgressIndicator() {
-
-            }
-
-            @Override
-            public void onResult(ArrayList<BriefRestaurantInfo> result) {
-                restaurantList.setValue(result);
-
-            }
-
-            @Override
-            public void onFailure(Error error) {
-
-            }
-        });
-    }
-
-
-    private void initUI(){
+    private void initUI() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarOverviewTop);
         setSupportActionBar(toolbar);
@@ -197,8 +161,10 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
         adapter.setOnClickListener(new MenuNavigationDrawerAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                if (position == 1) {
 
+                if (position == 1) {
+                    //TODO: Chèn thêm hình vào User profile
+                    closeDrawer();
                     final Fragment fragment = ProfileUserFragment.newInstance();
                     UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
                         @Override
@@ -214,13 +180,13 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
                         @Override
                         public void onResult(DetailUserInfo result) {
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable(getString(R.string.user_info),result);
+                            bundle.putSerializable(getString(R.string.user_info), result);
                             fragment.setArguments(bundle);
 
                             if (fm.findFragmentByTag("Profile") == null) {
                                 ft = fm.beginTransaction();
                                 ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
-                                        .replace(R.id.OverViewLayout,fragment , "Profile").addToBackStack("Profile").commit();
+                                        .add(R.id.OverViewLayout, fragment, "Profile").addToBackStack("Profile").commit();
                             } else getSupportFragmentManager().popBackStack("Profile", 0);
 
                         }
@@ -231,17 +197,27 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
                         }
                     });
 
-                }
-                if (position == 0) {
+                } else if (position == 0) {
                     if (fm.findFragmentByTag("Overview") == null) {
+
+                        Fragment restaurantOverViewFragment = RestaurantOverViewFragment.newInstance();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(getString(R.string.list_restaurants), getIntent().getSerializableExtra(getString(R.string.list_restaurants)));
+
+                        restaurantOverViewFragment.setArguments(bundle);
+
                         ft = fm.beginTransaction();
                         ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
-                                .replace(R.id.OverViewLayout, RestaurantOverViewFragment.newInstance(restaurantList.getValue()), "Overview").addToBackStack("Overview").commit();
+                                .replace(R.id.OverViewLayout, restaurantOverViewFragment, "Overview").addToBackStack("Overview").commit();
                     } else {
                         getSupportFragmentManager().popBackStack("Overview", 0);
 
                     }
 
+                } else if (position == 2) {
+                    Log.d("CALL_API", "Customer Order Screen");
+                    //TODO: thiết kế màn hình user order và gọi api user order
+                    //chèn dữ liệu vào trong
                 }
             }
         });
@@ -249,29 +225,21 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
 
     @Override
-    public void onClick(String restaurantID) {
-
-        Intent intent = new Intent(RestaurantsOverviewScreen.this, RestaurantDetailScreen.class);
-
-
-        intent.putExtra(EXTRA_KEY, restaurantID);
-
-        startActivity(intent);
-
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        //Inflate xml to android UI
         getMenuInflater().inflate(R.menu.shop_selected_menu, menu);
+
+        //Get two components from action bar menu
         searchButton = menu.findItem(R.id.menu_search);
         infoButton = menu.findItem(R.id.action_info);
-
-        searchButton.setVisible(false);
-
+        //Implement searching
         final SearchView searchView = (SearchView) searchButton.getActionView();
         View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+
+        //Change the background color for the palate search view
         searchPlate.setBackgroundColor(getColor(R.color.white));
+
+        //Text change listener for search view
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -284,6 +252,18 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
+                if(newText.length()>0){
+
+                    Repository.getInstance().searchRestaurant(newText,1,20).observe(RestaurantsOverviewScreen.this, new Observer<ArrayList<RestaurantDetail>>() {
+                        @Override
+                        public void onChanged(ArrayList<RestaurantDetail> restaurantDetails) {
+                            Log.d("SEARCHING", "onChanged: "+ restaurantDetails);
+                        }
+                    });
+                }else{
+
+                }
 
                 return false;
             }
@@ -305,8 +285,24 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements Rest
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onNavigateToOverviewScreen(String restaurantID) {
+    public void closeDrawer() {
+        drawerLayout.closeDrawer(Gravity.LEFT, true);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (fm.findFragmentByTag("Overview") == null) {
+
+            Fragment restaurantOverViewFragment = RestaurantOverViewFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getString(R.string.list_restaurants), getIntent().getSerializableExtra(getString(R.string.list_restaurants)));
+
+            restaurantOverViewFragment.setArguments(bundle);
+
+            ft = fm.beginTransaction();
+            ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
+                    .replace(R.id.OverViewLayout, restaurantOverViewFragment, "Overview").addToBackStack("Overview").commit();
+        }
     }
 }
