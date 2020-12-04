@@ -18,6 +18,9 @@ public class DetailOrderResponse implements Serializable {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("total")
+    @Expose
+    private Integer total;
     @SerializedName("orderPosition")
     @Expose
     private OrderPosition orderPosition;
@@ -39,6 +42,14 @@ public class DetailOrderResponse implements Serializable {
     @SerializedName("restaurant")
     @Expose
     private Restaurant restaurant;
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
 
     public List<Food> getFoods() {
         return foods;

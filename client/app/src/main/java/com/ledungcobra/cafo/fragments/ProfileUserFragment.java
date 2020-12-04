@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,13 +59,34 @@ public class ProfileUserFragment extends Fragment {
         txtPhoneNumber = view.findViewById(R.id.txtPhonePf);
         txtFullName = view.findViewById(R.id.txtFullnamePf);
         txtEmail = view.findViewById(R.id.txtEmailPf);
-        DetailUserInfo userInfo = (DetailUserInfo) getArguments().getSerializable(getActivity().getString(R.string.user_info));
+        final DetailUserInfo userInfo = new DetailUserInfo();
+        UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
+            @Override
+            public void stopProgressIndicator() {
 
-        txtUsername.setText(userInfo.getUsername());
-        txtFullName.setText(userInfo.getUsername());
-        txtPassword.setText("**********");
-        txtPhoneNumber.setText(userInfo.getPhoneNumber());
-        txtEmail.setText(userInfo.getEmail());
+            }
+
+            @Override
+            public void startProgressIndicator() {
+
+            }
+
+            @Override
+            public void onResult(DetailUserInfo result) {
+                txtUsername.setText(result.getUsername());
+                txtFullName.setText(result.getUsername());
+                txtPassword.setText("**********");
+                txtPhoneNumber.setText(result.getPhoneNumber());
+                txtEmail.setText(result.getEmail());
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
+
+
 
         return view;
     }

@@ -19,6 +19,8 @@ public interface TrackingRestaurantDao {
     @Query("DELETE FROM tracking_restaurant_table")
     void deleteAll();
 
+
+
     @Query("SELECT * FROM tracking_restaurant_table")
     LiveData<List<TrackingRestaurant>> getAllTrackingRestaurants();
 

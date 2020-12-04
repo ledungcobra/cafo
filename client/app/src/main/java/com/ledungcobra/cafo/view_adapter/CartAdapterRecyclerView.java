@@ -21,7 +21,7 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
     LayoutInflater mInflater;
     List<CartItem> cartShops;
     OnItemClickListener mListener;
-    int count = 1;
+
 
 
     public interface OnItemClickListener{
@@ -52,8 +52,8 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
 
-        holder.bindData(cartShops.get(position), count);
-        count++;
+        holder.bindData(cartShops.get(position), position);
+
 
 
     }

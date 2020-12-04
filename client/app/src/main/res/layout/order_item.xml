@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="5dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:padding="3dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="9"
+                    android:layout_height="wrap_content"
+                    android:text="Restaurant"
+                    android:textStyle="bold"
+                    android:id="@+id/tvResOrder"
+                    android:textSize="28sp"/>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:id="@+id/ivDeleteOrder"
+
+                    android:src="@drawable/ic_baseline_delete_24"
+                    android:padding="1dp"
+                    android:scaleType="fitCenter"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="OrderID:"
+                    android:textStyle="italic"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="match_parent"
+                    android:text="OrderID"
+                    android:id="@+id/tvOrderID"
+                    android:textStyle="italic"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Price:"
+                    android:textStyle="italic"
+                    android:textSize="20sp"/>
+               ] <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:text="Price"
+                android:id="@+id/tvPriceOrder"
+                android:textStyle="italic"
+                android:textSize="20sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Time:"
+                    android:textStyle="italic"
+                    android:textSize="20sp"/>
+                ] <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:text="Time"
+                android:id="@+id/tvTimeOrder"
+                android:textStyle="italic"
+                android:textSize="20sp"/>
+            </LinearLayout>
+
+
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:padding="2dp">
+               <TextView
+                   android:layout_width="0dp"
+                   android:layout_weight="1"
+                   android:layout_height="wrap_content"
+                   android:text="Status"
+                   android:textSize="20sp"
+                   android:textStyle="italic" />
+               <TextView
+                   android:id="@+id/tvStatusOrder"
+                   android:layout_width="0dp"
+                   android:layout_weight="3"
+                   android:layout_height="wrap_content"
+                   android:text="Status"
+                   android:textSize="20sp"
+                   android:textStyle="italic" />
+               <TextView
+                   android:id="@+id/tvDetailOrder"
+                   android:layout_width="0dp"
+                   android:layout_weight="1"
+                   android:gravity="end"
+                   android:layout_height="wrap_content"
+                   android:text="Detail"
+                   android:textColor="@color/colorPrimary"
+                   android:textSize="20sp"
+                   android:textStyle="italic" />
+           </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

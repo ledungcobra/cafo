@@ -24,19 +24,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.database.UserApiHandler;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverViewFragment;
+import com.ledungcobra.cafo.fragments.UserOrdersFragment;
+import com.ledungcobra.cafo.fragments.fragmentDetailFoodInOrder;
+import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
-import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
+import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.view_adapter.MenuNavigationDrawerAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class RestaurantsOverviewScreen extends AppCompatActivity  {
+public class RestaurantsOverviewScreen extends AppCompatActivity implements  UserOrdersFragment.CallBacktoCreateFm {
+
+    DetailUserInfo userInfo;
 
     public static String EXTRA_KEY = "RESTAURANT";
 
@@ -93,8 +98,8 @@ public class RestaurantsOverviewScreen extends AppCompatActivity  {
 
     }
 
-    private void initUI() {
 
+    private void initUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarOverviewTop);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getColor(R.color.white));
@@ -161,41 +166,16 @@ public class RestaurantsOverviewScreen extends AppCompatActivity  {
         adapter.setOnClickListener(new MenuNavigationDrawerAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
-
                 if (position == 1) {
-                    //TODO: Chèn thêm hình vào User profile
-                    closeDrawer();
-                    final Fragment fragment = ProfileUserFragment.newInstance();
-                    UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
-                        @Override
-                        public void stopProgressIndicator() {
+                    if (fm.findFragmentByTag("Profile") == null) {
 
-                        }
+                        ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
+                                .replace(R.id.OverViewLayout, ProfileUserFragment.newInstance(), "Profile").addToBackStack("Profile").commit();
 
-                        @Override
-                        public void startProgressIndicator() {
 
-                        }
+                    } else getSupportFragmentManager().popBackStack("Profile", 0);
 
-                        @Override
-                        public void onResult(DetailUserInfo result) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(getString(R.string.user_info), result);
-                            fragment.setArguments(bundle);
-
-                            if (fm.findFragmentByTag("Profile") == null) {
-                                ft = fm.beginTransaction();
-                                ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
-                                        .add(R.id.OverViewLayout, fragment, "Profile").addToBackStack("Profile").commit();
-                            } else getSupportFragmentManager().popBackStack("Profile", 0);
-
-                        }
-
-                        @Override
-                        public void onFailure(Error error) {
-
-                        }
-                    });
 
                 } else if (position == 0) {
                     if (fm.findFragmentByTag("Overview") == null) {
@@ -218,6 +198,18 @@ public class RestaurantsOverviewScreen extends AppCompatActivity  {
                     Log.d("CALL_API", "Customer Order Screen");
                     //TODO: thiết kế màn hình user order và gọi api user order
                     //chèn dữ liệu vào trong
+                }
+
+                if (position == 2) {
+
+
+                    if (fm.findFragmentByTag("Your order") == null) {
+
+                        ft = fm.beginTransaction();
+                        ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
+                                .replace(R.id.OverViewLayout, UserOrdersFragment.newInstance(), "Your Order").addToBackStack("Your Order").commit();
+                    } else getSupportFragmentManager().popBackStack("Your Order", 0);
+
                 }
             }
         });
@@ -305,4 +297,12 @@ public class RestaurantsOverviewScreen extends AppCompatActivity  {
                     .replace(R.id.OverViewLayout, restaurantOverViewFragment, "Overview").addToBackStack("Overview").commit();
         }
     }
+
+
+    @Override
+    public void onCreateFm(List<Food> foods,Integer total) {
+
+        ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
+                .add(R.id.OverViewLayout, fragmentDetailFoodInOrder.newInstance(foods,total)).addToBackStack("Your Order").commit();    }
 }

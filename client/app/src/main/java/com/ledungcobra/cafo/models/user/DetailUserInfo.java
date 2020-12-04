@@ -87,4 +87,5 @@ public class DetailUserInfo implements Serializable {
         this.updatedAt = updatedAt;
     }
 
+
 }

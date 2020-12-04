@@ -40,9 +40,7 @@ public class Food implements Serializable {
     @SerializedName("image_url")
     @Expose
     private Image image;
-    @SerializedName("amount")
-    @Expose
-    private String amount;
+
 
     public String getName() {
         return name;
@@ -76,13 +74,6 @@ public class Food implements Serializable {
         this.image = image;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
 
     @Override
     public String toString() {
@@ -93,7 +84,6 @@ public class Food implements Serializable {
                 ", decription='" + decription + '\'' +
                 ", price=" + price +
                 ", image=" + image +
-                ", amount='" + amount + '\'' +
                 '}';
     }
 }
