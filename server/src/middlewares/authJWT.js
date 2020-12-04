@@ -84,10 +84,13 @@ isShipper = (req, res, next) => {
             res.status(500).send(getMessageForClient(err));
             return;
         }
+        //console.log(req.userID);
+        //console.log(user);
         Role.find({
                 _id: { $in: user.roles }
             },
             (err, roles) => {
+                //console.log(roles);
                 if (err) {
                     res.status(500).send(getMessageForClient(err));
                     return;

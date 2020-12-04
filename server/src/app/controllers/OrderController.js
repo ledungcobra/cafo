@@ -4,6 +4,7 @@ const { mongooseToObject } = require('../../utils/mongoose')
 const { multipleMongooseToObject } = require('../../utils/mongoose');
 const Food = require('../model/Food');
 const Restaurant = require('../model/Restaurant');
+const moment = require('moment-timezone');
 
 /*
 status
@@ -32,7 +33,7 @@ class OrderController {
         res.send({ message: "Success!" })
     }
 
-    //[GET] /orders/get
+    //[GET] /orders
     show = async(req, res, next) => {
         let orders = await Order.find({
             user_id: req.userID
@@ -42,14 +43,19 @@ class OrderController {
             let rest = await Restaurant.find({ _id: orders[i].restaurant_id }, 'name address image');
             let total = 0;
             let count = 0;
+            let foodsOrder = new Array();
             for (let j = 0; j < orders[i].foods.length; j++) {
-                let food = await Food.findOne({ _id: orders[i].foods[j].foodID }, 'price');
+                let food = await Food.findOne({ _id: orders[i].foods[j].foodID }, '-category_id -createdAt -updatedAt -__v');
                 count += parseInt(orders[i].foods[j].count);
                 total += food.price.value * parseInt(orders[i].foods[j].count);
+                food = mongooseToObject(food);
+                food.count = orders[i].foods[j].count;
+                foodsOrder.push(food);
             }
 
             orders[i].total = total;
             orders[i].count = count;
+            orders[i].foods = foodsOrder;
         }
 
         res.send(orders);
@@ -73,6 +79,7 @@ class OrderController {
             foods.push(food);
             foods[i].amount = order.foods[i].count;
         }
+        //order.order_time = moment.tz(order.order_time, 'Asia/Ho_Chi_Minh');
         order.foods = foods;
         res.send(order);
     }

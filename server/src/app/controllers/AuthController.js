@@ -68,7 +68,7 @@ class AuthController {
                     return;
                 }
                 if (!user) {
-                    return res.status(404).send(getMessageForClient('User was registered successfully!'));
+                    return res.status(404).send(getMessageForClient('User was not found!'));
                 }
                 var passwordIsValid = bcrypt.compareSync(
                     req.body.password,
