@@ -193,6 +193,8 @@ public class UserApiHandler {
                     @Override
                     public void onResponse(Call<ArrayList<DetailOrderResponse>> call, Response<ArrayList<DetailOrderResponse>> response) {
                         callback.stopProgressIndicator();
+                        Log.d("CALL_API", "Code : "+response.code());
+                        Log.d("CALL_API", "Body: "+response.body());
                         if (response.code() == 200) {
                             callback.onResult(response.body());
                         } else {
@@ -202,6 +204,7 @@ public class UserApiHandler {
 
                     @Override
                     public void onFailure(Call<ArrayList<DetailOrderResponse>> call, Throwable t) {
+                        t.printStackTrace();
                         callback.stopProgressIndicator();
                         callback.onFailure(new Error(t.getMessage()));
                     }

@@ -123,6 +123,15 @@ public class Login extends AppCompatActivity {
 
         }
 
+        Repository.getInstance().getAllTrackingRestaurants().observe(this,
+                new Observer<List<TrackingRestaurant>>() {
+                    @Override
+                    public void onChanged(List<TrackingRestaurant> trackingRestaurants) {
+                        Log.d(TAG, "onChanged: "+trackingRestaurants);
+                    }
+                }
+        );
+
 
 
 

@@ -3,16 +3,16 @@ package com.ledungcobra.cafo.models.user;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
-@Entity(tableName = "tracking_restaurant_table")
+@Entity(tableName = "tracking_restaurant_table",primaryKeys = {"id","type"})
 public class TrackingRestaurant {
     final public static int FAVORITE = 0;
     final public static int VISITED = 1;
-    @PrimaryKey
+
     @NonNull
     @ColumnInfo(name="id")
     private String id;
+
     @ColumnInfo(name = "type")
     private int type;
 

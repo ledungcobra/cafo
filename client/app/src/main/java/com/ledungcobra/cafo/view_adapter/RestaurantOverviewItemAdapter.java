@@ -90,6 +90,6 @@ public class RestaurantOverviewItemAdapter
     }
     @Override
     public int getItemCount() {
-        return restaurants.size();
+        return restaurants== null?0:restaurants.size();
     }
 }

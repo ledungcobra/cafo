@@ -40,7 +40,7 @@ public interface UserService  {
     @POST("order")
     Call<OrderResponse> order(@Body OrderInfo body, @Header("x-cafo-client-access-token") String token);
 
-    @GET("order/get")
+    @GET("order")
     Call<ArrayList<DetailOrderResponse>> getMyOrders(@Header("x-cafo-client-access-token") String token);
 
     @GET("order/id/{id}")

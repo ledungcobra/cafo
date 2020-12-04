@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 //Having
                 Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(getString(R.string.list_restaurants),result);
+                intent.putExtras(bundle);
+
                 finish();
                 startActivity(intent);
             }

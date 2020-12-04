@@ -456,4 +456,10 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
 }
