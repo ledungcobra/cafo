@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,10 +56,11 @@ import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
 
 ;
 
-public class RestaurantDetailScreen extends AppCompatActivity implements ShoppingCartFragment.callBack, RestaurantCategoryFoodFragment.DataUpdateListener {
+public class RestaurantDetailScreen extends AppCompatActivity implements
+        ShoppingCartFragment.callBack,
+        RestaurantCategoryFoodFragment.DataUpdateListener {
 
-    private static final String TAGKEO = "SCROLL" ;
-//    RecyclerView lvMenu;
+    private static final String TAGKEO = "SCROLL";
     ImageView ivLoc;
     ImageView ivDist;
     MenuListViewAdapter adapter;
@@ -70,10 +72,15 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     //TODO: fix bug Card view khi recycler view không thể kéo được
     //TODO: xử lí
     LinearLayout restaurantCard;
+    ImageButton imgbtnList;
+
     FragmentManager fm;
     List<CartItem> cartShops;
     private boolean isShowCard = true;
-    private boolean isListView = true;
+    private MutableLiveData<Boolean> isListView = new MutableLiveData<>(false);
+
+    private ArrayList<RecyclerView> listViewPagerRecyclerView = new ArrayList<>();
+
 
     int cardHeight = -100;
 
@@ -86,8 +93,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         restaurantCard = findViewById(R.id.restaurantCard);
 
 
-
-
         Intent intent = getIntent();
         final String restaurantID = intent.getStringExtra(EXTRA_KEY);
         cartShops = (List<CartItem>) intent.getSerializableExtra("CartShop");
@@ -97,7 +102,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
             @Override
             public void onClick(View v) {
                 Log.d("CALL_API", "add love");
-                Repository.getInstance().insert(new TrackingRestaurant(restaurantID,TrackingRestaurant.FAVORITE));
+                Repository.getInstance().insert(new TrackingRestaurant(restaurantID, TrackingRestaurant.FAVORITE));
 
             }
         });
@@ -105,8 +110,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         if (cartShops == null) {
             cartShops = new ArrayList<CartItem>();
         }
-        final List<Food> foods;
-
         //adapter List
         adapter = new MenuListViewAdapter(this, new ArrayList<Food>());
         //button Add Food
@@ -151,7 +154,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         });
 
 
-        final TabLayout tabLayout= findViewById(R.id.categoryTabLayout);
+        final TabLayout tabLayout = findViewById(R.id.categoryTabLayout);
         final ViewPager viewPager = findViewById(R.id.categoryViewPager);
 
         ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
@@ -173,12 +176,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
         LayoutInflater layoutInflater = getLayoutInflater();
         final View view = layoutInflater.inflate(R.layout.progress_indicator, null, false);
-        final ProgressBar progressBar = view.findViewById(R.id.progress_circular);
-
         final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
-
-
-
 
 
         Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<RestaurantDetail, Error>() {
@@ -201,7 +199,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                 //Menu theo loai
 
                 final FragmentCategoryCollectionAdapter collectionAdapter = new FragmentCategoryCollectionAdapter(getSupportFragmentManager(),
-                        FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,result.getMenu());
+                        FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, result.getMenu(),isListView);
 
 
                 viewPager.setAdapter(collectionAdapter);
@@ -214,10 +212,10 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                 findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         Intent intent = new Intent(RestaurantDetailScreen.this, MapScreen.class);
                         intent.putExtra("lat", result.getPosition().getLatitude());
                         intent.putExtra("long", result.getPosition().getLongitude());
-
 
                         startActivity(intent);
                     }
@@ -236,29 +234,23 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         Toolbar toolbar = findViewById(R.id.toolbarDetail);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
-        //Transition from ListView to GridView and vice versa
-//        final ImageButton imgbtnList = findViewById(R.id.btnGrid);
-//        final boolean[] isListView = {true};
-//        imgbtnList.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (isListView[0]) {
-//                    lvMenu.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-//                    adapterGrid.setFoods(adapter.getListFood());
-//                    lvMenu.setAdapter(adapterGrid);
-//                    isListView[0] = !isListView[0];
-//                    imgbtnList.setImageResource(R.drawable.ic_baseline_grid_on_24);
-//
-//                } else {
-//                    lvMenu.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//                    lvMenu.setAdapter(adapter);
-//                    isListView[0] = !isListView[0];
-//                    imgbtnList.setImageResource(R.drawable.ic_baseline_list_24);
-//                }
-//
-//            }
-//        });
-//
+//        Transition from ListView to GridView and vice versa
+        imgbtnList = findViewById(R.id.btnGrid);
+
+        imgbtnList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isListView.getValue()){
+                    imgbtnList.setImageResource(R.drawable.ic_baseline_list_24);
+
+                }else{
+                    imgbtnList.setImageResource(R.drawable.ic_baseline_dehaze_24);
+                }
+                isListView.setValue(!isListView.getValue());
+            }
+        });
+
 
     }
 
@@ -282,7 +274,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                 view.getLayoutParams().height = value;
                 view.requestLayout();
 
-                if(newHeight == value){
+                if (newHeight == value) {
                     callback.onEnd();
                 }
 
@@ -294,6 +286,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         animationSet.play(slideAnimator);
         animationSet.start();
     }
+
     private void showComponents() {
 
         slideView(restaurantCard, 0, cardHeight, new OnAnimationEnd() {
@@ -305,7 +298,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
                 restaurantCard.setLayoutParams(layoutParams);
             }
         });
-
 
 
     }
@@ -331,7 +323,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_restaurant, menu);
@@ -343,9 +334,9 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.shopCart) {
-            for (int i=0; i<cartShops.size();i++){
-                for (int j=i+1; j<cartShops.size();j++){
-                    if (cartShops.get(i).getFood().equals(cartShops.get(j).getFood())){
+            for (int i = 0; i < cartShops.size(); i++) {
+                for (int j = i + 1; j < cartShops.size(); j++) {
+                    if (cartShops.get(i).getFood().equals(cartShops.get(j).getFood())) {
                         cartShops.get(i).setNumber(cartShops.get(i).getNumber() + 1);
                         cartShops.remove(j);
                         j--;
@@ -380,17 +371,13 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
     }
 
-    @Override
-    public void onDataInit(List<Food> foods) {
-        foods = adapter.getListFood();
-    }
 
     @Override
     public void onScrollChangeListener(final RecyclerView rvMenuFood) {
         rvMenuFood.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if( Math.abs(scrollY - oldScrollY)<400 && Math.abs(scrollY - oldScrollY)>50) {
+                if (Math.abs(scrollY - oldScrollY) < 400 && Math.abs(scrollY - oldScrollY) > 50) {
                     if (scrollY - oldScrollY > 0 && isShowCard == true) {
                         Log.d(TAGKEO, "Keo len: " + "Y old: " + oldScrollY + " Y: " + scrollY);
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card);
@@ -416,18 +403,17 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
 
 
                     } else if (scrollY - oldScrollY < 0 && isShowCard == false) {
-                        Log.d(TAGKEO, "Keo xuong: " + "Y old: " + oldScrollY + " Y: " + scrollY);
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
                         boolean shouldMove = false;
 
-                        if(isListView){
-                            shouldMove = 0 == ((LinearLayoutManager)rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+                        if (isListView.getValue() == false) {
+                            shouldMove = 0 == ((LinearLayoutManager) rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
 
-                        }else{
-                            shouldMove = 0 == ((GridLayoutManager)rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+                        } else {
+                            shouldMove = 0 == ((GridLayoutManager) rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
 
                         }
-                        if(shouldMove){
+                        if (shouldMove) {
                             restaurantCard.startAnimation(animation);
                             animation.setAnimationListener(new Animation.AnimationListener() {
                                 @Override
@@ -462,4 +448,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements Shoppin
         super.onBackPressed();
 
     }
+
+
 }

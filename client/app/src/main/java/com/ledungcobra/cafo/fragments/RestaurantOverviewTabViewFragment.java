@@ -68,31 +68,6 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        assert passedRestaurantList!=null;
-        passedRestaurantList.observe(this, new Observer<ArrayList<BriefRestaurantInfo>>() {
-            @Override
-            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
-                restaurantList.setValue((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
-
-            }
-        });
-
-        if (restaurantList != null) {
-
-            restaurantList.observe(this, new Observer<List<BriefRestaurantInfo>>() {
-                @Override
-                public void onChanged(List<BriefRestaurantInfo> briefRestaurantInfos) {
-
-                    if (briefRestaurantInfos != null && adapter != null) {
-                        adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
-
-                    }
-                }
-            });
-
-        }
-
     }
 
     @Override
@@ -160,6 +135,30 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
 
                     }
 
+                }
+            });
+
+        }
+
+        assert passedRestaurantList!=null;
+        passedRestaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
+            @Override
+            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
+                restaurantList.setValue((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
+
+            }
+        });
+
+        if (restaurantList != null) {
+
+            restaurantList.observe(getViewLifecycleOwner(), new Observer<List<BriefRestaurantInfo>>() {
+                @Override
+                public void onChanged(List<BriefRestaurantInfo> briefRestaurantInfos) {
+
+                    if (briefRestaurantInfos != null && adapter != null) {
+                        adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
+
+                    }
                 }
             });
 

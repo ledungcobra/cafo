@@ -184,8 +184,5 @@ public class RestaurantOverViewFragment extends Fragment{
         }
     }
 
-
-
-
 }
 

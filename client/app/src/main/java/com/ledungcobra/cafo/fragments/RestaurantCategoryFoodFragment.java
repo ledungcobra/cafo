@@ -7,13 +7,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.common_new.Food;
-import com.ledungcobra.cafo.view_adapter.MenuGridViewAdapter;
 import com.ledungcobra.cafo.view_adapter.MenuListViewAdapter;
 
 import java.util.ArrayList;
@@ -29,17 +31,12 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class RestaurantCategoryFoodFragment extends Fragment {
 
     MenuListViewAdapter adapter;
-    MenuGridViewAdapter adapterGrid;
     List<CartItem> cartShops = new ArrayList<CartItem>();
     RecyclerView rvMenuFood;
     List<Food> foods = new ArrayList<Food>();
-
-    private boolean isShowCard = true;
-
+    private LiveData<Boolean> isListView;
     public interface DataUpdateListener {
         void onDataUpdate(List<CartItem> mData);
-        //THUA: có thừa không ?
-        void onDataInit(List<Food> foods);
 
         void onScrollChangeListener(RecyclerView rvMenuFood);
     }
@@ -47,11 +44,13 @@ public class RestaurantCategoryFoodFragment extends Fragment {
     DataUpdateListener dataListener;
 
 
-    public interface callBackCategory {
-        void callBackActivity(List<CartItem> cartShopList);
+
+
+    public  interface  FoodCategoryFragmentCallback{
+        void addRecyclerViewToHostActivityList(RecyclerView recyclerView);
     }
 
-    ShoppingCartFragment.callBack listCart;
+
 
     public RestaurantCategoryFoodFragment() {
         // Required empty public constructor
@@ -59,13 +58,15 @@ public class RestaurantCategoryFoodFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static RestaurantCategoryFoodFragment newInstance(List<Food> foodList) {
+    public static RestaurantCategoryFoodFragment newInstance(List<Food> foodList, LiveData<Boolean> isListView) {
         RestaurantCategoryFoodFragment fragment = new RestaurantCategoryFoodFragment();
         Bundle args = new Bundle();
         ArrayList<Food> foodArrayList = new ArrayList<Food>();
         foodArrayList.addAll(foodList);
         args.putSerializable("RestaurantID", foodArrayList);
         fragment.setArguments(args);
+        fragment.isListView = isListView;
+
         return fragment;
     }
 
@@ -85,34 +86,31 @@ public class RestaurantCategoryFoodFragment extends Fragment {
         foods = (List<Food>) getArguments().getSerializable("RestaurantID");
         adapter = new MenuListViewAdapter(getContext(), new ArrayList<Food>());
 
-//        foods = (List<Food>) this.getArguments().getSerializable("MenuFood");
-//        Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<Restaurant, Error>() {
-//            @Override
-//            public void stopProgressIndicator() {
-//
-//            }
-//
-//            @Override
-//            public void startProgressIndicator() {
-//
-//            }
-//
-//            @Override
-//            public void onResult(Restaurant result) {
-//                adapter.setFoods(result.getMenuId().getFoodsId());
-//            }
-//
-//            @Override
-//            public void onFailure(Error error) {
-//
-//            }
-//        });
-        //adapter List
+
         adapter.setFoods(foods);
         rvMenuFood = view.findViewById(R.id.foodListRecyclerView);
         rvMenuFood.setLayoutManager(new LinearLayoutManager(getContext()));
         rvMenuFood.setAdapter(adapter);
         dataListener = (DataUpdateListener) getActivity();
+
+        isListView.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+
+                if(rvMenuFood!=null){
+
+                    if (isListView.getValue()) {
+
+                        rvMenuFood.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+
+                    } else {
+                        rvMenuFood.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    }
+                }
+
+            }
+        });
+
 
         adapter.setOnClickListener(new MenuListViewAdapter.OnItemClickListener() {
             @Override
@@ -141,11 +139,15 @@ public class RestaurantCategoryFoodFragment extends Fragment {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 dataListener.onScrollChangeListener(rvMenuFood);
+
             }
         });
 
+
         return view;
     }
+
+
 
 }
 

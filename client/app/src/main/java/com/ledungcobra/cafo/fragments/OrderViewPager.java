@@ -17,11 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrderViewPager#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class OrderViewPager extends Fragment {
 
     MaterialButton btnAcceptOrder;
