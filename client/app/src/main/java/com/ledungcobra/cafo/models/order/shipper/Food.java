@@ -9,6 +9,25 @@ import java.io.Serializable;
 
 public class Food implements Serializable {
 
+private String foodID;
+
+    public String getFoodID() {
+        return foodID;
+    }
+
+    public void setFoodID(String foodID) {
+        this.foodID = foodID;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    private  int count;
     @SerializedName("name")
     @Expose
     private String name;
@@ -21,9 +40,7 @@ public class Food implements Serializable {
     @SerializedName("image_url")
     @Expose
     private Image image;
-    @SerializedName("amount")
-    @Expose
-    private String amount;
+
 
     public String getName() {
         return name;
@@ -57,22 +74,16 @@ public class Food implements Serializable {
         this.image = image;
     }
 
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
 
     @Override
     public String toString() {
         return "Food{" +
-                "name='" + name + '\'' +
+                "foodID='" + foodID + '\'' +
+                ", count=" + count +
+                ", name='" + name + '\'' +
                 ", decription='" + decription + '\'' +
                 ", price=" + price +
                 ", image=" + image +
-                ", amount='" + amount + '\'' +
                 '}';
     }
 }

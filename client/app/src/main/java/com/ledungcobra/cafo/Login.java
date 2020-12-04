@@ -77,44 +77,6 @@ public class Login extends AppCompatActivity {
         Repository.getInstance().initDb(getApplication());
 
 
-        if (!TOKEN.equals("") && !ROLE.equals("")) {
-            UserApiHandler.getInstance().setUserAccessToken(TOKEN);
-            UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
-                @Override
-                public void stopProgressIndicator() {
-                    stopProgressBar();
-                }
-
-                @Override
-                public void startProgressIndicator() {
-                    startProgressBar();
-                }
-
-                @Override
-                public void onResult(DetailUserInfo result) {
-                    if (ROLE.equals("shipper")) {
-                        startActivity(new Intent(Login.this, DriverScreen.class));
-                    } else if (ROLE.equals("customer")) {
-                        startActivity(new Intent(Login.this, MainActivity.class));
-                    }
-                    Log.d(TAG, "onResult: " + result);
-                }
-
-                @Override
-                public void onFailure(Error error) {
-
-                    Toast.makeText(Login.this, "User session expired", Toast.LENGTH_SHORT).show();
-                    Editor editor = pref.edit();
-                    editor.clear();
-                    editor.apply();
-                    showErrorDialog("User hết hạn, đăng nhập thất bại");
-
-                }
-            });
-
-        }
-
-
 
 
     }
