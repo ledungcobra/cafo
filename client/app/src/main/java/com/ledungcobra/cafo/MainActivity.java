@@ -1,9 +1,11 @@
 package com.ledungcobra.cafo;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -24,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AnimationDrawable animationDrawable;
+        ImageView mProgressBar = findViewById(R.id.gif_progress_bar);
+        animationDrawable = (AnimationDrawable)mProgressBar.getDrawable();
+        mProgressBar.setVisibility(View.VISIBLE);
+        animationDrawable.start();
 
         appTitle = findViewById(R.id.app_title);
         appTitle.setAlpha(0);
