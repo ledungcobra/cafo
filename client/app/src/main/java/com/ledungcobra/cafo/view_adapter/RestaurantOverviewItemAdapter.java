@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.RestaurantDetailScreen;
+import com.ledungcobra.cafo.activity.RestaurantDetailScreen;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.squareup.picasso.Picasso;

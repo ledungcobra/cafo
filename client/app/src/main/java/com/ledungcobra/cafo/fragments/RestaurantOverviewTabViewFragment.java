@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.RestaurantDetailScreen;
-import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.activity.RestaurantDetailScreen;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
@@ -25,7 +25,7 @@ import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
+import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 
 /**
  * A fragment representing a list of Items.

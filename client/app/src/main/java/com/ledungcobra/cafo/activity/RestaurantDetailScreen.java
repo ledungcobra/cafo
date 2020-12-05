@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 
 import android.animation.AnimatorSet;
@@ -34,7 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.fragments.RestaurantCategoryFoodFragment;
 import com.ledungcobra.cafo.fragments.ShoppingCartFragment;
 import com.ledungcobra.cafo.models.common_new.CartItem;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.ledungcobra.cafo.RestaurantsOverviewScreen.EXTRA_KEY;
+import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 
 ;
 

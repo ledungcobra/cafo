@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.database.UserApiHandler;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 

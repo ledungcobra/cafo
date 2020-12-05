@@ -1,8 +1,8 @@
-package com.ledungcobra.cafo.database;
+package com.ledungcobra.cafo.models.user;
 
 import java.io.Serializable;
 
-class UserPos implements Serializable {
+public class UserPos implements Serializable {
     private double latitude;
     private double longitude;
 

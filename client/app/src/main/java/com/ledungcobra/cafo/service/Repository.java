@@ -1,8 +1,9 @@
-package com.ledungcobra.cafo.database;
+package com.ledungcobra.cafo.service;
 
 import android.app.Application;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -169,7 +170,7 @@ public class Repository {
         }).start();
     }
 
-    public LiveData<ArrayList<RestaurantDetail>> searchRestaurant(String searchKeyword, int page, int limit) {
+    public LiveData<ArrayList<RestaurantDetail>> searchRestaurant(String searchKeyword, int page, int limit, final AppCompatActivity activity) {
         final MutableLiveData<ArrayList<RestaurantDetail>> result = new MutableLiveData<>(new ArrayList<RestaurantDetail>());
 
         restaurantService.searchRestaurant(searchKeyword, page, limit, "5fbd364afe0a1616a91994bb").enqueue(new Callback<List<String>>() {
@@ -179,9 +180,11 @@ public class Repository {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ArrayList<RestaurantDetail> list = new ArrayList<>();
+
+                            final ArrayList<RestaurantDetail> list = new ArrayList<>();
                             for (String resID : response.body()) {
                                 try {
+                                    Log.d("SEARCHING", "run: "+resID);
 
                                     Response<RestaurantDetail> resDetail= restaurantService.getRestaurant(resID).execute();
 
@@ -195,7 +198,14 @@ public class Repository {
                                     e.printStackTrace();
                                 }
                             }
-                            result.setValue(list);
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.d("SEARCHING", "run: "+list.size());
+                                    result.setValue(list);
+                                }
+                            });
                         }
                     }).start();
 

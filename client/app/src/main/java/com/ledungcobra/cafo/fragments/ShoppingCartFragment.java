@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.activity.CartInformationShipping;
 import com.ledungcobra.cafo.models.cart.Price;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
-import com.ledungcobra.cafo.CartInformationShipping;
 
 import java.io.Serializable;
 import java.util.List;
@@ -117,7 +117,7 @@ public class ShoppingCartFragment extends Fragment {
                 intent.putExtra(getActivity().getString(R.string.cart_items), (Serializable) cartShops);
                 intent.putExtra(getActivity().getString(R.string.res_id),resID);
                 intent.putExtra("Info", (Serializable) cartShops);
-                startActivity(intent);
+                startActivityForResult(intent,77777);
             }
         });
 
@@ -135,4 +135,6 @@ public class ShoppingCartFragment extends Fragment {
             throw new ClassCastException(context.toString());
         }
     }
+
+
 }

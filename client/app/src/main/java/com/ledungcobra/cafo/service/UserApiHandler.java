@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo.database;
+package com.ledungcobra.cafo.service;
 
 import android.util.Log;
 
@@ -6,11 +6,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.GsonBuilder;
 import com.ledungcobra.cafo.models.order.FoodOrderItem;
+import com.ledungcobra.cafo.models.order.OrderInfo;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.order.customer.OrderResponse;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.models.user.UserInfo;
 import com.ledungcobra.cafo.models.user.UserLogin;
+import com.ledungcobra.cafo.models.user.UserPos;
 import com.ledungcobra.cafo.network.UserService;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 

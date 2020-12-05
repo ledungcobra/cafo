@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.GsonBuilder;
+import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.routing.Routing;
 import com.ledungcobra.cafo.network.MapService;
 

@@ -15,43 +15,42 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DriverScreen">
+        <activity android:name=".activity.DriverScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CallApi">
+        <activity android:name=".activity.CallApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".CartInformationShipping"
+            android:name=".activity.CartInformationShipping"
             android:label="@string/title_activity_cart_infomation_shipping">
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_api_key" />
         <activity
-            android:name=".Login"
+            android:name=".activity.Login"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapScreen">
+        <activity android:name=".activity.MapScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RestaurantDetailScreen" />
-        <activity android:name=".RestaurantsOverviewScreen"/>
-        <activity android:name=".ShopSelected" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.RestaurantDetailScreen" />
+        <activity android:name=".activity.RestaurantsOverviewScreen"/>
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

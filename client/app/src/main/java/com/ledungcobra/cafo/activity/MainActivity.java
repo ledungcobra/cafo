@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -10,7 +10,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 
-import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResult(ArrayList<BriefRestaurantInfo> result) {
                 //Having
-                Intent intent = new Intent(MainActivity.this,RestaurantsOverviewScreen.class);
+                Intent intent = new Intent(MainActivity.this, RestaurantsOverviewScreen.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(getString(R.string.list_restaurants),result);
                 intent.putExtras(bundle);

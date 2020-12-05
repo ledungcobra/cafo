@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -24,10 +24,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
-import com.ledungcobra.cafo.database.UserApiHandler;
+import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.order.customer.OrderResponse;
@@ -46,34 +45,20 @@ import retrofit2.Response;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class CartInformationShipping extends AppCompatActivity {
-    //Views
 
 
-    String resID;
-    private static final int REQUEST_LOCATION_CODE = 12345;
-    LocationManager locationManager;
-    ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
-    MutableLiveData<String> username = new MutableLiveData<>(null);
-    MutableLiveData<String> phoneNumber = new MutableLiveData<>(null);
-
-
-    protected EditText
+    private LocationManager locationManager;
+    private  EditText
             edtFullname,
             edtAddress,
             edtPhoneNumber,
             edtNote,
             edtCode;
-    protected TextView
+    private  TextView
             tvCostFood,
             tvShippingFee,
             tvTotalCost;
     protected Button btnOrderShip;
-
-    //Data
-    ArrayList<CartItem> listCartShop;
-    int foodCost = 0;
-    int shippingFeeCost = 0;
-    int totalCost = 0;
 
     LocationListener locationListener = new LocationListener() {
         @Override
@@ -97,20 +82,32 @@ public class CartInformationShipping extends AppCompatActivity {
         }
     };
 
+    String resID;
+    private static final int REQUEST_LOCATION_CODE = 12345;
+    ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
+
+    //Data
+    ArrayList<CartItem> listCartShop;
+    int foodCost = 0;
+    int shippingFeeCost = 0;
+    int totalCost = 0;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_infomation_shipping);
-        bindViews();
 
-        btnOrderShip.setEnabled(false);
+        initUI();
 
+        //GET DATA
         Intent intent = getIntent();
         listCartShop = (ArrayList<CartItem>) intent.getSerializableExtra("Info");
         resID = intent.getStringExtra(getString(R.string.res_id));
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-
+        //CALC TOTAL COST FOR EVERY ORDER
         if (listCartShop != null && listCartShop.size() > 0) {
             for (CartItem cartShop: listCartShop){
                 foodCost += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
@@ -128,81 +125,25 @@ public class CartInformationShipping extends AppCompatActivity {
         tvTotalCost.setText(
                 String.format("%,d", totalCost) + getResources().getString(R.string.currency));
 
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //validate input
-                for (EditText edt  : new EditText[] {edtFullname, edtAddress, edtPhoneNumber}) {
-                    if (edt.getText().toString().trim().isEmpty()) {
-                        btnOrderShip.setEnabled(false);
-                        return;
-                    }
-                }
-                btnOrderShip.setEnabled(true);
-            }
-        };
-
-        edtFullname.addTextChangedListener(textWatcher);
-        edtAddress.addTextChangedListener(textWatcher);
-        edtPhoneNumber.addTextChangedListener(textWatcher);
-
 
         if (ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-            Log.d("CALL_API", "LOCATION PERMISION");
             ActivityCompat.requestPermissions(CartInformationShipping.this,new String[]
                             {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_LOCATION_CODE);
 
         }else{
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, locationListener);
-//            doOrder();a
             Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if(loc != null) edtAddress.setText(getAddress(this,loc.getLatitude(),loc.getLongitude()));
 
         }
 
+        //Get user information
+        getUserInformation();
 
-        btnOrderShip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fullname = edtFullname.getText().toString();
-                String address = edtAddress.getText().toString();
-                String phone = edtPhoneNumber.getText().toString();
-                String notes = edtNote.getText().toString();
+    }
 
-                String message = new String(
-                        "Your name: "+ fullname
-                        +"\nAddress: "+ address
-                        +"\nPhone: " + phone
-                        +"\nNotes: " + notes
-                        +"\n\nTotal Cost: " + tvTotalCost.getText().toString()
-                        //Too lazy to do format number again :p
-                );
-
-                AlertDialog.Builder myBuilder =
-                        new AlertDialog.Builder(CartInformationShipping.this);
-                myBuilder.setTitle("Confirm Order")
-                        .setMessage(message)
-                        .setPositiveButton("Confirm Order", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichOne) {
-                                //TODO: Call API to place order
-                                for (CartItem cartItem : listCartShop) {
-                                    foodOrderItems.add(new FoodOrderItem(cartItem.getFood().getId(), cartItem.getNumber()));
-                                }
-
-                                doOrder();
-                                finish();
-                            }})
-                        .setNegativeButton("Cancel", null) //setNegativeButton
-                        .show();
-            }
-        });
-
+    private void getUserInformation(){
         UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
             @Override
             public void stopProgressIndicator() {
@@ -216,8 +157,8 @@ public class CartInformationShipping extends AppCompatActivity {
 
             @Override
             public void onResult(DetailUserInfo result) {
-                username.setValue(result.getUsername());
-                phoneNumber.setValue(result.getPhoneNumber());
+                edtFullname.setText(result.getUsername());
+                edtPhoneNumber.setText(result.getPhoneNumber());
             }
 
             @Override
@@ -225,21 +166,6 @@ public class CartInformationShipping extends AppCompatActivity {
 
             }
         });
-
-        username.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-               edtFullname.setText(s);
-            }
-        });
-
-        phoneNumber.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                edtPhoneNumber.setText(s);
-            }
-        });
-
     }
 
     @SuppressLint("MissingPermission")
@@ -313,7 +239,7 @@ public class CartInformationShipping extends AppCompatActivity {
         totalCost = foodCost + shippingFeeCost;
     }
 
-    private void bindViews() {
+    private void initUI() {
         edtFullname = findViewById(R.id.editFullNameShip);
         edtAddress = findViewById(R.id.editAddressShip);
         edtPhoneNumber = findViewById(R.id.editPhone);
@@ -325,6 +251,76 @@ public class CartInformationShipping extends AppCompatActivity {
         tvTotalCost = findViewById(R.id.tvTotalCost);
 
         btnOrderShip = findViewById(R.id.btnOrderShip);
+        btnOrderShip.setEnabled(false);
+
+        //Add UI Listener
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //validate input
+                for (EditText edt  : new EditText[] {edtFullname, edtAddress, edtPhoneNumber}) {
+                    if (edt.getText().toString().trim().isEmpty()) {
+                        btnOrderShip.setEnabled(false);
+                        return;
+                    }
+                }
+                btnOrderShip.setEnabled(true);
+            }
+        };
+
+        edtFullname.addTextChangedListener(textWatcher);
+        edtAddress.addTextChangedListener(textWatcher);
+        edtPhoneNumber.addTextChangedListener(textWatcher);
+
+        btnOrderShip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fullname = edtFullname.getText().toString();
+                String address = edtAddress.getText().toString();
+                String phone = edtPhoneNumber.getText().toString();
+                String notes = edtNote.getText().toString();
+
+                String message = new String(
+                        "Your name: "+ fullname
+                                +"\nAddress: "+ address
+                                +"\nPhone: " + phone
+                                +"\nNotes: " + notes
+                                +"\n\nTotal Cost: " + tvTotalCost.getText().toString()
+                        //Too lazy to do format number again :p
+                );
+
+                AlertDialog.Builder myBuilder =
+                        new AlertDialog.Builder(CartInformationShipping.this);
+                myBuilder.setTitle("Confirm Order")
+                        .setMessage(message)
+                        .setPositiveButton("Confirm Order", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichOne) {
+                                //TODO: Call API to place order
+                                for (CartItem cartItem : listCartShop) {
+                                    foodOrderItems.add(new FoodOrderItem(cartItem.getFood().getId(), cartItem.getNumber()));
+                                }
+
+                                doOrder();
+                                dialog.dismiss();
+
+                                setResult(RESULT_OK,new Intent());
+                                CartInformationShipping.this.finish();
+                            }})
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }) //setNegativeButton
+                        .show();
+            }
+        });
+
     }
 
 }

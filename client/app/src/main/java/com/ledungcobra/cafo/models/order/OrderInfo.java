@@ -1,6 +1,6 @@
-package com.ledungcobra.cafo.database;
+package com.ledungcobra.cafo.models.order;
 
-import com.ledungcobra.cafo.models.order.FoodOrderItem;
+import com.ledungcobra.cafo.models.user.UserPos;
 
 import java.util.List;
 

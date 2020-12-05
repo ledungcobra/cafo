@@ -1,6 +1,6 @@
 package com.ledungcobra.cafo.network;
 
-import com.ledungcobra.cafo.database.OrderInfo;
+import com.ledungcobra.cafo.models.order.OrderInfo;
 import com.ledungcobra.cafo.models.order.customer.OrderResponse;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;

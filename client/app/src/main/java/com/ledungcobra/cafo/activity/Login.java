@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -24,8 +24,9 @@ import androidx.lifecycle.Observer;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.ledungcobra.cafo.database.Repository;
-import com.ledungcobra.cafo.database.UserApiHandler;
+import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.service.Repository;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.models.user.UserInfo;

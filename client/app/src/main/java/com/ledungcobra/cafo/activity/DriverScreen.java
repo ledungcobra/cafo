@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;

@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo.database;
+package com.ledungcobra.cafo.service;
 
 import android.content.Context;
 import android.util.Log;

@@ -18,7 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 

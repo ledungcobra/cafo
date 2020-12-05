@@ -9,20 +9,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.database.UserApiHandler;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.order.shipper.Food;
-import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.OrderListAdapter;
 
-import java.nio.file.ClosedFileSystemException;
 import java.util.ArrayList;
 import java.util.List;
 

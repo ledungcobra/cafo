@@ -1,4 +1,4 @@
-package com.ledungcobra.cafo;
+package com.ledungcobra.cafo.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
-import com.ledungcobra.cafo.database.Repository;
+import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverViewFragment;
 import com.ledungcobra.cafo.fragments.UserOrdersFragment;
@@ -32,7 +33,6 @@ import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
-import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.view_adapter.MenuNavigationDrawerAdapter;
 
 import java.util.ArrayList;
@@ -247,7 +247,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
 
                 if(newText.length()>0){
 
-                    Repository.getInstance().searchRestaurant(newText,1,20).observe(RestaurantsOverviewScreen.this, new Observer<ArrayList<RestaurantDetail>>() {
+                    Repository.getInstance().searchRestaurant(newText,1,10,RestaurantsOverviewScreen.this).observe(RestaurantsOverviewScreen.this, new Observer<ArrayList<RestaurantDetail>>() {
                         @Override
                         public void onChanged(ArrayList<RestaurantDetail> restaurantDetails) {
                             Log.d("SEARCHING", "onChanged: "+ restaurantDetails);
