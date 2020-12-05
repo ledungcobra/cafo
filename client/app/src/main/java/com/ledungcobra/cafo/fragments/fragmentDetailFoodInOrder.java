@@ -20,9 +20,10 @@ import java.util.List;
 
 public class fragmentDetailFoodInOrder extends Fragment {
 
+
+    //DATA
     private static final String ARG_PARAM1 = "List Food in DetailOrder";
     private static final String ARG_PARAM2 = "Total in DetailOrder";
-
 
     public fragmentDetailFoodInOrder() {
         // Required empty public constructor

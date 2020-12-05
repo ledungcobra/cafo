@@ -21,15 +21,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.fragments.DashboardFragment;
-import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
+import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.service.UserApiHandler;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
 import com.ledungcobra.cafo.view_adapter.SimpleItem;
@@ -207,12 +208,30 @@ public class DriverScreen extends AppCompatActivity implements
     }
 
     @Override
-    public void onButtonAcceptOrderClick() {
+    public void onButtonAcceptOrderClick(String orderID) {
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container,new DriverDetailOrderFragment());
-        ft.addToBackStack(null);
-        ft.commit();
+        UserApiHandler.getInstance().getOrderByUser(orderID, new UIThreadCallBack<DetailOrderResponse, Error>() {
+            @Override
+            public void stopProgressIndicator() {
+
+            }
+
+            @Override
+            public void startProgressIndicator() {
+
+            }
+
+            @Override
+            public void onResult(DetailOrderResponse result) {
+
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
+
 
     }
 }

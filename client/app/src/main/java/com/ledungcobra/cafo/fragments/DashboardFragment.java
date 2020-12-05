@@ -32,6 +32,8 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_drawer,container,false);
+
+        //Button for customer find fetch five order
         CardView cardFindOrders = view.findViewById(R.id.cardFindOrders);
 
         cardFindOrders.setOnClickListener(new View.OnClickListener() {

@@ -38,7 +38,7 @@ public class OrderViewPager extends Fragment {
     }
 
     public interface OrderViewPagerCallback {
-        void onButtonAcceptOrderClick();
+        void onButtonAcceptOrderClick(String orderID);
     }
 
 
@@ -75,12 +75,14 @@ public class OrderViewPager extends Fragment {
         btnAcceptOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (callback != null) {
-                    callback.onButtonAcceptOrderClick();
+                    callback.onButtonAcceptOrderClick(detailOrderResponse.getId());
                 } else {
-                    Log.d("Must implement this", "onClick: ");
+                    Log.d("CALL_API", "REQUIRE CALLBACK");
 
                 }
+
             }
         });
         return view;

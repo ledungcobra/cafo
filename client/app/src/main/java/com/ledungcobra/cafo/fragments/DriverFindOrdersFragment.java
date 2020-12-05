@@ -78,7 +78,7 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             return;
         }
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location userLocation = locationManager != null ? locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) : null;
         UserApiHandler.getInstance().fetchFiveOrdersNearCustomerByShipper(userLocation.getLatitude(),
                 userLocation.getLongitude(), new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
                     @Override
