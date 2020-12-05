@@ -1,9 +1,10 @@
 const VERSION = 0.2;
 
-getMessageForClient = (message) => {
+getMessageForClient = (status_code, message) => {
     return {
         api_name: "cafo",
         version: VERSION,
+        status_code: status_code,
         message: message
     }
 }

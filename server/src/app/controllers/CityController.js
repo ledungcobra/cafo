@@ -1,46 +1,56 @@
+const createError = require('http-errors')
+
 const City = require('../model/City');
-//const Restaurant = require('../model/Restaurant');
 const { mongooseToObject } = require('../../utils/mongoose')
 const { multipleMongooseToObject } = require('../../utils/mongoose')
 
-const getMessageForClient = require('../../utils/message')
-
 class CityController {
     //[GET] /cities/id/:id
-    showOneByID(req, res, next) {
-        City.findOne({ _id: req.params.id }, 'name city_url')
-            .then(city => {
+    async showOneByID(req, res, next) {
+        try {
+            let city = await City.findOne({ _id: req.params.id }, 'name city_url');
+            //check exist city
+            if (city) {
                 city = mongooseToObject(city);
                 res.send(city);
-            })
-            .catch(err => {
-                res.send(getMessageForClient('null'));
-            });
+            } else {
+                next(createError(404));
+            }
+        } catch (err) {
+            next(createError(400, err));
+        }
     }
 
     //[GET] /cities/:city_url
-    showOneByURL(req, res, next) {
-        City.findOne({ city_url: req.params.city_url }, 'name city_url')
-            .then(city => {
+    async showOneByURL(req, res, next) {
+        try {
+            let city = await City.findOne({ city_url: req.params.city_url }, 'name city_url');
+
+            //check exist city
+            if (city) {
                 city = mongooseToObject(city);
                 res.send(city);
-            })
-            .catch(err => {
-                res.send(getMessageForClient('null'));
-            });
+            } else {
+                next(createError(404));
+            }
+        } catch (err) {
+            next(createError(400, err));
+        }
     }
 
     //[GET] /cities
-    showFull(req, res, next) {
-        City.find()
-            .then(cities => {
+    async showFull(req, res, next) {
+        try {
+            let cities = await City.find();
+            if (cities.length) {
                 cities = multipleMongooseToObject(cities);
-                console.log(cities)
                 res.send(cities);
-            })
-            .catch(err => {
-                res.send(getMessageForClient('null'));
-            });
+            } else {
+                next(createError(404));
+            }
+        } catch (err) {
+            next(createError(err));
+        }
     }
 }
 

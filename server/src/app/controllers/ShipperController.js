@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const Order = require('../model/Order');
 const { mongooseToObject, multipleMongooseToObject } = require('../../utils/mongoose');
 const Restaurant = require('../model/Restaurant');
@@ -11,30 +12,41 @@ const getMessageForClient = require('../../utils/message');
 class ShipperController {
     //[GET] /orders
     show = async(req, res, next) => {
-        let orders = await Order.find({
-            shipper_id: req.userID
-        }, '-__v -updatedAt -createdAt');
-        orders = multipleMongooseToObject(orders);
-        for (let i = 0; i < orders.length; i++) {
-            let rest = await Restaurant.find({ _id: orders[i].restaurant_id }, 'name address image');
-            let total = 0;
-            let count = 0;
-            let foodsOrder = new Array();
-            for (let j = 0; j < orders[i].foods.length; j++) {
-                let food = await Food.findOne({ _id: orders[i].foods[j].foodID }, '-category_id -createdAt -updatedAt -__v');
-                count += parseInt(orders[i].foods[j].count);
-                total += food.price.value * parseInt(orders[i].foods[j].count);
-                food = mongooseToObject(food);
-                food.count = orders[i].foods[j].count;
-                foodsOrder.push(food);
+        try {
+            let orders = await Order.find({
+                shipper_id: req.userID
+            }, '-__v -createdAt');
+            orders = multipleMongooseToObject(orders);
+            for (let i = 0; i < orders.length; i++) {
+                if (orders[i].restaurant_id) {
+                    let rest = await Restaurant.findOne({ _id: orders[i].restaurant_id }, 'name address image');
+                    if (rest) {
+                        rest = mongooseToObject(rest);
+                        orders[i].restaurnt = rest;
+                    }
+                }
+                let total = 0;
+                let count = 0;
+                let foodsOrder = new Array();
+                for (let j = 0; j < orders[i].foods.length; j++) {
+                    let food = await Food.findOne({ _id: orders[i].foods[j].foodID }, '-category_id -createdAt -updatedAt -__v');
+                    count += parseInt(orders[i].foods[j].count);
+                    total += food.price.value * parseInt(orders[i].foods[j].count);
+                    food = mongooseToObject(food);
+                    food.count = orders[i].foods[j].count;
+                    foodsOrder.push(food);
+                }
+
+                orders[i].total = total;
+                orders[i].count = count;
+                orders[i].foods = foodsOrder;
             }
+            //todo: return null orders?
 
-            orders[i].total = total;
-            orders[i].count = count;
-            orders[i].foods = foodsOrder;
+            res.send(orders);
+        } catch (error) {
+            next(createError(error));
         }
-
-        res.send(orders);
     }
 
     //[GET] /search?long=?&lat=?
@@ -46,22 +58,21 @@ class ShipperController {
             status: "WAITING",
         }, 'restaurant_id orderPosition');
 
-        console.log(orders);
-
         let distanceArr = new Array();
 
         for (let i = 0; i < orders.length; i++) {
             let rest = await Restaurant.findOne({ _id: orders[i].restaurant_id }, 'position');
-            console.log(rest);
-            let distanceToCus = getDistanceFromLatLonInKm(lat, long, orders[i].orderPosition.latitude, orders[i].orderPosition.longitude);
-            let distanceToRes = getDistanceFromLatLonInKm(lat, long, rest.position.latitude, rest.position.longitude);
+            if (rest) {
+                let distanceToCus = getDistanceFromLatLonInKm(lat, long, orders[i].orderPosition.latitude, orders[i].orderPosition.longitude);
+                let distanceToRes = getDistanceFromLatLonInKm(lat, long, rest.position.latitude, rest.position.longitude);
 
-            let order = new Object();
-            order._id = orders[i]._id;
-            order.distanceToCus = distanceToCus;
-            order.distanceToRes = distanceToRes;
+                let order = new Object();
+                order._id = orders[i]._id;
+                order.distanceToCus = distanceToCus;
+                order.distanceToRes = distanceToRes;
 
-            distanceArr.push(order);
+                distanceArr.push(order);
+            }
         }
 
         //selection sort distance
@@ -92,7 +103,7 @@ class ShipperController {
 
         let results = new Array();
         for (let i = 0; i < n; i++) {
-            let order = await Order.findOne({ _id: distanceArr[i]._id }, '-__v -updatedAt -createdAt')
+            let order = await Order.findOne({ _id: distanceArr[i]._id }, '-__v -createdAt')
             order = mongooseToObject(order);
             order.distanceToCus = distanceArr[i].distanceToCus;
             order.distanceToRes = distanceArr[i].distanceToRes;
@@ -125,9 +136,9 @@ class ShipperController {
                     order.shipper_id = (req.userID);
                     order.status = 'SHIPPING';
                     order.save();
-                    res.send(getMessageForClient('Get order successfuly!'));
+                    res.send(getMessageForClient(res.statusCode, 'Get order successfuly!'));
                 } else {
-                    res.send(getMessageForClient('Get order unsuccessfuly!'));
+                    res.send(getMessageForClient(res.statusCode, 'Get order unsuccessfuly!'));
                 }
             })
             .catch(next)
@@ -143,9 +154,9 @@ class ShipperController {
             order.shipper_id = null;
             (await order).save();
 
-            res.send(getMessageForClient('Cancel order successfuly!'))
+            res.send(getMessageForClient(res.statusCode, 'Cancel order successfuly!'))
         } else {
-            res.send(getMessageForClient('Get order unsuccessfuly!'))
+            res.send(getMessageForClient(res.statusCode, 'Get order unsuccessfuly!'))
         }
     }
 
@@ -159,9 +170,9 @@ class ShipperController {
             order.shipper_id = null;
             await order.save();
 
-            res.send(getMessageForClient('Finish order successfuly!'))
+            res.send(getMessageForClient(res.statusCode, 'Finish order successfuly!'))
         } else {
-            res.send(getMessageForClient('Finish order unsuccessfuly!'))
+            res.send(getMessageForClient(res.statusCode, 'Finish order unsuccessfuly!'))
         }
     }
 }
