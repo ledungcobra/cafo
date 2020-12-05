@@ -16,11 +16,6 @@ import com.ledungcobra.cafo.R;
 
 public class DashboardFragment extends Fragment {
 
-//    public final static String MENU_USER = "MENU_USER";
-//    public final static String MENU_PROFILE = "MENU_PROFILE";
-//    public final static String MENU_LOGOUT = "LOGOUT";
-//    public final static String MENU_SETTINGS = "SETTINGS";
-
     public DashboardFragment() {
         super();
     }
@@ -38,7 +33,6 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_drawer,container,false);
         CardView cardFindOrders = view.findViewById(R.id.cardFindOrders);
-//        CardView cardStatistic = view.findViewById(R.id.cardViewStatistic);
 
         cardFindOrders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,14 +47,7 @@ public class DashboardFragment extends Fragment {
 
             }
         });
-//
-//        cardStatistic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(container.getContext(), DriverStatisticScreen.class);
-//                startActivity(intent);
-//            }
-//        });
+
 
         return view;
     }

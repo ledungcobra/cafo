@@ -46,24 +46,23 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class CartInformationShipping extends AppCompatActivity {
 
-
+    //View
     private LocationManager locationManager;
-    private  EditText
-            edtFullname,
-            edtAddress,
-            edtPhoneNumber,
-            edtNote,
-            edtCode;
-    // private  TextView
-    //         edtPhoneNumber;
-            //edtNote, //API can't handle these 2
-            //edtCode;
-    protected TextView
-            tvCostFood,
-            tvShippingFee,
-            tvTotalCost;
+    private  EditText edtFullname, edtAddress,edtPhoneNumber;
+    protected TextView  tvCostFood, tvShippingFee, tvTotalCost;
     protected Button btnOrderShip;
 
+
+    //DATA
+    private static final int REQUEST_LOCATION_CODE = 12345;
+    ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
+    String resID;
+    ArrayList<CartItem> listCartShop;
+    int foodCost = 0;
+    int shippingFeeCost = 0;
+    int totalCost = 0;
+
+    //LISTENER
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -86,16 +85,7 @@ public class CartInformationShipping extends AppCompatActivity {
         }
     };
 
-    String resID;
-    private static final int REQUEST_LOCATION_CODE = 12345;
-    ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
-
-    //Data
-    ArrayList<CartItem> listCartShop;
-    int foodCost = 0;
-    int shippingFeeCost = 0;
-    int totalCost = 0;
-
+    //INTERFACE
 
 
     @Override
@@ -175,6 +165,8 @@ public class CartInformationShipping extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     private void doOrder(){
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            Log.d("ORDER", "doOrder: "+resID);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             UserApiHandler.getInstance().order(resID,location.getLatitude(),location.getLongitude(),foodOrderItems)
                     .enqueue(new Callback<OrderResponse>() {
@@ -233,10 +225,7 @@ public class CartInformationShipping extends AppCompatActivity {
         if (foodCost > 0) {
             shippingFeeCost = 20000;
         }
-        //Special shipping codes if API can handle
-        /*if (edtCode.getText().toString().equals("FREE_SHIPPING_CODE")) {
-            shippingFeeCost = 0;
-        }*/
+
     }
 
     private void calcTotalCost() {
@@ -247,8 +236,6 @@ public class CartInformationShipping extends AppCompatActivity {
         edtFullname = findViewById(R.id.editFullNameShip);
         edtAddress = findViewById(R.id.editAddressShip);
         edtPhoneNumber = findViewById(R.id.editPhone);
-        //edtNote = findViewById(R.id.editNote);
-        //edtCode = findViewById(R.id.editFreeShipCode);
 
         tvCostFood = findViewById(R.id.tvCostFoodShip);
         tvShippingFee = findViewById(R.id.tvFeeShip);
@@ -287,13 +274,11 @@ public class CartInformationShipping extends AppCompatActivity {
                 String fullname = edtFullname.getText().toString();
                 String address = edtAddress.getText().toString();
                 String phone = edtPhoneNumber.getText().toString();
-                String notes = edtNote.getText().toString();
 
                 String message = new String(
                         "Your name: "+ fullname
                                 +"\nAddress: "+ address
                                 +"\nPhone: " + phone
-                                +"\nNotes: " + notes
                                 +"\n\nTotal Cost: " + tvTotalCost.getText().toString()
                         //Too lazy to do format number again :p
                 );
@@ -312,8 +297,6 @@ public class CartInformationShipping extends AppCompatActivity {
                                 doOrder();
                                 dialog.dismiss();
 
-                                setResult(RESULT_OK,new Intent());
-                                CartInformationShipping.this.finish();
                             }})
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override

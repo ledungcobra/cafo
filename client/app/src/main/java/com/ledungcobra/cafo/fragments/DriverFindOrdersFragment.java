@@ -48,18 +48,15 @@ import java.util.List;
 
 public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCallback, ViewPager.PageTransformer {
 
+    //VIEW
     private GoogleMap mMap;
-
-    private static final int NUM_PAGES = 5;
-
     ViewPager viewPager;
+
+    //DATA
     MutableLiveData<Integer> currentPage = new MutableLiveData<>(-1);
-
-
     MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders = new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
 
     public DriverFindOrdersFragment() {
-        // Required empty public constructor
     }
 
 
@@ -76,7 +73,7 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         super.onCreate(savedInstanceState);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("CALL_API", "onCreate: PERMISSION PROBLEM");
+            Log.d("CALL_API", "onCreate: PERMISSION PROBEM");
 
             return;
         }
@@ -108,11 +105,11 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
         currentPage.observe(this, new Observer<Integer>() {
             @Override
-            public void onChanged(final Integer integer) {
+            public void onChanged(final Integer page) {
 
-                if (integer != -1 && listCustomerOrders.getValue() != null) {
+                if (page != -1 && listCustomerOrders.getValue() != null) {
 
-                    getNewLocation(listCustomerOrders.getValue().get(integer).getRestaurant().getAddress());
+                    getNewLocation(listCustomerOrders.getValue().get(page).getRestaurant().getAddress());
 
                 }
             }

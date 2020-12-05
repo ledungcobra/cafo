@@ -25,9 +25,7 @@ import java.util.List;
 import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 
 
-/**
- * A fragment representing a list of Items.
- */
+
 public class RestaurantOverviewNewFragment extends Fragment {
 
     ArrayList<BriefRestaurantInfo> restaurantList;

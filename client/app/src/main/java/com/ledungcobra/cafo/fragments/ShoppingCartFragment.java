@@ -72,6 +72,8 @@ public class ShoppingCartFragment extends Fragment {
             sumOfCost += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
         }
         //Click event
+        final TextView CostTotal = rootView.findViewById(R.id.tvResult);
+
         cartAdapterRecyclerView.setOnClickListener(new CartAdapterRecyclerView.OnItemClickListener() {
             @Override
             public void onAddClick(int position) {
@@ -80,9 +82,8 @@ public class ShoppingCartFragment extends Fragment {
                     sumOfCostNew += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
                 }
 
-                TextView CostTotal = rootView.findViewById(R.id.tvResult);
                 CostTotal.setText(
-                        String.format("%,d",Integer.toString(sumOfCostNew)) + " " + R.string.currency);
+                        String.format("%,d",sumOfCostNew) + " " + R.string.currency);
 
 
             }
@@ -118,7 +119,7 @@ public class ShoppingCartFragment extends Fragment {
                 intent.putExtra(getActivity().getString(R.string.cart_items), (Serializable) cartShops);
                 intent.putExtra(getActivity().getString(R.string.res_id),resID);
                 intent.putExtra("Info", (Serializable) cartShops);
-                startActivityForResult(intent,77777);
+                startActivity(intent);
             }
         });
 

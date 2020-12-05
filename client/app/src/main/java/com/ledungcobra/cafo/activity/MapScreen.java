@@ -59,11 +59,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
-    private GoogleMap mMap;
-    MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
-    LocationManager locationManager;
-    String TAG = "GOOGLE_MAP";
 
+    //VIEW
+    private GoogleMap mMap;
+    LocationManager locationManager;
+
+    //DATA
+    MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
+    String TAG = "GOOGLE_MAP";
     MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
 
     @SuppressLint("MissingPermission")

@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.fragments.RestaurantOverViewFragment;
 import com.ledungcobra.cafo.fragments.UserOrdersFragment;
@@ -32,7 +31,7 @@ import com.ledungcobra.cafo.fragments.fragmentDetailFoodInOrder;
 import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
-import com.ledungcobra.cafo.models.user.DetailUserInfo;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.view_adapter.MenuNavigationDrawerAdapter;
 
 import java.util.ArrayList;
@@ -41,22 +40,20 @@ import java.util.Objects;
 
 public class RestaurantsOverviewScreen extends AppCompatActivity implements  UserOrdersFragment.CallBacktoCreateFm {
 
-    DetailUserInfo userInfo;
-
-    public static String EXTRA_KEY = "RESTAURANT";
-
-    private DrawerLayout drawerLayout;
+    //VIEW
     private ActionBarDrawerToggle drawerToggle;
-    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders"};
-    public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_person_24, R.drawable.ic_baseline_list_alt_24};
+    private DrawerLayout drawerLayout;
 
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction ft = fm.beginTransaction();
 
-    ArrayList<RestaurantDetail> backupListNewRestaurant;
+    //DATA
+    public static String EXTRA_KEY = "RESTAURANT";
+    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders","Logout"};
+    public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_person_24, R.drawable.ic_baseline_list_alt_24,R.drawable.logout};
 
-    MenuItem searchButton;
-    MenuItem infoButton;
+
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -119,11 +116,9 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // set item as selected to persist highlight
                 item.setChecked(true);
-                // close drawer when item is tapped
+                // close drawer when item is tappd
                 drawerLayout.closeDrawers();
 
-                // Add code here to update the UI based on the item selected
-                // For example, swap UI fragments here
 
                 return true;
             }
@@ -193,13 +188,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
 
                     }
 
-                } else if (position == 2) {
-                    Log.d("CALL_API", "Customer Order Screen");
-                    //TODO: thiết kế màn hình user order và gọi api user order
-                    //chèn dữ liệu vào trong
-                }
-
-                if (position == 2) {
+                } else  if (position == 2) {
 
 
                     if (fm.findFragmentByTag("Your order") == null) {
@@ -209,6 +198,8 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
                                 .replace(R.id.OverViewLayout, UserOrdersFragment.newInstance(), "Your Order").addToBackStack("Your Order").commit();
                     } else getSupportFragmentManager().popBackStack("Your Order", 0);
 
+                }else if(position == 3){
+                    finish();
                 }
             }
         });
@@ -221,8 +212,9 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
         getMenuInflater().inflate(R.menu.shop_selected_menu, menu);
 
         //Get two components from action bar menu
-        searchButton = menu.findItem(R.id.menu_search);
-        infoButton = menu.findItem(R.id.action_info);
+        MenuItem searchButton = menu.findItem(R.id.menu_search);
+        MenuItem infoButton  = menu.findItem(R.id.action_info);
+
         //Implement searching
         final SearchView searchView = (SearchView) searchButton.getActionView();
         View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_src_text);

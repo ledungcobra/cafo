@@ -17,22 +17,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DriverDetailOrderFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class DriverDetailOrderFragment extends Fragment {
 
 
-
+    //VIEW
     RecyclerView listCustomerOrder;
+
     public DriverDetailOrderFragment() {
         // Required empty public constructor
     }
 
 
-    // TODO: Rename and change types and number of parameters
     public static DriverDetailOrderFragment newInstance() {
         DriverDetailOrderFragment fragment = new DriverDetailOrderFragment();
         Bundle args = new Bundle();
@@ -44,9 +40,7 @@ public class DriverDetailOrderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
 
-        }
     }
 
     @Override

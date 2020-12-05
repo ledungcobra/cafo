@@ -20,7 +20,10 @@ import java.text.DecimalFormat;
 
 public class OrderViewPager extends Fragment {
 
+    //VIEW
     MaterialButton btnAcceptOrder;
+
+    //CALLBACK
     private OrderViewPagerCallback callback;
 
     public OrderViewPager() {
@@ -29,9 +32,6 @@ public class OrderViewPager extends Fragment {
 
     private DetailOrderResponse detailOrderResponse;
 
-    public DetailOrderResponse getDetailOrderResponse() {
-        return detailOrderResponse;
-    }
 
     public void setDetailOrderResponse(DetailOrderResponse detailOrderResponse) {
         this.detailOrderResponse = detailOrderResponse;

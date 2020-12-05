@@ -117,6 +117,7 @@ public class UserApiHandler {
                                      ArrayList<FoodOrderItem> listOrderItems
     ) {
         OrderInfo orderInfo = new OrderInfo(restaurantID, new UserPos(latitude, longitude), listOrderItems);
+        Log.d("ORDER", "order: "+orderInfo);
         return userService.order(orderInfo, userAccessToken.getValue());
 
     }

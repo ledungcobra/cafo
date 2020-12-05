@@ -61,29 +61,31 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         ShoppingCartFragment.callBack,
         RestaurantCategoryFoodFragment.DataUpdateListener {
 
-    private static final String TAGKEO = "SCROLL";
+    //VIEW
     ImageView ivLoc;
     ImageView ivDist;
     MenuListViewAdapter adapter;
     MenuGridViewAdapter adapterGrid;
     ImageView ivRestaurant;
     TextView tvRestaurantName;
-    LinearLayout phoneContainer;
     TextView tvRestaurantPhone;
-    //TODO: fix bug Card view khi recycler view không thể kéo được
-    //TODO: xử lí
+    LinearLayout phoneContainer;
     LinearLayout restaurantCard;
     ImageButton imgbtnList;
-
     FragmentManager fm;
+
+    //DATA
+    private static final String TAGKEO = "SCROLL";
     List<CartItem> cartShops;
     private boolean isShowCard = true;
     private MutableLiveData<Boolean> isListView = new MutableLiveData<>(false);
-
-    private ArrayList<RecyclerView> listViewPagerRecyclerView = new ArrayList<>();
-
-
     int cardHeight = -100;
+    private String restaurantID;
+
+    //TODO: fix bug Card view khi recycler view không thể kéo được
+    //TODO: xử lí
+
+
 
 
     @Override
@@ -95,7 +97,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
 
 
         Intent intent = getIntent();
-        final String restaurantID = intent.getStringExtra(EXTRA_KEY);
+        restaurantID = intent.getStringExtra(EXTRA_KEY);
         cartShops = (List<CartItem>) intent.getSerializableExtra("CartShop");
         ImageView imvLove = findViewById(R.id.imAddToFavorite);
 
@@ -351,6 +353,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
 
             Bundle bundleFragment = new Bundle();
             bundleFragment.putSerializable("ListFood", al_Food);
+            bundleFragment.putString("resID",restaurantID);
             FragmentTransaction ft_add = fm.beginTransaction();
             ft_add.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example).replace(R.id.flrestaurant_detail_view, ShoppingCartFragment.
                     newInstance(bundleFragment))

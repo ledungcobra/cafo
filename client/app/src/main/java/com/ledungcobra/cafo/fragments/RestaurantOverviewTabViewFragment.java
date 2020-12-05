@@ -28,39 +28,31 @@ import java.util.List;
 
 import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 
-/**
- * A fragment representing a list of Items.
- */
 public class RestaurantOverviewTabViewFragment extends Fragment {
 
+    //VIEW
+    RestaurantOverviewItemAdapter adapter;
+
+    //DATA
     public static int NEW_PAGER = 0;
     public static int FAV_PAGER = 1;
     public static int VISITED_PAGER = 2;
-
     private int currentPage = 1;
-
-
     private int type;
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>();
     private LiveData<ArrayList<BriefRestaurantInfo>> passedRestaurantList;
 
-
-    RestaurantOverviewItemAdapter adapter;
-
-
     public RestaurantOverviewTabViewFragment() {
     }
 
-    public void setRestaurantList(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList) {
-        this.passedRestaurantList = restaurantList;
-    }
+
 
     public static RestaurantOverviewTabViewFragment newInstance(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList, int type) {
         RestaurantOverviewTabViewFragment fragment = new RestaurantOverviewTabViewFragment();
         Bundle args = new Bundle();
 
         assert restaurantList != null;
-        fragment.setRestaurantList(restaurantList);
+        fragment.passedRestaurantList = restaurantList;
         fragment.setArguments(args);
         fragment.type = type;
         return fragment;

@@ -20,9 +20,7 @@ import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- */
+
 public class RestaurantOverviewVisitedFragment extends Fragment {
     LiveData<List<BriefRestaurantInfo>> restaurantList = new MutableLiveData<List<BriefRestaurantInfo>>(new ArrayList<BriefRestaurantInfo>());
     RestaurantOverviewItemAdapter adapter;
@@ -30,9 +28,7 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
     public RestaurantOverviewVisitedFragment() {
     }
 
-    public  LiveData<List<BriefRestaurantInfo>>  getRestaurantList() {
-        return restaurantList;
-    }
+
 
     public void setRestaurantList( LiveData<List<BriefRestaurantInfo>>  restaurantList) {
         this.restaurantList = restaurantList;

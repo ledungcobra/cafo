@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
@@ -44,17 +43,23 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public class DriverScreen extends AppCompatActivity implements
                                 DrawerAdapter.OnItemSelectedListener,
                                     OrderViewPager.OrderViewPagerCallback {
+    //VIEW
+    private Drawable[] screenIcons;
+    private SlidingRootNav slidingRootNav;
 
+    //DATA
     private static final int POS_DASHBOARD = 0;
     private static final int POS_PROFILE = 1;
     private static final int POS_ORDERS = 2;
     private static final int POS_LOGOUT = 3;
-
     private String[] screenTitles = new String[]{"Dashboard","Profile","Your orders","Logout"};
     private final int REQUEST_CODE = 9999;
 
-    private Drawable[] screenIcons;
-    private SlidingRootNav slidingRootNav;
+    //LISTENER
+
+    //INTERFACE
+
+
 
     private void showFragment(Fragment fragment){
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragment).commit();
@@ -160,13 +165,12 @@ public class DriverScreen extends AppCompatActivity implements
 
     @Override
     public void onItemSelected(int position) {
-        Log.d("CALL_API", "onItemSelected: "+ position);
         Fragment fragment  = null;
 
         if (position == POS_LOGOUT) {
             finish();
         }else if(position == POS_ORDERS){
-
+            //TODO: Order accepted
         }else if(position == POS_PROFILE){
             fragment = ProfileUserFragment.newInstance();
         }else if(position == POS_DASHBOARD){

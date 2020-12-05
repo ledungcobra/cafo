@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A fragment representing a list of Items.
- */
 public class RestaurantOverviewFavoriteFragment extends Fragment {
 
     ArrayList<BriefRestaurantInfo> restaurantList;
@@ -35,7 +32,7 @@ public class RestaurantOverviewFavoriteFragment extends Fragment {
         Bundle args = new Bundle();
         ArrayList<BriefRestaurantInfo> restaurantArrayList = new ArrayList<BriefRestaurantInfo>();
         restaurantArrayList.addAll(restaurantList);
-        args.putSerializable("RestaurantFavoriteList",restaurantArrayList);
+        args.putSerializable("RestaurantFavoriteList", restaurantArrayList);
 
 
         fragment.setArguments(args);
@@ -55,13 +52,12 @@ public class RestaurantOverviewFavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_restaurant_overview_favorite_list, container, false);
 
 
-
         final RestaurantOverviewItemAdapter adapter = new RestaurantOverviewItemAdapter(getContext());
         restaurantList = new ArrayList<BriefRestaurantInfo>();
         restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantFavoriteList");
 
         adapter.setRestaurants(restaurantList);
-        RecyclerView recyclerView =   (RecyclerView)view;
+        RecyclerView recyclerView = (RecyclerView) view;
 //        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack) getActivity();
 //        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
 //            @Override
@@ -72,8 +68,6 @@ public class RestaurantOverviewFavoriteFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
-
-
 
 
         return view;

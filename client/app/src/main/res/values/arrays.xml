@@ -3,6 +3,7 @@
     <string-array name="ld_activityScreenIcons">
         <item>@drawable/dashboard</item>
         <item>@drawable/profile</item>
+        <item>@drawable/ic_order</item>
         <item>@drawable/logout</item>
     </string-array>
 </resources>
