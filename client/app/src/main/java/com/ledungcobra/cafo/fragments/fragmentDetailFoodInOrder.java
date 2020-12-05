@@ -1,34 +1,25 @@
 package com.ledungcobra.cafo.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.order.shipper.Food;
-import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
 import com.ledungcobra.cafo.view_adapter.FoodListViewAdapter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link fragmentDetailFoodInOrder#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class fragmentDetailFoodInOrder extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "List Food in DetailOrder";
     private static final String ARG_PARAM2 = "Total in DetailOrder";
 
@@ -58,7 +49,6 @@ public class fragmentDetailFoodInOrder extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         List<com.ledungcobra.cafo.models.order.shipper.Food> foodList;
-        foodList = new ArrayList<com.ledungcobra.cafo.models.order.shipper.Food>();
         foodList = (List<com.ledungcobra.cafo.models.order.shipper.Food>) getArguments().getSerializable(ARG_PARAM1);
         Integer total = getArguments().getInt(ARG_PARAM2);
 

@@ -22,11 +22,7 @@ import com.ledungcobra.cafo.view_adapter.OrderListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserOrdersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class UserOrdersFragment extends Fragment {
 
     CallBacktoCreateFm callback;

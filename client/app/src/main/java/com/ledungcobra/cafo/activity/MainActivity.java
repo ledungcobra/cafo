@@ -19,8 +19,11 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    //VIEW
     View appTitle;
 
+    //DATA
     private static String TAG = "CALL_API";
 
     @Override

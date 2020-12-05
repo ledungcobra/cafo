@@ -23,33 +23,28 @@ import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RestaurantCategoryFoodFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RestaurantCategoryFoodFragment extends Fragment {
 
+    //VIEW
     MenuListViewAdapter adapter;
-    List<CartItem> cartShops = new ArrayList<CartItem>();
     RecyclerView rvMenuFood;
+
+    //DATA
+    List<CartItem> cartShops = new ArrayList<CartItem>();
     List<Food> foods = new ArrayList<Food>();
     private LiveData<Boolean> isListView;
+
+    //LISTENER
+    DataUpdateListener dataListener;
+
     public interface DataUpdateListener {
+
+
         void onDataUpdate(List<CartItem> mData);
 
         void onScrollChangeListener(RecyclerView rvMenuFood);
+
     }
-
-    DataUpdateListener dataListener;
-
-
-
-
-    public  interface  FoodCategoryFragmentCallback{
-        void addRecyclerViewToHostActivityList(RecyclerView recyclerView);
-    }
-
 
 
     public RestaurantCategoryFoodFragment() {
@@ -97,7 +92,7 @@ public class RestaurantCategoryFoodFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
 
-                if(rvMenuFood!=null){
+                if (rvMenuFood != null) {
 
                     if (isListView.getValue()) {
 
@@ -146,7 +141,6 @@ public class RestaurantCategoryFoodFragment extends Fragment {
 
         return view;
     }
-
 
 
 }

@@ -15,11 +15,7 @@ import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileUserFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ProfileUserFragment extends Fragment {
 
 
@@ -28,7 +24,6 @@ public class ProfileUserFragment extends Fragment {
     }
 
 
-    // TODO: Rename and change types and number of parameters
     public static ProfileUserFragment newInstance() {
         ProfileUserFragment fragment = new ProfileUserFragment();
         Bundle args = new Bundle();

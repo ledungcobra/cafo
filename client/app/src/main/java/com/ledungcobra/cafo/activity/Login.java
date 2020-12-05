@@ -40,6 +40,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class Login extends AppCompatActivity {
 
+    //VIEW
     MaterialButton btnSignIn;
     MaterialButton btnCreateAccount;
     TextInputEditText edtFullName;
@@ -50,20 +51,24 @@ public class Login extends AppCompatActivity {
     TextInputLayout lFullname;
     TextInputLayout lEmail;
     TextInputLayout lConfirmPassword;
-
     TextInputEditText edtPhoneNumber;
     TextInputLayout lPhoneNumber;
-
+    View lnSignInAs;
     TextView tvSignUp;
     RadioGroup radioGroupLoginAs;
+    ProgressBar progressBar;
+
+    //DATA
+    SharedPreferences pref;
     boolean signInClicked = false;
     private static final String SHARED_PREF_NAME = "USER_ACCESS_TOKEN";
-    SharedPreferences pref;
     String TAG = "CALL_API";
-
-    View lnSignInAs;
-    ProgressBar progressBar;
     private String currentButtonText = null;
+
+    //LISTENER
+    //INTERFACE
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

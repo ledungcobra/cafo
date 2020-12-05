@@ -28,11 +28,7 @@ import java.util.List;
 import static com.ledungcobra.cafo.models.user.TrackingRestaurant.FAVORITE;
 import static com.ledungcobra.cafo.models.user.TrackingRestaurant.VISITED;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RestaurantOverViewFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class RestaurantOverViewFragment extends Fragment{
     //TODO:
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
