@@ -83,7 +83,8 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
                     int numberNew=cartShops.get(position).getNumber()+1;
                     cartShops.get(position).setNumber(numberNew);
 
-                    tvCost.setText(Integer.toString(numberNew*cartShop.getFood().getPrice().getValue()));
+                    tvCost.setText(String.format("%,d", numberNew*cartShop.getFood().getPrice().getValue())
+                                    + " ₫");
                     tvNumber.setText(Integer.toString(numberNew));
 
                     mListener.onAddClick(position);
@@ -99,7 +100,9 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
 
                     if (Integer.parseInt(tvNumber.getText().toString()) > 0) {
                         int numberNew=cartShops.get(position).getNumber()-1;
-                        tvCost.setText(Integer.toString(numberNew*cartShop.getFood().getPrice().getValue()));
+
+                        tvCost.setText(String.format("%,d", numberNew*cartShop.getFood().getPrice().getValue())
+                                        + " ₫");
                         tvNumber.setText(Integer.toString(numberNew));
                         cartShops.get(position).setNumber(numberNew);
                     }
@@ -127,7 +130,8 @@ public class CartAdapterRecyclerView extends RecyclerView.Adapter<CartAdapterRec
             Picasso.get().load(useImageUrl).into(ivFoodPhoto);
 
             tvNumber.setText(Integer.toString(cartShop.getNumber()));
-            tvCost.setText(Integer.toString(cartShop.getFood().getPrice().getValue()*cartShop.getNumber()));
+            tvCost.setText(String.format("%,d", cartShop.getFood().getPrice().getValue()*cartShop.getNumber())
+                            + " ₫");
 
 
             tvSTT.setText(Integer.toString(serial));
