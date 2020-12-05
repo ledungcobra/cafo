@@ -217,7 +217,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
 
         //Implement searching
         final SearchView searchView = (SearchView) searchButton.getActionView();
-        View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        View searchPlate = searchView.findViewById(R.id.search_src_text);
 
         //Change the background color for the palate search view
         searchPlate.setBackgroundColor(getColor(R.color.white));
@@ -260,7 +260,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-
+        //set onClick button About
         if (id == R.id.action_info) {
 
             return true;
@@ -268,9 +268,8 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
         return super.onOptionsItemSelected(item);
     }
 
-    public void closeDrawer() {
-        drawerLayout.closeDrawer(Gravity.LEFT, true);
-    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -289,7 +288,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
         }
     }
 
-
+    //CALLBACK to init new fragment from YourOrder
     @Override
     public void onCreateFm(List<Food> foods,Integer total) {
 

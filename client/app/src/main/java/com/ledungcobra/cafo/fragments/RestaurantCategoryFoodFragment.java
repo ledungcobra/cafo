@@ -37,6 +37,7 @@ public class RestaurantCategoryFoodFragment extends Fragment {
     //LISTENER
     DataUpdateListener dataListener;
 
+    //CALLBACK
     public interface DataUpdateListener {
 
 
@@ -77,17 +78,28 @@ public class RestaurantCategoryFoodFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_category_food, container, false);
 
-//
+        InitUI(view);
+
+        return view;
+    }
+
+
+
+    public void InitUI(View view){
+        //Get data from OverViewRestaurantScreen
         foods = (List<Food>) getArguments().getSerializable("RestaurantID");
+        //Create an adapter
         adapter = new MenuListViewAdapter(getContext(), new ArrayList<Food>());
-
-
+        //Set value for adapter
         adapter.setFoods(foods);
+
         rvMenuFood = view.findViewById(R.id.foodListRecyclerView);
+        //Set list layout for recycleView
         rvMenuFood.setLayoutManager(new LinearLayoutManager(getContext()));
         rvMenuFood.setAdapter(adapter);
-        dataListener = (DataUpdateListener) getActivity();
 
+        //init callback
+        dataListener = (DataUpdateListener) getActivity();
         isListView.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -106,12 +118,15 @@ public class RestaurantCategoryFoodFragment extends Fragment {
             }
         });
 
-
+        //set onClick add Food in Cart
         adapter.setOnClickListener(new MenuListViewAdapter.OnItemClickListener() {
             @Override
             public void onAddClick(int position) {
+                //Notification
                 Toast toast = Toast.makeText(getContext(), "Added " + adapter.getFood(position).getName(), LENGTH_SHORT);
                 toast.show();
+
+                //Count amount of food
                 int sameFood = 0;
                 for (CartItem cartShop : cartShops) {
                     if (cartShop.getFood().equals(adapter.getFood(position))) {
@@ -124,12 +139,13 @@ public class RestaurantCategoryFoodFragment extends Fragment {
                     cartShops.add(cartShop);
                 }
 
+                //callback RestaurantDetail
                 dataListener.onDataUpdate(cartShops);
                 cartShops.removeAll(cartShops);
             }
         });
 
-
+        //Animation Scroll Card
         rvMenuFood.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -138,8 +154,6 @@ public class RestaurantCategoryFoodFragment extends Fragment {
             }
         });
 
-
-        return view;
     }
 
 

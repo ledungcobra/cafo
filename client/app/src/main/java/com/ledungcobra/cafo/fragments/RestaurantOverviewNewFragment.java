@@ -29,11 +29,6 @@ import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 public class RestaurantOverviewNewFragment extends Fragment {
 
     ArrayList<BriefRestaurantInfo> restaurantList;
-    fragmentCallBack fragmentCallBack;
-
-    public interface fragmentCallBack{
-        void onNavigateToOverviewScreen(String restaurantID);
-    }
 
 
     public RestaurantOverviewNewFragment() {
@@ -70,7 +65,7 @@ public class RestaurantOverviewNewFragment extends Fragment {
         restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantNewList");
         adapter.setRestaurants(restaurantList);
         RecyclerView recyclerView =   (RecyclerView)view;
-//        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack)getActivity();
+
         adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
             @Override
             public void onClick(String restaurantID) {

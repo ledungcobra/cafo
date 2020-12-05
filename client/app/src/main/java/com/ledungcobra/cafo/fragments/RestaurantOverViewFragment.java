@@ -30,10 +30,9 @@ import static com.ledungcobra.cafo.models.user.TrackingRestaurant.VISITED;
 
 
 public class RestaurantOverViewFragment extends Fragment{
-    //TODO:
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    //DATA
     MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData(new ArrayList<>());
-
+    //VIEW
     RestaurantOverViewFragment.OverviewViewPagerAdapter viewPagerAdapter;
 
 
@@ -51,6 +50,7 @@ public class RestaurantOverViewFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         Log.d("BACK" ,"onCreate fragment ");
+        //Get list restaurant
         ArrayList<BriefRestaurantInfo> restaurantInfos = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable(getString(R.string.list_restaurants));
         restaurantList.setValue(restaurantInfos);
 
@@ -71,7 +71,6 @@ public class RestaurantOverViewFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_over_view, container, false);
 
-
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         ViewPager viewPager = view.findViewById(R.id.vpRestaurant);
 
@@ -84,8 +83,6 @@ public class RestaurantOverViewFragment extends Fragment{
 
         return view;
     }
-
-
 
 
     public class OverviewViewPagerAdapter extends FragmentPagerAdapter {
@@ -145,14 +142,14 @@ public class RestaurantOverViewFragment extends Fragment{
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
 
+            if (position == 0) {//Create New Restaurant
                 newFragment = newFragment == null ? RestaurantOverviewTabViewFragment.newInstance(restaurantList,RestaurantOverviewTabViewFragment.NEW_PAGER) : newFragment;
                 return newFragment;
-            } else if (position == 1) {
+            } else if (position == 1) { //Create Visited Restaurant
                 visitedFragment = visitedFragment == null ? RestaurantOverviewTabViewFragment.newInstance(filter(VISITED),RestaurantOverviewTabViewFragment.VISITED_PAGER) : visitedFragment;
                 return visitedFragment;
-            } else if (position == 2) {
+            } else if (position == 2) { //Create Favorite Restaurant
                 favoriteFragment = favoriteFragment == null ? RestaurantOverviewTabViewFragment.newInstance(filter(FAVORITE),RestaurantOverviewTabViewFragment.FAV_PAGER) : favoriteFragment;
                 return favoriteFragment;
             }
@@ -161,14 +158,14 @@ public class RestaurantOverViewFragment extends Fragment{
         }
 
         @Override
-        public int getCount() {
+        public int getCount() {//3 tab view
             return 3;
         }
 
 
         @Nullable
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(int position) {//Title of page
             if (position == 0) {
                 return "New";
             } else if (position == 1) {

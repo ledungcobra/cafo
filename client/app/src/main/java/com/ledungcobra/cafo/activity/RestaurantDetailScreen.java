@@ -57,7 +57,7 @@ import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 
 ;
 
-public class RestaurantDetailScreen extends AppCompatActivity implements
+public class    RestaurantDetailScreen extends AppCompatActivity implements
         ShoppingCartFragment.callBack,
         RestaurantCategoryFoodFragment.DataUpdateListener {
 

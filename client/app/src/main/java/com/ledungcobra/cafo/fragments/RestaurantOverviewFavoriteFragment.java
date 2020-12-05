@@ -19,10 +19,10 @@ import java.util.List;
 
 
 public class RestaurantOverviewFavoriteFragment extends Fragment {
-
+    //DATA
     ArrayList<BriefRestaurantInfo> restaurantList;
 
-
+    //Constructor
     public RestaurantOverviewFavoriteFragment() {
     }
 
@@ -30,11 +30,11 @@ public class RestaurantOverviewFavoriteFragment extends Fragment {
     public static RestaurantOverviewFavoriteFragment newInstance(List<BriefRestaurantInfo> restaurantList) {
         RestaurantOverviewFavoriteFragment fragment = new RestaurantOverviewFavoriteFragment();
         Bundle args = new Bundle();
+
         ArrayList<BriefRestaurantInfo> restaurantArrayList = new ArrayList<BriefRestaurantInfo>();
         restaurantArrayList.addAll(restaurantList);
+
         args.putSerializable("RestaurantFavoriteList", restaurantArrayList);
-
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,25 +51,23 @@ public class RestaurantOverviewFavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_overview_favorite_list, container, false);
 
+        InitUI(view);
 
+        return view;
+    }
+
+    public void InitUI(View view){
+        //Declare adapter
         final RestaurantOverviewItemAdapter adapter = new RestaurantOverviewItemAdapter(getContext());
         restaurantList = new ArrayList<BriefRestaurantInfo>();
         restaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantFavoriteList");
 
+        //trans data
         adapter.setRestaurants(restaurantList);
         RecyclerView recyclerView = (RecyclerView) view;
-//        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack) getActivity();
-//        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
-//            @Override
-//            public void onClick(String restaurantID) {
-//                fragmentCallBack.onNavigateToOverviewScreen(restaurantID);
-//            }
-//        });
         recyclerView.setAdapter(adapter);
-
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
 
 
-        return view;
     }
 }

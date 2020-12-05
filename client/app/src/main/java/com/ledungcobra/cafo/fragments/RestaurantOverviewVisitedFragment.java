@@ -63,27 +63,20 @@ public class RestaurantOverviewVisitedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_overview_visited_list, container, false);
-//        List<BriefRestaurantInfo> tRestaurantList = new ArrayList<BriefRestaurantInfo>();
-//        tRestaurantList = (ArrayList<BriefRestaurantInfo>) getArguments().getSerializable("RestaurantVisitedList");
-//
 
-         adapter = new RestaurantOverviewItemAdapter(getContext());
+        InitUI(view);
 
+        return view;
+    }
+
+    public void InitUI(View view){
+        adapter = new RestaurantOverviewItemAdapter(getContext());
         adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) restaurantList.getValue());
-        RecyclerView recyclerView =   (RecyclerView)view;
-//        fragmentCallBack = (RestaurantOverviewNewFragment.fragmentCallBack) getActivity();
-//        adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
-//            @Override
-//            public void onClick(String restaurantID) {
-//                fragmentCallBack.onNavigateToOverviewScreen(restaurantID);
-//            }
-//        });
-        recyclerView.setAdapter(adapter);
 
+        RecyclerView recyclerView =   (RecyclerView)view;
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false));
 
 
-
-        return view;
     }
 }

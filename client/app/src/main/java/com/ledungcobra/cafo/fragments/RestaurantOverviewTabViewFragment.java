@@ -46,7 +46,6 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     }
 
 
-
     public static RestaurantOverviewTabViewFragment newInstance(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList, int type) {
         RestaurantOverviewTabViewFragment fragment = new RestaurantOverviewTabViewFragment();
         Bundle args = new Bundle();
@@ -68,29 +67,38 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_overview_visited_list, container, false);
 
+        InitUI(view);
+
+        return view;
+    }
+
+
+    public void InitUI(View view) {
+        //init adapter
         adapter = new RestaurantOverviewItemAdapter(getContext());
 
         final RecyclerView recyclerView = (RecyclerView) view;
 
+        //Set onClick every element in adapter
         adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
             @Override
             public void onClick(String restaurantID) {
                 Intent intent = new Intent(getContext(), RestaurantDetailScreen.class);
                 intent.putExtra(EXTRA_KEY, restaurantID);
-                Repository.getInstance().insert(new TrackingRestaurant(restaurantID,TrackingRestaurant.VISITED));
+                Repository.getInstance().insert(new TrackingRestaurant(restaurantID, TrackingRestaurant.VISITED));
                 startActivity(intent);
             }
         });
+        //Set adapter for recyclerView
         recyclerView.setAdapter(adapter);
+        //Set GridLayout for recyclerView
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-
-        if (type == NEW_PAGER) {
+        if (type == NEW_PAGER) {//Set pagination for new_pager
 
             recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
 
                     if (oldScrollY < 0) {
                         LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -115,8 +123,6 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
                                     currentRestaurantList.addAll(result);
 
                                     restaurantList.setValue(currentRestaurantList);
-
-
                                 }
 
                                 @Override
@@ -133,7 +139,7 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
 
         }
 
-        assert passedRestaurantList!=null;
+        assert passedRestaurantList != null;
         passedRestaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
             @Override
             public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
@@ -156,8 +162,5 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
             });
 
         }
-
-
-        return view;
     }
 }
