@@ -30,6 +30,9 @@ import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
+import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.service.UserApiHandler;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
 import com.ledungcobra.cafo.view_adapter.SimpleItem;
@@ -207,12 +210,37 @@ public class DriverScreen extends AppCompatActivity implements
     }
 
     @Override
-    public void onButtonAcceptOrderClick() {
+    public void onSelectedOrder(DetailOrderResponse detailOrderResponse) {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container,new DriverDetailOrderFragment());
+        ft.add(R.id.container,DriverDetailOrderFragment.newInstance(detailOrderResponse));
         ft.addToBackStack(null);
         ft.commit();
 
+    }
+
+    @Override
+    public void onAcceptAnOrder(String orderID) {
+        UserApiHandler.getInstance().acceptAnOrder(orderID, new UIThreadCallBack<String, Error>() {
+            @Override
+            public void stopProgressIndicator() {
+
+            }
+
+            @Override
+            public void startProgressIndicator() {
+
+            }
+
+            @Override
+            public void onResult(String result) {
+                Toast.makeText(DriverScreen.this,"Accept an order successfully",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
     }
 }

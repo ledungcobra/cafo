@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.order.customer.CustomerOrder;
+import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.view_adapter.CustomerOrdersAdapter;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class DriverDetailOrderFragment extends Fragment {
     }
 
 
-    public static DriverDetailOrderFragment newInstance() {
+    public static DriverDetailOrderFragment newInstance(DetailOrderResponse detailOrderResponse) {
         DriverDetailOrderFragment fragment = new DriverDetailOrderFragment();
         Bundle args = new Bundle();
 
