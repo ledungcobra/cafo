@@ -54,7 +54,11 @@ public class CartInformationShipping extends AppCompatActivity {
             edtPhoneNumber,
             edtNote,
             edtCode;
-    private  TextView
+    // private  TextView
+    //         edtPhoneNumber;
+            //edtNote, //API can't handle these 2
+            //edtCode;
+    protected TextView
             tvCostFood,
             tvShippingFee,
             tvTotalCost;
@@ -229,10 +233,10 @@ public class CartInformationShipping extends AppCompatActivity {
         if (foodCost > 0) {
             shippingFeeCost = 20000;
         }
-        //TODO: Special shipping codes
-        if (edtCode.getText().toString().equals("FREE_SHIPPING_CODE")) {
+        //Special shipping codes if API can handle
+        /*if (edtCode.getText().toString().equals("FREE_SHIPPING_CODE")) {
             shippingFeeCost = 0;
-        }
+        }*/
     }
 
     private void calcTotalCost() {
@@ -243,8 +247,8 @@ public class CartInformationShipping extends AppCompatActivity {
         edtFullname = findViewById(R.id.editFullNameShip);
         edtAddress = findViewById(R.id.editAddressShip);
         edtPhoneNumber = findViewById(R.id.editPhone);
-        edtNote = findViewById(R.id.editNote);
-        edtCode = findViewById(R.id.editFreeShipCode);
+        //edtNote = findViewById(R.id.editNote);
+        //edtCode = findViewById(R.id.editFreeShipCode);
 
         tvCostFood = findViewById(R.id.tvCostFoodShip);
         tvShippingFee = findViewById(R.id.tvFeeShip);

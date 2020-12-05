@@ -48,8 +48,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders"};
-    //TODO: Thay đổi ICON cho phù hợp
-    public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_home_24};
+    public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_person_24, R.drawable.ic_baseline_list_alt_24};
 
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction ft = fm.beginTransaction();
