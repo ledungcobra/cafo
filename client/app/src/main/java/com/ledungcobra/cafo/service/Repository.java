@@ -19,7 +19,9 @@ import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,11 +53,17 @@ public class Repository {
 
     private Repository() {
 
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(80, TimeUnit.SECONDS)
+                .readTimeout(80, TimeUnit.SECONDS)
+                .writeTimeout(80, TimeUnit.SECONDS)
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(
-                        new GsonBuilder()
-                                .create()))
+                        new GsonBuilder().create()))
+                .client(okHttpClient)
                 .build();
 
         restaurantService = retrofit.create(RestaurantService.class);

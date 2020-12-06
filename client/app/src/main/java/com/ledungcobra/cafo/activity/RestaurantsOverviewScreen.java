@@ -43,7 +43,6 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
     //VIEW
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
-
     FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction ft = fm.beginTransaction();
 

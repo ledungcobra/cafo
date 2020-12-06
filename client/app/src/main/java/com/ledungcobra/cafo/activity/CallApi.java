@@ -54,9 +54,10 @@ public class CallApi extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Error error) {
-
+                        Log.d(TAG, "onFailure: "+error);
                     }
                 });
+
             }
 
             @Override

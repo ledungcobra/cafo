@@ -160,9 +160,14 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         final TabLayout tabLayout = findViewById(R.id.categoryTabLayout);
         final ViewPager viewPager = findViewById(R.id.categoryViewPager);
 
+        //TODO: Bind views
         ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
         tvRestaurantName = findViewById(R.id.tvRestaurantName);
+        tvRestaurantAddress = findViewById(R.id.address_restaurant);
+        tvRestaurantStatus = findViewById(R.id.timeOpenOff);
         tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
+        tvRestaurantDistance = findViewById(R.id.distance);
+
         phoneContainer = findViewById(R.id.phoneContainer);
         phoneContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +216,9 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
 
                 Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
                 tvRestaurantName.setText(result.getName());
+                tvRestaurantAddress.setText(result.getAddress());
+                //Only first number
+                tvRestaurantPhone.setText(result.getPhones().get(0));
 
                 findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
                     @Override

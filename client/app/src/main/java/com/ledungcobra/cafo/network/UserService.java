@@ -46,7 +46,6 @@ public interface UserService  {
     @GET("order/id/{id}")
     Call<DetailOrderResponse> getOrder(@Header("x-cafo-client-access-token") String token, @Path("id") String id);
 
-    //OBJECT TODO:
     @POST("order/cancel")
     @FormUrlEncoded
     Call<OrderResponse> cancelOrderByCustomer(@Header("x-cafo-client-access-token") String token, @Field("order_id") String orderID);
@@ -62,6 +61,10 @@ public interface UserService  {
         String token,
         @Field("order_id") String orderID
     );
+
+    @GET("shipper/orders")
+    Call<List<DetailOrderResponse>> getAcceptedOrdersByShipper(@Header("x-cafo-client-access-token") String token);
+
 
     
 }
