@@ -22,8 +22,8 @@ import java.util.List;
 
 
 public class RestaurantOverviewVisitedFragment extends Fragment {
-    LiveData<List<BriefRestaurantInfo>> restaurantList = new MutableLiveData<List<BriefRestaurantInfo>>(new ArrayList<BriefRestaurantInfo>());
-    RestaurantOverviewItemAdapter adapter;
+    private LiveData<List<BriefRestaurantInfo>> restaurantList = new MutableLiveData<List<BriefRestaurantInfo>>(new ArrayList<BriefRestaurantInfo>());
+    private RestaurantOverviewItemAdapter adapter;
 
     public RestaurantOverviewVisitedFragment() {
     }

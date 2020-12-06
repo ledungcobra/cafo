@@ -62,12 +62,12 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     //VIEW
     private GoogleMap mMap;
-    LocationManager locationManager;
+    private LocationManager locationManager;
 
     //DATA
-    MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
+    private MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
     String TAG = "GOOGLE_MAP";
-    MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
+    private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
 
     @SuppressLint("MissingPermission")
     @Override

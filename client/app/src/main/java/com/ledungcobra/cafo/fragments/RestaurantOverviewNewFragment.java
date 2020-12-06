@@ -28,8 +28,8 @@ import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 
 public class RestaurantOverviewNewFragment extends Fragment {
 
-    ArrayList<BriefRestaurantInfo> restaurantList;
-    fragmentCallBack fragmentCallBack;
+    private ArrayList<BriefRestaurantInfo> restaurantList;
+    private fragmentCallBack fragmentCallBack;
 
     public interface fragmentCallBack{
         void onNavigateToOverviewScreen(String restaurantID);
@@ -39,8 +39,6 @@ public class RestaurantOverviewNewFragment extends Fragment {
     public RestaurantOverviewNewFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static RestaurantOverviewNewFragment newInstance(List<BriefRestaurantInfo> restaurantList) {
         RestaurantOverviewNewFragment fragment = new RestaurantOverviewNewFragment();
         Bundle args = new Bundle();

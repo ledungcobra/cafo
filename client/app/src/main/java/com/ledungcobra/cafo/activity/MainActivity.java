@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     //VIEW
-    View appTitle;
+    private View appTitle;
 
     //DATA
     private static String TAG = "CALL_API";

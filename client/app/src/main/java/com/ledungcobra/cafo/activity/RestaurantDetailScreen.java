@@ -62,21 +62,21 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         RestaurantCategoryFoodFragment.DataUpdateListener {
 
     //VIEW
-    ImageView ivLoc;
-    ImageView ivDist;
-    MenuListViewAdapter adapter;
-    MenuGridViewAdapter adapterGrid;
-    ImageView ivRestaurant;
-    TextView tvRestaurantName;
-    TextView tvRestaurantPhone;
-    LinearLayout phoneContainer;
-    LinearLayout restaurantCard;
-    ImageButton imgbtnList;
-    FragmentManager fm;
+    private ImageView ivLoc;
+    private ImageView ivDist;
+    private MenuListViewAdapter adapter;
+    private MenuGridViewAdapter adapterGrid;
+    private ImageView ivRestaurant;
+    private TextView tvRestaurantName;
+    private TextView tvRestaurantPhone;
+    private LinearLayout phoneContainer;
+    private LinearLayout restaurantCard;
+    private ImageButton imgbtnList;
+    private FragmentManager fm;
 
     //DATA
     private static final String TAGKEO = "SCROLL";
-    List<CartItem> cartShops;
+    private List<CartItem> cartShops;
     private boolean isShowCard = true;
     private MutableLiveData<Boolean> isListView = new MutableLiveData<>(false);
     int cardHeight = -100;

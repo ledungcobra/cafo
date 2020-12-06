@@ -25,7 +25,7 @@ import java.util.List;
 
 public class UserOrdersFragment extends Fragment {
 
-    CallBacktoCreateFm callback;
+    private CallBacktoCreateFm callback;
     public interface CallBacktoCreateFm{
         void onCreateFm(List<Food> foods, Integer total);
     }

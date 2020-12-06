@@ -32,9 +32,9 @@ import static com.ledungcobra.cafo.models.user.TrackingRestaurant.VISITED;
 public class RestaurantOverViewFragment extends Fragment{
     //TODO:
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData(new ArrayList<>());
+    private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData(new ArrayList<>());
 
-    RestaurantOverViewFragment.OverviewViewPagerAdapter viewPagerAdapter;
+    private RestaurantOverViewFragment.OverviewViewPagerAdapter viewPagerAdapter;
 
 
     public RestaurantOverViewFragment() {

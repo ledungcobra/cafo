@@ -24,7 +24,7 @@ import java.text.DecimalFormat;
 public class OrderViewPager extends Fragment {
 
     //VIEW
-    MaterialButton btnAcceptOrder;
+    private MaterialButton btnAcceptOrder;
 
     //CALLBACK
     private OrderViewPagerCallback callback;

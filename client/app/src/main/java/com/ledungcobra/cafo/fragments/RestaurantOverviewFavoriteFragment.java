@@ -20,7 +20,7 @@ import java.util.List;
 
 public class RestaurantOverviewFavoriteFragment extends Fragment {
 
-    ArrayList<BriefRestaurantInfo> restaurantList;
+    private ArrayList<BriefRestaurantInfo> restaurantList;
 
 
     public RestaurantOverviewFavoriteFragment() {
