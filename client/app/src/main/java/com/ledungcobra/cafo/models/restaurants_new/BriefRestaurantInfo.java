@@ -39,6 +39,18 @@ public class BriefRestaurantInfo  implements Serializable {
     @Expose
     private String cityId;
 
+    public BriefRestaurantInfo(List<String> phones, String id, String name, String restaurantUrl, String address, Image image, Operating operating, PriceRange priceRange, String cityId) {
+        this.phones = phones;
+        this.id = id;
+        this.name = name;
+        this.restaurantUrl = restaurantUrl;
+        this.address = address;
+        this.image = image;
+        this.operating = operating;
+        this.priceRange = priceRange;
+        this.cityId = cityId;
+    }
+
     public List<String> getPhones() {
         return phones;
     }

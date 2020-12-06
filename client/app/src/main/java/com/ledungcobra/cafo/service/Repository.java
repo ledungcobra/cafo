@@ -192,7 +192,6 @@ public class Repository {
                             final ArrayList<RestaurantDetail> list = new ArrayList<>();
                             for (String resID : response.body()) {
                                 try {
-                                    Log.d("SEARCHING", "run: "+resID);
 
                                     Response<RestaurantDetail> resDetail= restaurantService.getRestaurant(resID).execute();
 

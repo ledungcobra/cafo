@@ -37,6 +37,8 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     public static int NEW_PAGER = 0;
     public static int FAV_PAGER = 1;
     public static int VISITED_PAGER = 2;
+    public static int SEARCHING_PAGER = 3;
+
     private int currentPage = 1;
     private int type;
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>();
@@ -45,6 +47,16 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     public RestaurantOverviewTabViewFragment() {
     }
 
+    public void setData(ArrayList<BriefRestaurantInfo> data){
+
+        restaurantList.setValue(data);
+
+
+    }
+
+    public void clearData(){
+        restaurantList.setValue(new ArrayList<BriefRestaurantInfo>());
+    }
 
 
     public static RestaurantOverviewTabViewFragment newInstance(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList, int type) {
