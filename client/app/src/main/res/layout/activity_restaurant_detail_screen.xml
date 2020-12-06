@@ -70,7 +70,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="Restaurant Name"
+                                android:maxLines="2"
+                                android:text="@string/placeholder_text"
                                 android:textColor="@color/colorPrimaryDark"
                                 android:textSize="23sp"
                                 android:textStyle="bold" />
@@ -94,6 +95,7 @@
                                 android:id="@+id/ivLoc"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/ic_baseline_home_24" />
 
                             <TextView
@@ -101,7 +103,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="Restaurant Address"
+                                android:text="@string/placeholder_text"
+                                android:maxLines="2"
                                 android:textSize="16sp" />
 
 
@@ -114,9 +117,9 @@
                             android:orientation="horizontal">
 
                             <ImageView
-
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/ic_baseline_timer_24" />
 
                             <TextView
@@ -124,7 +127,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="Tinh trang: 00:00 -/- 24:00"
+                                android:maxLines="2"
+                                android:text="▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄"
                                 android:textSize="16sp" />
 
 
@@ -138,9 +142,9 @@
                             android:orientation="horizontal">
 
                             <ImageView
-
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/ic_baseline_phone_24" />
 
                             <TextView
@@ -148,7 +152,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="Phone of Restaurant"
+                                android:text="@string/placeholder_text"
+                                android:maxLength="11"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -162,6 +167,7 @@
                                 android:id="@+id/ivDist"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/ic_baseline_near_me_24" />
 
                             <TextView
@@ -169,34 +175,32 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="Khoang cach: "
+                                android:maxLines="1"
+                                android:text="▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄"
                                 android:textSize="16sp" />
 
 
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:gravity="center_vertical"
+                            android:gravity="center_vertical|end"
                             android:layout_height="wrap_content" >
                             <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="8dp"
                                 android:id="@+id/imAddToFavorite"
-                                android:src="@drawable/ic_heart"
-                                />
+                                android:src="@drawable/ic_heart"/>
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
-                                android:layout_weight="1"
-                                />
-
-
+                                android:layout_weight="1"/>
                             <Button
                                 android:id="@+id/btnMap"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="BẢN ĐỒ" />
+                                android:text="BẢN ĐỒ"/>
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -206,7 +210,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:background="@null"
             android:elevation="16dp"
             android:orientation="horizontal"
@@ -227,6 +230,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@null"
+                android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_baseline_list_24" />
         </LinearLayout>
 

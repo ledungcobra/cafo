@@ -50,9 +50,8 @@
                 android:padding="10dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:textSize="18sp"
                     android:text = "Username: "
                     android:textColor="@android:color/black"/>
@@ -63,7 +62,8 @@
                     android:gravity="end"
                     android:textSize="18sp"
                     android:id="@+id/txtUserNamePf"
-                    android:text = "Tester "/>
+                    android:maxLines="1"
+                    android:text = "@string/placeholder_text"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,9 +71,8 @@
                 android:padding="10dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:textSize="18sp"
                     android:text = "Phone: "
                     android:textColor="@android:color/black"/>
@@ -85,7 +84,8 @@
                     android:textSize="18sp"
                     android:inputType="phone"
                     android:id="@+id/txtPhonePf"
-                    android:text = "0919191919 "/>
+                    android:maxLength="15"
+                    android:text = "@string/placeholder_text"/>
             </LinearLayout>
 
             <LinearLayout
@@ -95,9 +95,8 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Fullname: "
                     android:textSize="18sp"
                     android:textColor="@android:color/black"/>
@@ -108,7 +107,8 @@
                     android:gravity="end"
                     android:textSize="18sp"
                     android:id="@+id/txtFullnamePf"
-                    android:text = "John"/>
+                    android:maxLines="2"
+                    android:text = "@string/placeholder_text"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -116,9 +116,8 @@
                 android:padding="10dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:textSize="18sp"
                     android:text = "Email: "
                     android:textColor="@android:color/black"/>
@@ -128,9 +127,10 @@
                     android:layout_weight="1"
                     android:gravity="end"
                     android:textSize="18sp"
+                    android:maxLines="1"
                     android:inputType="textEmailAddress"
                     android:id="@+id/txtEmailPf"
-                    android:text = "JohnWish@gmail.com"/>
+                    android:text="@string/placeholder_text"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,9 +138,8 @@
                 android:padding="10dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:textSize="18sp"
                     android:text = "Password: "
                     android:textColor="@android:color/black"/>
@@ -150,9 +149,10 @@
                     android:layout_weight="1"
                     android:textSize="18sp"
                     android:gravity="end"
+                    android:maxLines="1"
                     android:inputType="numberPassword"
                     android:id="@+id/txtPasswordPf"
-                    android:text = "Tester "/>
+                    android:text = "@string/placeholder_text"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
