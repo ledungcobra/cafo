@@ -464,7 +464,6 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             }
 
 
-            fetchUserOrder.start();
         }
     }
 

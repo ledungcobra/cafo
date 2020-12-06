@@ -62,8 +62,11 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         RestaurantCategoryFoodFragment.DataUpdateListener {
 
     //VIEW
+    private TextView tvRestaurantAddress;
+    private TextView tvRestaurantStatus;
+    private TextView tvRestaurantDistance;
     private ImageView ivLoc;
-    private ImageView ivDist;
+    private ImageView ivDist ;
     private MenuListViewAdapter adapter;
     private MenuGridViewAdapter adapterGrid;
     private ImageView ivRestaurant;

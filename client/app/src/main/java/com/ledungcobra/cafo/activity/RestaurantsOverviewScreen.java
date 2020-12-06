@@ -235,7 +235,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(newText.length()>0){
+                if(newText.length()>3){
 
                     Repository.getInstance().searchRestaurant(newText,1,10,RestaurantsOverviewScreen.this).observe(RestaurantsOverviewScreen.this, new Observer<ArrayList<RestaurantDetail>>() {
                         @Override
@@ -243,6 +243,9 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
                             Log.d("SEARCHING", "onChanged: "+ restaurantDetails);
                         }
                     });
+
+
+
                 }else{
 
                 }

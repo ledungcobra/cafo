@@ -140,7 +140,7 @@ public class RestaurantOverViewFragment extends Fragment{
             return filterResult;
         }
 
-        Fragment newFragment, visitedFragment, favoriteFragment;
+        private Fragment newFragment, visitedFragment, favoriteFragment;
 
         @NonNull
         @Override
