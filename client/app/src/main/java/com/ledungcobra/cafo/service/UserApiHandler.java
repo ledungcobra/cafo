@@ -88,6 +88,7 @@ public class UserApiHandler {
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 callback.stopProgressIndicator();
                 callback.onFailure(new Error(t.getMessage()));
+                Log.d("LOGIN_ERR", "onFailure: "+t);
             }
         });
     }

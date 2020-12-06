@@ -159,8 +159,10 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 3333);
+            return;
+
         }
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager != null) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, new LocationListener() {
@@ -265,6 +267,8 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
             }
         });
+
+
 
     }
 
@@ -449,6 +453,41 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
                 }
             });
+
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                });
+            }
+
+            userLocation = null;
+
+            if (locationManager != null) {
+                userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+
+
+            fetchUserOrder.start();
         }
     }
 

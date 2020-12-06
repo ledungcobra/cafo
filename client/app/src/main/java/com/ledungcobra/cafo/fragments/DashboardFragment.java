@@ -39,6 +39,7 @@ public class DashboardFragment extends Fragment {
 
 
         initUI(view);
+
         setListener();
 
 
