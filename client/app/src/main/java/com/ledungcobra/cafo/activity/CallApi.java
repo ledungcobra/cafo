@@ -35,7 +35,8 @@ public class CallApi extends AppCompatActivity {
             @Override
             public void onResult(UserInfo result) {
 
-                UserApiHandler.getInstance().getAcceptedOrdersByShipper(new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
+                Log.d(TAG, "onResult: "+result);
+                UserApiHandler.getInstance().fetchFiveOrdersNearCustomerByShipper(10, 106, new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
                     @Override
                     public void stopProgressIndicator() {
 
@@ -64,6 +65,8 @@ public class CallApi extends AppCompatActivity {
 
             }
         });
+
+
 
     }
 

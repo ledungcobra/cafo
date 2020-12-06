@@ -1,16 +1,19 @@
 package com.ledungcobra.cafo.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -19,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.Request;
@@ -34,8 +38,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import org.json.JSONArray;
@@ -45,16 +49,97 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCallback, ViewPager.PageTransformer {
+/**
+ * The fragment represent for a screen in which the user roles as Driver can get orders
+ */
+public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCallback,
+        ViewPager.PageTransformer, OrderViewPager.OnAcceptAnOrderCallBack {
 
     //VIEW
     private GoogleMap mMap;
-    ViewPager viewPager;
+    private ViewPager viewPager;
+    private ScreenSlidePagerAdapter adapter;
 
     //DATA
-    MutableLiveData<Integer> currentPage = new MutableLiveData<>(-1);
-    MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders = new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
+    private MutableLiveData<Integer> currentPage = new MutableLiveData<>(-1);
+    private final MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders = new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
+    private LocationManager locationManager;
+    private boolean shouldContinueFetchOrders = true;
+    private Location userLocation;
+
+    //Thread handler
+    private Handler handler = new Handler();
+    private final Thread fetchUserOrder = new Thread() {
+        @Override
+        public void run() {
+
+            if (userLocation != null ) {
+                
+                UserApiHandler
+                        .getInstance()
+                        .fetchFiveOrdersNearCustomerByShipper(userLocation.getLatitude(),
+                                userLocation.getLongitude(),
+                                new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
+
+                                    @Override
+                                    public void stopProgressIndicator() {
+
+                                    }
+
+                                    @Override
+                                    public void startProgressIndicator() {
+
+                                    }
+
+                                    @Override
+                                    public void onResult(final List<DetailOrderResponse> result) {
+
+                                        synchronized (listCustomerOrders){
+                                            try {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        listCustomerOrders.setValue((ArrayList<DetailOrderResponse>) result);
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                Log.d("Null Exception", "onResult: " + e);
+                                            }
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Error error) {
+
+                                        synchronized (listCustomerOrders){
+                                            try {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Toast.makeText(getActivity(), "Cannot fetch from server", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            } catch (Exception e) {
+                                                Log.d("Null Exception", "onFailure: " + e);
+                                            }
+                                        }
+                                    }
+                                }
+                        );
+
+                if(shouldContinueFetchOrders){
+                    handler.postDelayed(this, 1000);
+                }else{
+                    //Stop fetching
+                }
+            }
+
+        }
+    };
+
 
     public DriverFindOrdersFragment() {
     }
@@ -72,48 +157,43 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("CALL_API", "onCreate: PERMISSION PROBEM");
-
-            return;
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 3333);
         }
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location userLocation = locationManager != null ? locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) : null;
-        UserApiHandler.getInstance().fetchFiveOrdersNearCustomerByShipper(userLocation.getLatitude(),
-                userLocation.getLongitude(), new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
-                    @Override
-                    public void stopProgressIndicator() {
 
-                    }
-
-                    @Override
-                    public void startProgressIndicator() {
-
-                    }
-
-                    @Override
-                    public void onResult(List<DetailOrderResponse> result) {
-                        listCustomerOrders.setValue((ArrayList<DetailOrderResponse>) result);
-                    }
-
-                    @Override
-                    public void onFailure(Error error) {
-
-                    }
-                });
-
-
-        currentPage.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(final Integer page) {
-
-                if (page != -1 && listCustomerOrders.getValue() != null) {
-
-                    getNewLocation(listCustomerOrders.getValue().get(page).getRestaurant().getAddress());
+        if (locationManager != null) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
 
                 }
-            }
-        });
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
+
+        userLocation = null;
+
+        if (locationManager != null) {
+            userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+
+
+        fetchUserOrder.start();
 
     }
 
@@ -122,26 +202,62 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_driver_find_orders, container, false);
+
+        initUI(view);
+
+        listCustomerOrders.observe(getViewLifecycleOwner(), new Observer<ArrayList<DetailOrderResponse>>() {
+            @Override
+            public void onChanged(ArrayList<DetailOrderResponse> detailOrderResponses) {
+
+                if (detailOrderResponses != null) {
+                    adapter.setListCustomerOrders(detailOrderResponses);
+
+
+                }
+
+
+            }
+        });
+
+        currentPage.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(final Integer page) {
+
+                if (page != -1 && listCustomerOrders.getValue() != null && listCustomerOrders.getValue().size() > 0) {
+
+                    getNewLocation(listCustomerOrders.getValue().get(page).getRestaurant().getAddress());
+
+                }
+
+            }
+        });
+
+
+        return view;
+    }
+
+    private void initUI(View view) {
+
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.myMap2);
-        mapFragment.getMapAsync(this);
+
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         viewPager = view.findViewById(R.id.pager);
-
-        final ScreenSlidePagerAdapter adapter = new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager());
+        adapter = new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setPageTransformer(true, this);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("VIEWPAGER", "onPageScrolled: " + position);
+                currentPage.setValue(position);
             }
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("CALL_API", "onPageScrolled: " + position);
-                currentPage.setValue(position);
             }
 
             @Override
@@ -150,14 +266,32 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             }
         });
 
-        listCustomerOrders.observe(getViewLifecycleOwner(), new Observer<ArrayList<DetailOrderResponse>>() {
-            @Override
-            public void onChanged(ArrayList<DetailOrderResponse> detailOrderResponses) {
-                adapter.setListCustomerOrders(detailOrderResponses);
-            }
-        });
+    }
 
-        return view;
+    @Override
+    public void removeOrderFromArray(String orderID) {
+
+        ArrayList<DetailOrderResponse> orders = listCustomerOrders.getValue();
+        ArrayList<DetailOrderResponse> filteredOrders = new ArrayList<>();
+
+        if (orders == null) return;
+        for (DetailOrderResponse order : orders) {
+
+            if (order.getId().equals(orderID)) {
+                continue;
+            }
+
+            filteredOrders.add(order);
+
+        }
+
+        if (filteredOrders.size() == 0) {
+            currentPage.setValue(-1);
+        }
+
+        listCustomerOrders.setValue(filteredOrders);
+
+
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -167,10 +301,12 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
         private ArrayList<DetailOrderResponse> orders = new ArrayList<>();
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             OrderViewPager viewPager = OrderViewPager.newInstance(orders.get(position));
             viewPager.setCallback((OrderViewPager.OrderViewPagerCallback) getActivity());
+            viewPager.setAcceptOrderCallBack(DriverFindOrdersFragment.this);
             return viewPager;
         }
 
@@ -182,6 +318,11 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         public void setListCustomerOrders(ArrayList<DetailOrderResponse> orders) {
             this.orders = orders;
             notifyDataSetChanged();
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return PagerAdapter.POSITION_NONE;
         }
     }
 
@@ -278,6 +419,44 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
                 });
         requestQueue.add(jsonArrayRequest);
 
+
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 3333 && grantResults.length == 2 && grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED) {
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        shouldContinueFetchOrders = false;
+        Log.d("RUN_THREAD", "onDetach: ");
 
     }
 }

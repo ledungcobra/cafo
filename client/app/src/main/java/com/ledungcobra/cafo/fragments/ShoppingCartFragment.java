@@ -83,8 +83,7 @@ public class ShoppingCartFragment extends Fragment {
                 }
 
                 CostTotal.setText(
-                        String.format("%,d",sumOfCostNew) + " " + R.string.currency);
-
+                        String.format("%,d",sumOfCostNew) + " " + getString(R.string.currency));
 
             }
 
@@ -101,8 +100,8 @@ public class ShoppingCartFragment extends Fragment {
                     sumOfCostNew += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
                 }
 
-                TextView tvResult = rootView.findViewById(R.id.tvResult);
-                tvResult.setText(Integer.toString(sumOfCostNew));
+                CostTotal.setText(
+                        String.format("%,d",sumOfCostNew) + " " + getString(R.string.currency));
                 listCart.callBackActivity(cartShops);
             }
         });

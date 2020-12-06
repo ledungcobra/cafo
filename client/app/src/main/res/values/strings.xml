@@ -13,6 +13,7 @@
     <string name="username">Username</string>
     <string name="fullname">Fullname</string>
     <string name="currency">₫</string>
+    <string name="placeholder_text">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Loading......</string>
     <string name="shopcart">Shopping Cart</string>

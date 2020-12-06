@@ -11,73 +11,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="3dp">
-
+        android:padding="4dp">
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:padding="3dp"
+            android:padding="4dp"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:layout_marginRight="8dp"
+                    android:text="OrderID"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:text="@string/placeholder_text"
+                    android:id="@+id/tvOrderID"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="9"
                     android:layout_height="wrap_content"
-                    android:text="Restaurant"
+                    android:maxLines="1"
+                    android:text="@string/placeholder_text"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold"
                     android:id="@+id/tvResOrder"
-                    android:textSize="28sp"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:id="@+id/ivDeleteOrder"
-
-                    android:src="@drawable/ic_baseline_delete_24"
-                    android:padding="1dp"
-                    android:scaleType="fitCenter"/>
+                    android:textSize="24sp"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:text="OrderID:"
-                    android:textStyle="italic"
-                    android:textSize="20sp"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="4"
-                    android:layout_height="match_parent"
-                    android:text="OrderID"
-                    android:id="@+id/tvOrderID"
-                    android:textStyle="italic"
-                    android:textSize="20sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Price:"
-                    android:textStyle="italic"
-                    android:textSize="20sp"/>
-               ] <TextView
+                    android:layout_weight="1.4"
+                    android:layout_marginRight="8dp"
+                    android:text="Price"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+               <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:text="Price"
+                android:layout_weight="5"
+                android:maxLines="1"
+                android:text="@string/placeholder_text"
                 android:id="@+id/tvPriceOrder"
-                android:textStyle="italic"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -85,53 +82,69 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Time:"
-                    android:textStyle="italic"
-                    android:textSize="20sp"/>
-                ] <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:text="Time"
-                android:id="@+id/tvTimeOrder"
-                android:textStyle="italic"
-                android:textSize="20sp"/>
+                    android:layout_weight="1.4"
+                    android:layout_marginRight="8dp"
+                    android:text="Order Time"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:maxLines="1"
+                    android:text="@string/placeholder_text"
+                    android:id="@+id/tvTimeOrder"
+                    android:textSize="16sp"/>
             </LinearLayout>
-
-
-
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               android:padding="2dp">
-               <TextView
-                   android:layout_width="0dp"
-                   android:layout_weight="1"
-                   android:layout_height="wrap_content"
-                   android:text="Status"
-                   android:textSize="20sp"
-                   android:textStyle="italic" />
-               <TextView
-                   android:id="@+id/tvStatusOrder"
-                   android:layout_width="0dp"
-                   android:layout_weight="3"
-                   android:layout_height="wrap_content"
-                   android:text="Status"
-                   android:textSize="20sp"
-                   android:textStyle="italic" />
-               <TextView
-                   android:id="@+id/tvDetailOrder"
-                   android:layout_width="0dp"
-                   android:layout_weight="1"
-                   android:gravity="end"
-                   android:layout_height="wrap_content"
-                   android:text="Detail"
-                   android:textColor="@color/colorPrimary"
-                   android:textSize="20sp"
-                   android:textStyle="italic" />
-           </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.4"
+                    android:layout_marginRight="8dp"
+                    android:text="Status"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/tvStatusOrder"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/placeholder_text"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/ivDeleteOrder"
+                    app:tint="@android:color/holo_red_dark"
+                    android:src="@drawable/ic_baseline_delete_24"
+                    android:scaleType="fitCenter"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/tvDetailOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:text="Detail"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
