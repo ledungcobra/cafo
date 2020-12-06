@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,7 +23,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.service.Repository;
@@ -40,11 +38,12 @@ public class RestaurantOverViewFragment extends Fragment {
 
     //VIEW
     private RestaurantOverViewFragment.OverviewViewPagerAdapter viewPagerAdapter;
+    private TabLayout tabLayout;
+
 
     //DATA
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData(new ArrayList<>());
-    private MutableLiveData<Boolean> showSearchFragment = new MutableLiveData<>(false);
-
+    private MutableLiveData<ArrayList<BriefRestaurantInfo>> searchedRestaurants = new MutableLiveData<>(new ArrayList<BriefRestaurantInfo>());
 
     public RestaurantOverViewFragment() {
         // Required empty public constructor
@@ -81,15 +80,14 @@ public class RestaurantOverViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_restaurant_over_view, container, false);
 
 
-        TabLayout tabLayout = view.findViewById(R.id.tabLayout);
+        tabLayout = view.findViewById(R.id.tabLayout);
         ViewPager viewPager = view.findViewById(R.id.vpRestaurant);
 
         viewPagerAdapter = new RestaurantOverViewFragment.OverviewViewPagerAdapter(getChildFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
 
 
         return view;
@@ -112,7 +110,6 @@ public class RestaurantOverViewFragment extends Fragment {
             fragments.add(RestaurantOverviewTabViewFragment.newInstance(filter(VISITED), RestaurantOverviewTabViewFragment.VISITED_PAGER));
 
             fragments.add(RestaurantOverviewTabViewFragment.newInstance(filter(FAVORITE), RestaurantOverviewTabViewFragment.FAV_PAGER));
-            searchingFragment = RestaurantOverviewTabViewFragment.newInstance(restaurantList, RestaurantOverviewTabViewFragment.SEARCHING_PAGER);
 
         }
 
@@ -171,24 +168,28 @@ public class RestaurantOverViewFragment extends Fragment {
             return fragments.size();
         }
 
+
         // This is used for filling data to the tab of the view pager which named Searching
-        public void showSearchingFragment(ArrayList<BriefRestaurantInfo> searchingData) {
+        public void setDataSearchingFragment(ArrayList<BriefRestaurantInfo> searchingData) {
 
-            if(fragments.size() == 3){
-                ((RestaurantOverviewTabViewFragment)searchingFragment).setData(searchingData);
+
+            if (fragments.size() == 3) {
+                searchingFragment = RestaurantOverviewTabViewFragment.newInstance(restaurantList, RestaurantOverviewTabViewFragment.SEARCHING_PAGER);
+                ((RestaurantOverviewTabViewFragment) searchingFragment).setData(searchingData);
                 fragments.add(searchingFragment);
-                notifyDataSetChanged();
-
-
-
+            } else {
+                ((RestaurantOverviewTabViewFragment) fragments.get(3)).setData(searchingData);
             }
+            notifyDataSetChanged();
+
+
         }
 
-        public void removeSearchingFragment(){
+        public void removeSearchingFragment() {
 
-            if(fragments.size() == 4){
-                fragments.remove(fragments.size()-1);
-                ((RestaurantOverviewTabViewFragment)searchingFragment).clearData();
+            if (fragments.size() == 4) {
+                ((RestaurantOverviewTabViewFragment) searchingFragment).clearData();
+                fragments.remove(fragments.size() - 1);
                 notifyDataSetChanged();
             }
 
@@ -236,35 +237,15 @@ public class RestaurantOverViewFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
-                Log.d("VIEW_PAGER", "onQueryTextSubmit: ");
-
-                Repository.getInstance().searchRestaurant(query, 1, 10, (AppCompatActivity) getActivity())
-                        .observe(getViewLifecycleOwner(), new Observer<ArrayList<RestaurantDetail>>() {
-                            @Override
-                            public void onChanged(ArrayList<RestaurantDetail> restaurantDetails) {
-                                Log.d("SEARCHING", "onChanged: " + restaurantDetails);
-
-
-
-                                ArrayList<BriefRestaurantInfo> listRestaurants = new ArrayList<>();
-
-                                for (RestaurantDetail restaurantDetail : restaurantDetails) {
-                                    listRestaurants.add(new BriefRestaurantInfo(restaurantDetail.getPhones(),
-                                            restaurantDetail.getId(), restaurantDetail.getName(),
-                                            restaurantDetail.getRestaurantUrl(),
-                                            restaurantDetail.getAddress(),
-                                            restaurantDetail.getImage(),
-                                            restaurantDetail.getOperating(),
-                                            restaurantDetail.getPriceRange(),
-                                            restaurantDetail.getId()
-                                    ));
+                Repository.getInstance().searchRestaurant(query, 1,5)
+                        .observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
+                                    @Override
+                                    public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
+                                        viewPagerAdapter.setDataSearchingFragment(briefRestaurantInfos);
+                                        tabLayout.getTabAt(3).select();
+                                    }
                                 }
-                                Log.d("VIEW_PAGER", "onChanged: "+ listRestaurants);
-                                viewPagerAdapter.showSearchingFragment(listRestaurants);
-
-
-                            }
-                        });
+                        );
 
                 return false;
 
@@ -273,8 +254,9 @@ public class RestaurantOverViewFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(newText.length() == 0){
+                if (newText.length() == 0) {
                     viewPagerAdapter.removeSearchingFragment();
+                    tabLayout.getTabAt(0).select();
                 }
 
                 return false;
