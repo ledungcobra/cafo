@@ -22,7 +22,7 @@ class ShipperController {
                     let rest = await Restaurant.findOne({ _id: orders[i].restaurant_id }, 'name address image');
                     if (rest) {
                         rest = mongooseToObject(rest);
-                        orders[i].restaurnt = rest;
+                        orders[i].restaurant = rest;
                     }
                 }
                 let total = 0;
