@@ -68,6 +68,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     private MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
     String TAG = "GOOGLE_MAP";
     private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
+    private final int maxTimeLocUpdateMilis = 300;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -295,9 +296,12 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 9999 && grantResults.length  ==  2 && grantResults[0] == PERMISSION_GRANTED &&grantResults[1] == PERMISSION_GRANTED ) {
+        if (requestCode == 9999 &&
+                grantResults.length  ==  2 &&
+                grantResults[0] == PERMISSION_GRANTED &&
+                grantResults[1] == PERMISSION_GRANTED ) {
             Log.d(TAG, "PERMISSION");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,maxTimeLocUpdateMilis,5,this);
         }
 
     }
