@@ -29,9 +29,9 @@ import java.util.List;
 
 public class DriverOrdersFragment extends Fragment {
 
-    CallBacktoCreateFm callback;
-    public interface CallBacktoCreateFm{
-        void onCreateFm(List<Food> foods, Integer total);
+    CallBackToCreateFm callback;
+    public interface CallBackToCreateFm{
+        void onCreateFm(DetailOrderResponse detail);
     }
     public DriverOrdersFragment() {
         // Required empty public constructor
@@ -59,12 +59,16 @@ public class DriverOrdersFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view =  inflater.inflate(R.layout.fragment_user_orders, container, false);
         final TextView tvIdOrder = view.findViewById(R.id.tvIdOrder);
+
+        //Load animation
         final ImageView gifProgressbar =  view.findViewById(R.id.gif_progress_bar);
         final AnimationDrawable animationDrawable = (AnimationDrawable)gifProgressbar.getDrawable();
         gifProgressbar.setVisibility(View.GONE);
+        //Load animation
+
         final DetailOrderResponse orderResponse;
         final List<DetailOrderResponse> orderList= new ArrayList<>();
-        //callback = (CallBacktoCreateFm) getActivity();
+        callback = (CallBackToCreateFm) getActivity();
 
 
         UserApiHandler.getInstance().getAcceptedOrdersByShipper(new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
@@ -100,8 +104,7 @@ public class DriverOrdersFragment extends Fragment {
 
                     @Override
                     public void onDetailClick(int position) {
-                        //callback.onCreateFm(orderList.get(position).getFoods(), orderList.get(position).getTotal());
-
+                        callback.onCreateFm(orderList.get(position));
                     }
                 });
 
