@@ -122,7 +122,7 @@ public class Login extends AppCompatActivity {
                     Editor editor = pref.edit();
                     editor.clear();
                     editor.apply();
-                    showErrorDialog("User hết hạn, đăng nhập thất bại");
+                    showErrorDialog("Đăng nhập hết hạn, đăng nhập thất bại");
 
                 }
             });

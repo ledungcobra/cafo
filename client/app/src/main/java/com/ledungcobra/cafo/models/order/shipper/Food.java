@@ -13,8 +13,20 @@ public class Food implements Serializable {
     private String foodID;
     private int count;
 
+    @SerializedName("amount")
+    @Expose
+    private Integer amount;
+
     public String getFoodID() {
         return foodID;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     public void setFoodID(String foodID) {

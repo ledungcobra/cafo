@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.models.order.customer.CustomerOrder;
+import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class CustomerOrdersAdapter extends RecyclerView.Adapter<CustomerOrdersAdapter.ViewHolder> {
-    List<CustomerOrder> customerOrders;
+    List<Food> customerOrders;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -27,17 +27,10 @@ public class CustomerOrdersAdapter extends RecyclerView.Adapter<CustomerOrdersAd
         return new ViewHolder(view);
     }
 
-    public CustomerOrdersAdapter(List<CustomerOrder> customerOrders) {
+    public CustomerOrdersAdapter(List<Food> customerOrders) {
         this.customerOrders = customerOrders;
     }
 
-    public List<CustomerOrder> getCustomerOrders() {
-        return customerOrders;
-    }
-
-    public void setCustomerOrders(List<CustomerOrder> customerOrders) {
-        this.customerOrders = customerOrders;
-    }
 
     @Override
     public int getItemCount() {
@@ -47,12 +40,12 @@ public class CustomerOrdersAdapter extends RecyclerView.Adapter<CustomerOrdersAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        CustomerOrder customerOrder = customerOrders.get(position);
+        Food customerOrder = customerOrders.get(position);
         Log.d("CUSTOMER", "onBindViewHolder: "+customerOrder);
-        holder.totalPrice.setText(customerOrder.getPrice());
-        holder.foodName.setText(customerOrder.getFoodName());
-        Picasso.get().load(customerOrder.getImageUrl()).transform(new CropCircleTransformation()).into(holder.foodImage);
-        holder.quantity.setText(customerOrder.getQuantity());
+        holder.totalPrice.setText(customerOrder.getPrice().getText());
+        holder.foodName.setText(customerOrder.getName());
+        Picasso.get().load(customerOrder.getImage().getValue()).transform(new CropCircleTransformation()).into(holder.foodImage);
+        holder.quantity.setText(customerOrder.getAmount().toString());
 
     }
 

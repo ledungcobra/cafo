@@ -7,12 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.service.UserApiHandler;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -25,6 +28,16 @@ public class OrderViewPager extends Fragment {
 
     //CALLBACK
     private OrderViewPagerCallback callback;
+    private OnAcceptAnOrderCallBack acceptAnOrderCallBack;
+
+    public void setAcceptOrderCallBack(DriverFindOrdersFragment driverFindOrdersFragment) {
+        this.acceptAnOrderCallBack = driverFindOrdersFragment;
+    }
+
+    //INTERFACE
+    public interface OnAcceptAnOrderCallBack{
+        void removeOrderFromArray(String orderID);
+    }
 
     public OrderViewPager() {
 
@@ -39,7 +52,6 @@ public class OrderViewPager extends Fragment {
 
     public interface OrderViewPagerCallback {
         void onSelectedOrder(DetailOrderResponse detailOrderResponse);
-        void onAcceptAnOrder(String orderID);
     }
 
 
@@ -76,12 +88,38 @@ public class OrderViewPager extends Fragment {
         btnAcceptOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (callback != null) {
-                    callback.onAcceptAnOrder(detailOrderResponse.getId());
-                } else {
-                    Log.d("Must implement this", "onClick: ");
 
-                }
+                UserApiHandler.getInstance().acceptAnOrder(detailOrderResponse.getId(), new UIThreadCallBack<String, Error>() {
+                    @Override
+                    public void stopProgressIndicator() {
+
+                    }
+
+                    @Override
+                    public void startProgressIndicator() {
+
+                    }
+
+                    @Override
+                    public void onResult(String result) {
+
+                        try{
+
+                            Toast.makeText(getContext(),"Accept an order successfully",Toast.LENGTH_SHORT).show();
+
+                        }catch (Exception e){
+
+                            Log.d("EXCEPTION", "onResult: ");
+
+                        }
+                        acceptAnOrderCallBack.removeOrderFromArray(detailOrderResponse.getId());
+                    }
+
+                    @Override
+                    public void onFailure(Error error) {
+                        Toast.makeText(getContext(),"Cannot accept this order",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         view.setOnClickListener(new View.OnClickListener() {
