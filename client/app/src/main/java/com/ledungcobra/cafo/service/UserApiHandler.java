@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.gson.GsonBuilder;
 import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.order.OrderInfo;
-import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.order.customer.OrderResponse;
+import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
 import com.ledungcobra.cafo.models.user.UserInfo;
 import com.ledungcobra.cafo.models.user.UserLogin;
@@ -18,7 +18,9 @@ import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,13 +38,19 @@ public class UserApiHandler {
     }
 
     private UserApiHandler() {
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(80, TimeUnit.SECONDS)
+                .readTimeout(80, TimeUnit.SECONDS)
+                .writeTimeout(80, TimeUnit.SECONDS)
+                .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(
-                        new GsonBuilder()
-                                .create()))
+                        new GsonBuilder().create()))
+                .client(okHttpClient)
                 .build();
+
         userService = retrofit.create(UserService.class);
     }
 
@@ -117,7 +125,7 @@ public class UserApiHandler {
                                      ArrayList<FoodOrderItem> listOrderItems
     ) {
         OrderInfo orderInfo = new OrderInfo(restaurantID, new UserPos(latitude, longitude), listOrderItems);
-        Log.d("ORDER", "order: "+orderInfo);
+        Log.d("ORDER", "order: " + orderInfo);
         return userService.order(orderInfo, userAccessToken.getValue());
 
     }
@@ -196,8 +204,8 @@ public class UserApiHandler {
                     @Override
                     public void onResponse(Call<ArrayList<DetailOrderResponse>> call, Response<ArrayList<DetailOrderResponse>> response) {
                         callback.stopProgressIndicator();
-                        Log.d("CALL_API", "Code : "+response.code());
-                        Log.d("CALL_API", "Body: "+response.body());
+                        Log.d("CALL_API", "Code : " + response.code());
+                        Log.d("CALL_API", "Body: " + response.body());
                         if (response.code() == 200) {
                             callback.onResult(response.body());
                         } else {
@@ -262,5 +270,27 @@ public class UserApiHandler {
 
     }
 
+    public void getAcceptedOrdersByShipper(final UIThreadCallBack<List<DetailOrderResponse>,Error> callBack){
+        callBack.startProgressIndicator();
+        userService.getAcceptedOrdersByShipper(userAccessToken.getValue()).enqueue(new Callback<List<DetailOrderResponse>>() {
+            @Override
+            public void onResponse(Call<List<DetailOrderResponse>> call, Response<List<DetailOrderResponse>> response) {
+
+                if(response.code() == 200){
+                    callBack.onResult(response.body());
+                }else{
+                    callBack.onFailure(new Error("Network error"));
+                }
+
+                callBack.stopProgressIndicator();
+            }
+
+            @Override
+            public void onFailure(Call<List<DetailOrderResponse>> call, Throwable t) {
+                callBack.stopProgressIndicator();
+                callBack.onFailure(new Error(t.getMessage()));
+            }
+        });
+    }
 }
 

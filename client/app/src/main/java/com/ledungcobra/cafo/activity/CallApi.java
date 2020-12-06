@@ -6,12 +6,12 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.user.UserInfo;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CallApi extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class CallApi extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_api2);
-        UserApiHandler.getInstance().signIn("helloxxa", "123456", new UIThreadCallBack<UserInfo, Error>() {
+        UserApiHandler.getInstance().signIn("shipper0123", "a", new UIThreadCallBack<UserInfo, Error>() {
             @Override
             public void stopProgressIndicator() {
 
@@ -35,8 +35,7 @@ public class CallApi extends AppCompatActivity {
             @Override
             public void onResult(UserInfo result) {
 
-                Log.d(TAG, "onResult: "+result);
-                UserApiHandler.getInstance().getOrdersByCustomer(new UIThreadCallBack<ArrayList<DetailOrderResponse>, Error>() {
+                UserApiHandler.getInstance().getAcceptedOrdersByShipper(new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
                     @Override
                     public void stopProgressIndicator() {
 
@@ -48,15 +47,16 @@ public class CallApi extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResult(ArrayList<DetailOrderResponse> result) {
+                    public void onResult(List<DetailOrderResponse> result) {
                         Log.d(TAG, "onResult: "+result);
                     }
 
                     @Override
                     public void onFailure(Error error) {
-
+                        Log.d(TAG, "onFailure: "+error);
                     }
                 });
+
             }
 
             @Override
