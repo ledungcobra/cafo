@@ -16,6 +16,10 @@ import com.ledungcobra.cafo.R;
 
 public class DashboardFragment extends Fragment {
 
+
+    //VIEW
+    private CardView cardFindOrders;
+
     public DashboardFragment() {
         super();
     }
@@ -32,8 +36,22 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_drawer,container,false);
-        CardView cardFindOrders = view.findViewById(R.id.cardFindOrders);
 
+
+        initUI(view);
+        setListener();
+
+
+        return view;
+    }
+
+    private void initUI(View view){
+
+        cardFindOrders = view.findViewById(R.id.cardFindOrders);
+
+    }
+
+    private void setListener(){
         cardFindOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,10 +66,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-
-        return view;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

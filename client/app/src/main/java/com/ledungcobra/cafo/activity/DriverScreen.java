@@ -10,11 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +28,7 @@ import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
+import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
 import com.ledungcobra.cafo.view_adapter.SimpleItem;
@@ -72,7 +71,9 @@ public class DriverScreen extends AppCompatActivity implements
         initUI(savedInstanceState);
 
         //Request for location permission
-        requestPermission();
+//        requestPermission();
+
+//        Log.d("PERMISSION", "onCreate: "+checkForEnabledLocation());
 
 
 
@@ -133,33 +134,25 @@ public class DriverScreen extends AppCompatActivity implements
         }
         return wasEnabledNavigationLocation;
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_CODE && grantResults.length == 2 && grantResults[1] == PERMISSION_GRANTED  && grantResults[0] == PERMISSION_GRANTED){
-            Toast.makeText(this,"Location permission granted",Toast.LENGTH_SHORT).show();
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if(requestCode == REQUEST_CODE && grantResults.length == 2 && grantResults[1] == PERMISSION_GRANTED  && grantResults[0] == PERMISSION_GRANTED){
+//            Toast.makeText(this,"Location permission granted",Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     public boolean checkForEnabledLocation(){
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
-        boolean network_enabled = false;
-        boolean isEnable = true;
+
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch(Exception ex) {}
 
-        try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
 
-        if(!gps_enabled && !network_enabled) {
 
-            isEnable = false;
-
-        }
-        return isEnable;
+        return gps_enabled;
     }
 
 
@@ -207,12 +200,14 @@ public class DriverScreen extends AppCompatActivity implements
     }
 
     @Override
-    public void onButtonAcceptOrderClick() {
+    public void onSelectedOrder(DetailOrderResponse detailOrderResponse) {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container,new DriverDetailOrderFragment());
+        ft.add(R.id.container,DriverDetailOrderFragment.newInstance(detailOrderResponse));
         ft.addToBackStack(null);
         ft.commit();
 
     }
+
+
 }
