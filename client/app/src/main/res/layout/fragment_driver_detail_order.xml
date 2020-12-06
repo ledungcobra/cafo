@@ -5,109 +5,243 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".fragments.DriverDetailOrderFragment">
-
   <LinearLayout
-      android:paddingTop="10dp"
-      android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Danh sách các món được đặt"
-        android:textStyle="bold|italic"
-        android:textSize="20sp"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="10dp"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+    <ScrollView
         android:layout_width="match_parent"
-        android:id="@+id/listCustomerOrderItems"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="@color/colorBackgroundAccent">
       <LinearLayout
           android:layout_width="match_parent"
+          android:layout_height="wrap_content"
           android:orientation="vertical"
-          android:layout_height="wrap_content">
-
+          android:padding="8dp">
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="end"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="13dp"
-            android:layout_height="wrap_content">
+            android:background="@android:color/white"
+            android:layout_marginVertical="4dp"
+            android:padding="8dp">
           <LinearLayout
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="4dp"
+              android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:layout_marginRight="8dp"
+                android:text="OrderID"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="@string/placeholder_text"
+                android:id="@+id/tvOrderID"
+                android:textSize="12sp"/>
+          </LinearLayout>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="8dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/placeholder_text"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:id="@+id/tvResOrder"
+                android:textSize="24sp"/>
+          </LinearLayout>
+          <LinearLayout
+              android:layout_width="match_parent"
               android:layout_height="wrap_content">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tiền ship: "
-                android:textSize="15dp"
-                android:textStyle="bold|italic"
-                />
-
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:layout_marginRight="8dp"
+                android:text="Receive Address"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
             <TextView
-                android:id="@+id/txtShippingFee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="50k" />
-
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:maxLines="2"
+                android:text="@string/placeholder_text"
+                android:id="@+id/tvReceiveAddressOrder"
+                android:textSize="16sp"/>
           </LinearLayout>
-
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:layout_marginRight="8dp"
+                android:text="Contact"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:maxLines="1"
+                android:text="@string/placeholder_text"
+                android:id="@+id/tvPhoneOrder"
+                android:textSize="16sp"/>
+          </LinearLayout>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:layout_marginRight="8dp"
+                android:text="Time"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:maxLines="1"
+                android:text="@string/placeholder_text"
+                android:id="@+id/tvTimeOrder"
+                android:textSize="16sp"/>
+          </LinearLayout>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.4"
+                android:layout_marginRight="8dp"
+                android:text="Status"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tvStatusOrder"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/placeholder_text"
+                android:textSize="16sp"/>
+          </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:orientation="horizontal"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:layout_marginVertical="8dp"
+            android:padding="4dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin đơn hàng"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
 
-          <View
-              android:layout_width="0dp"
-              android:layout_weight="1"
-              android:layout_height="0dp" />
-          <View
-              android:layout_width="0dp"
-              android:background="@color/colorPrimary"
-              android:layout_height="1dp"
-              android:layout_weight="2"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:id="@+id/listCustomerOrderItems"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
       </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:orientation="horizontal">
-
-      <TextView
-          android:id="@+id/textView2"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
-          android:layout_marginRight="13dp"
-          android:gravity="end"
-          android:text="Tổng tiền: "
-          android:textColor="@android:color/holo_red_dark" />
-      <TextView
-          android:id="@+id/txtTotalCost"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
-          android:layout_marginRight="13dp"
-          android:gravity="end"
-          android:text=""
-          android:textColor="@android:color/holo_red_dark" />
-    </LinearLayout>
-
+    </ScrollView>
+    <!--Important Details-->
     <View
-        android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:text="Tiền ship: "
+            android:textSize="15dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/txtShippingFee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/placeholder_text"
+            android:gravity="end"/>
+      </LinearLayout>
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="right"
+          android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:text="Tổng tiền: "
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/txtTotalCost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/colorCart"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="@string/placeholder_text"/>
+      </LinearLayout>
+      <TextView
+          android:id="@+id/tvDoneOrder"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:padding="8dp"
+          android:background="@android:color/holo_green_dark"
+          android:gravity="center"
+          android:text="Complete Order"
+          android:textColor="@android:color/white"
+          android:textSize="20sp"
+          android:textStyle="bold" />
 
+    </LinearLayout>
+    <!--Important Details-->
 
   </LinearLayout>
 

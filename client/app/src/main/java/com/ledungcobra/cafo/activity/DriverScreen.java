@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
+import com.ledungcobra.cafo.fragments.DriverOrdersFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
@@ -165,6 +166,7 @@ public class DriverScreen extends AppCompatActivity implements
             finish();
         }else if(position == POS_ORDERS){
             //TODO: Order accepted
+            fragment = DriverOrdersFragment.newInstance();
         }else if(position == POS_PROFILE){
             fragment = ProfileUserFragment.newInstance();
         }else if(position == POS_DASHBOARD){

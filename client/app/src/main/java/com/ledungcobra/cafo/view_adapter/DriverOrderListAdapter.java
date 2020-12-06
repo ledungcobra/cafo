@@ -17,18 +17,18 @@ import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 
 import java.util.List;
 
-public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.OrderListHolder> {
+public class DriverOrderListAdapter extends RecyclerView.Adapter<DriverOrderListAdapter.DriverOrderListHolder> {
     Context context;
     List<DetailOrderResponse> orderResponseList;
     OnItemClickListener mListener;
 
-    public OrderListAdapter(Context context, List<DetailOrderResponse> orderResponseList) {
+    public DriverOrderListAdapter(Context context, List<DetailOrderResponse> orderResponseList) {
         this.context = context;
         this.orderResponseList = orderResponseList;
     }
 
     public interface OnItemClickListener{
-        void onDeleteOrder(int position);
+        //void onDeleteOrder(int position);
         void onDetailClick(int position);
     }
 
@@ -36,15 +36,15 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
 
     @NonNull
     @Override
-    public OrderListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DriverOrderListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-        View view = inflater.inflate(R.layout.order_item, parent,false);
+        View view = inflater.inflate(R.layout.order_item_driver, parent,false);
 
-        return new OrderListHolder(view);
+        return new DriverOrderListHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrderListHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DriverOrderListHolder holder, int position) {
             holder.bind(position);
     }
 
@@ -53,34 +53,36 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
         return orderResponseList.size();
     }
 
-    public class OrderListHolder extends RecyclerView.ViewHolder{
-        TextView tvResOrder;
+    public class DriverOrderListHolder extends RecyclerView.ViewHolder{
         TextView tvOrderID;
+        TextView tvResOrder;
+        TextView tvResAddress;
+        TextView tvCustomerAddress;
         TextView tvPriceOrder;
-        TextView tvTimeOrder;
         TextView tvStatusOrder;
         TextView tvDetailOrder;
-        ImageView ivDeleteOrder;
 
         public void bind(int position){
-            //Respond to user don't have restaurant name
-            //tvResOrder.setText(orderResponseList.get(position).getRestaurant().getName());
+            tvResOrder.setText(orderResponseList.get(position).getRestaurant().getName());
+            //Toast.makeText(context, orderResponseList.get(position).toString(),Toast.LENGTH_LONG).show();
             tvOrderID.setText(orderResponseList.get(position).getId());
             tvPriceOrder.setText(String.format("%,d",orderResponseList.get(position).getTotal())+" đ");
-            tvTimeOrder.setText("Time" + String.valueOf(position));
+            tvResAddress.setText(orderResponseList.get(position).getRestaurant().getAddress());
+            tvCustomerAddress.setText(orderResponseList.get(position).getOrderPosition().getLatitude()
+                    +", "+orderResponseList.get(position).getOrderPosition().getLatitude());
             tvStatusOrder.setText(orderResponseList.get(position).getStatus());
         }
 
 
-        public OrderListHolder(@NonNull View itemView) {
+        public DriverOrderListHolder(@NonNull View itemView) {
             super(itemView);
             tvResOrder = itemView.findViewById(R.id.tvResOrder);
             tvOrderID =  itemView.findViewById(R.id.tvOrderID);
             tvPriceOrder =  itemView.findViewById(R.id.tvPriceOrder);
-            tvTimeOrder =  itemView.findViewById(R.id.tvTimeOrder);
+            tvResAddress = itemView.findViewById(R.id.tvResAddressOrder);
+            tvCustomerAddress = itemView.findViewById(R.id.tvCustomerAddressOrder);
             tvStatusOrder =  itemView.findViewById(R.id.tvStatusOrder);
             tvDetailOrder =  itemView.findViewById(R.id.tvDetailOrder);
-            ivDeleteOrder =  itemView.findViewById(R.id.ivDeleteOrder);
 
             tvDetailOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -89,15 +91,6 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
                     mListener.onDetailClick(getAdapterPosition());
                 }
             });
-
-            ivDeleteOrder.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    mListener.onDeleteOrder(getAdapterPosition());
-                }
-            });
-
 
         }
     }
