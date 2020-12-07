@@ -26,16 +26,16 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class RestaurantCategoryFoodFragment extends Fragment {
 
     //VIEW
-    MenuListViewAdapter adapter;
-    RecyclerView rvMenuFood;
+    private MenuListViewAdapter adapter;
+    private RecyclerView rvMenuFood;
 
     //DATA
-    List<CartItem> cartShops = new ArrayList<CartItem>();
-    List<Food> foods = new ArrayList<Food>();
+    private List<CartItem> cartShops = new ArrayList<CartItem>();
+    private List<Food> foods = new ArrayList<Food>();
     private LiveData<Boolean> isListView;
 
     //LISTENER
-    DataUpdateListener dataListener;
+    private DataUpdateListener dataListener;
 
     public interface DataUpdateListener {
 

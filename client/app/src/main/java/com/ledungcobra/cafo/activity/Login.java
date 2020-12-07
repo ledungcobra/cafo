@@ -41,28 +41,28 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class Login extends AppCompatActivity {
 
     //VIEW
-    MaterialButton btnSignIn;
-    MaterialButton btnCreateAccount;
-    TextInputEditText edtFullName;
-    TextInputEditText edtUsername;
-    TextInputEditText edtEmail;
-    TextInputEditText edtPassword;
-    TextInputEditText edtConfirmPassword;
-    TextInputLayout lFullname;
-    TextInputLayout lEmail;
-    TextInputLayout lConfirmPassword;
-    TextInputEditText edtPhoneNumber;
-    TextInputLayout lPhoneNumber;
-    View lnSignInAs;
-    TextView tvSignUp;
-    RadioGroup radioGroupLoginAs;
-    ProgressBar progressBar;
+    private MaterialButton btnSignIn;
+    private MaterialButton btnCreateAccount;
+    private TextInputEditText edtFullName;
+    private TextInputEditText edtUsername;
+    private TextInputEditText edtEmail;
+    private TextInputEditText edtPassword;
+    private TextInputEditText edtConfirmPassword;
+    private TextInputLayout lFullname;
+    private TextInputLayout lEmail;
+    private TextInputLayout lConfirmPassword;
+    private TextInputEditText edtPhoneNumber;
+    private TextInputLayout lPhoneNumber;
+    private View lnSignInAs;
+    private TextView tvSignUp;
+    private RadioGroup radioGroupLoginAs;
+    private ProgressBar progressBar;
 
     //DATA
-    SharedPreferences pref;
-    boolean signInClicked = false;
+    private SharedPreferences pref;
+    private boolean signInClicked = false;
     private static final String SHARED_PREF_NAME = "USER_ACCESS_TOKEN";
-    String TAG = "CALL_API";
+    private String TAG = "CALL_API";
     private String currentButtonText = null;
 
     //LISTENER

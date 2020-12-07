@@ -3,7 +3,6 @@ package com.ledungcobra.cafo.service;
 import android.app.Application;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,7 +15,6 @@ import com.ledungcobra.cafo.models.user.TrackingRestaurant;
 import com.ledungcobra.cafo.network.RestaurantService;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -178,54 +176,20 @@ public class Repository {
         }).start();
     }
 
-    public LiveData<ArrayList<RestaurantDetail>> searchRestaurant(String searchKeyword, int page, int limit, final AppCompatActivity activity) {
-        final MutableLiveData<ArrayList<RestaurantDetail>> result = new MutableLiveData<>(new ArrayList<RestaurantDetail>());
+    public LiveData<ArrayList<BriefRestaurantInfo>> searchRestaurant(String searchKeyword, int page, final int limit) {
+        final MutableLiveData<ArrayList<BriefRestaurantInfo>> result = new MutableLiveData<>(new ArrayList<BriefRestaurantInfo>());
 
-        restaurantService.searchRestaurant(searchKeyword, page, limit, "5fbd364afe0a1616a91994bb").enqueue(new Callback<List<String>>() {
+        restaurantService.searchRestaurantDetail(searchKeyword, page, limit, "5fbd364afe0a1616a91994bb").enqueue(new Callback<List<BriefRestaurantInfo>>() {
             @Override
-            public void onResponse(Call<List<String>> call, final Response<List<String>> response) {
-                if (response.code() == 200) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            final ArrayList<RestaurantDetail> list = new ArrayList<>();
-                            for (String resID : response.body()) {
-                                try {
-                                    Log.d("SEARCHING", "run: "+resID);
-
-                                    Response<RestaurantDetail> resDetail= restaurantService.getRestaurant(resID).execute();
-
-                                    if(resDetail.code() == 200){
-                                        list.add(resDetail.body());
-                                    }else{
-                                        return;
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.d("SEARCHING", "run: "+list.size());
-                                    result.setValue(list);
-                                }
-                            });
-                        }
-                    }).start();
-
-
-                } else {
-                    result.setValue(null);
+            public void onResponse(Call<List<BriefRestaurantInfo>> call, Response<List<BriefRestaurantInfo>> response) {
+                if(response.code() == 200){
+                    result.setValue((ArrayList<BriefRestaurantInfo>) response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<String>> call, Throwable t) {
-                result.setValue(null);
+            public void onFailure(Call<List<BriefRestaurantInfo>> call, Throwable t) {
+
             }
         });
         return result;

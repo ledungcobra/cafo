@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.ledungcobra.cafo.models.common_new.Image;
 import com.ledungcobra.cafo.models.common_new.PriceRange;
+import com.ledungcobra.cafo.models.restaurants_new.Operating;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,6 +42,18 @@ public class RestaurantDetail implements Serializable {
     @SerializedName("menu")
     @Expose
     private List<Menu> menu = null;
+
+    @SerializedName("operating")
+    @Expose
+    private Operating operating;
+
+    public Operating getOperating() {
+        return operating;
+    }
+
+    public void setOperating(Operating operating) {
+        this.operating = operating;
+    }
 
     public List<String> getPhones() {
         return phones;

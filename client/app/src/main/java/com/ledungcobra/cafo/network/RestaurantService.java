@@ -52,6 +52,13 @@ public interface RestaurantService {
 
 
 
+    @POST("search-detail")
+    @FormUrlEncoded
+    Call<List<BriefRestaurantInfo>> searchRestaurantDetail(@Field("keyword") String keyword,
+                                        @Field("page") int page,
+                                        @Field("limit") int limit,
+                                        @Field("city_id")String cityId
+    );
 
 
 }

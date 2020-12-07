@@ -55,15 +55,15 @@ public class CartInformationShipping extends AppCompatActivity {
 
     //DATA
     private static final int REQUEST_LOCATION_CODE = 12345;
-    ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
-    String resID;
-    ArrayList<CartItem> listCartShop;
-    int foodCost = 0;
-    int shippingFeeCost = 0;
-    int totalCost = 0;
+    private ArrayList<FoodOrderItem> foodOrderItems = new ArrayList<>();
+    private String resID;
+    private ArrayList<CartItem> listCartShop;
+    private int foodCost = 0;
+    private int shippingFeeCost = 0;
+    private int totalCost = 0;
 
     //LISTENER
-    LocationListener locationListener = new LocationListener() {
+    private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
 

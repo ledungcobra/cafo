@@ -20,6 +20,7 @@ public class DashboardFragment extends Fragment {
     //VIEW
     private CardView cardFindOrders;
 
+
     public DashboardFragment() {
         super();
     }
@@ -39,6 +40,7 @@ public class DashboardFragment extends Fragment {
 
 
         initUI(view);
+
         setListener();
 
 

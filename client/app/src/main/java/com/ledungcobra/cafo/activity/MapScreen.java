@@ -17,12 +17,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,10 +34,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.GsonBuilder;
+import com.google.maps.android.ui.IconGenerator;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.routing.Routing;
 import com.ledungcobra.cafo.network.MapService;
@@ -62,12 +64,19 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     //VIEW
     private GoogleMap mMap;
-    LocationManager locationManager;
+    private LocationManager locationManager;
 
     //DATA
-    MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
+    private MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
     String TAG = "GOOGLE_MAP";
-    MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
+    private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
+    private final int maxTimeLocUpdateMilis = 300;
+    private LatLng locSrc;
+    private LatLng locDest;
+    private MutableLiveData<ArrayList<LatLng>> downloadedLocations = new MutableLiveData<>(null);
+
+    private final int REQUEST_CODE = 9999;
+    private boolean firstLoad = true;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -75,10 +84,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
 
-//        Uri gmmIntentUri = Uri.parse("google.navigation:q=10.10,100");
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//        mapIntent.setPackage("com.google.android.apps.maps");
-//        startActivity(mapIntent);
 
         ArrayAdapter<String> adapter
                 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listAddresses.getValue());
@@ -111,15 +116,19 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}, 9999);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            return;
+
         }
 
 
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
 
-
-
-
+        Intent intent = getIntent();
+        double lat = intent.getDoubleExtra("lat", 0);
+        double long_ = intent.getDoubleExtra("long", 0);
+        locDest = new LatLng(lat, long_);
 
     }
 
@@ -131,33 +140,40 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                Log.d("GOOGLE_MAP", "onMapClick: " + latLng.toString());
-                Log.d("GOOGLE_MAP", "Address " + getAddress(MapScreen.this, latLng.latitude, latLng.longitude));
+                Log.d("GOOGLE_MAP", "onMapClick: " + latLng);
+
             }
         });
 
+        userLocation.observe(this, new Observer<Location>() {
+            @Override
+            public void onChanged(Location loc) {
+                if (loc != null) {
 
+                    if (firstLoad) {
+                        downloadLocations(new LatLng(loc.getLatitude(), loc.getLongitude()), locDest);
+                        renderRoute();
+                    } else {
+                        renderRoute();
+                    }
 
-        Intent intent = getIntent();
-        double lat = intent.getDoubleExtra("lat", 0);
-        double long_ = intent.getDoubleExtra("long", 0);
-        final LatLng pos = new LatLng(lat, long_);
+                }
+            }
+        });
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
-        googleMap.addMarker(new MarkerOptions()
-                .position(pos)
-                .title("Marker in Sydney"));
+        downloadedLocations.observe(this, new Observer<ArrayList<LatLng>>() {
+            @Override
+            public void onChanged(ArrayList<LatLng> latLngs) {
+                if(userLocation.getValue()!=null){
+                    renderRoute();
+                }
+            }
+        });
 
-
-        moveCamera(10.8830067,106.7795138, "Start");
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
-
-//
-//
     }
 
-    private void requestRoute(LatLng userLocation, LatLng destLocation){
-        if(mMap !=null)  mMap.clear();
+    private void downloadLocations(LatLng userLocation, LatLng destLocation) {
+//        if(mMap !=null)  mMap.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.geoapify.com/")
                 .addConverterFactory(GsonConverterFactory.create(
@@ -166,66 +182,88 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .build();
 
         MapService mapService = retrofit.create(MapService.class);
-        mapService.getRoute(userLocation.latitude+","+userLocation.longitude+"|"
-                +destLocation.latitude+","+destLocation.longitude,
-                "drive","e39be72fa4a1417db83845d0c9e238ce")
+        mapService.getRoute(userLocation.latitude + "," + userLocation.longitude + "|"
+                        + destLocation.latitude + "," + destLocation.longitude,
+                "drive", getString(R.string.api_geoapify))
                 .enqueue(new Callback<Routing>() {
                              @Override
                              public void onResponse(Call<Routing> call, retrofit2.Response<Routing> response) {
 
                                  ArrayList<LatLng> locs = new ArrayList<>();
-                                 try{
-                                     Log.d(TAG, "onResponse: "+response.body().getFeatures().get(0).getGeometry().getCoordinates().size());
-                                     Log.d(TAG, "onResponse: "+response.body().toString());
-                                     for (List<Double> cord: response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)){
-                                         locs.add(new LatLng(cord.get(1),cord.get(0)));
+                                 try {
+                                     Log.d(TAG, "onResponse: " + response.body().getFeatures().get(0).getGeometry().getCoordinates().size());
+                                     Log.d(TAG, "onResponse: " + response.body().toString());
+                                     for (List<Double> cord : response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)) {
+                                         locs.add(new LatLng(cord.get(1), cord.get(0)));
                                      }
-                                     drawALine(locs);
-                                 }catch (Exception e){
-                                     Log.d(TAG, "Error"+e) ;
+
+                                     downloadedLocations.setValue(locs);
+                                     firstLoad = false;
+
+                                 } catch (Exception e) {
+                                     Log.d(TAG, "Error" + e);
                                  }
 
                              }
 
                              @Override
-                             public void onFailure(Call<Routing> call, Throwable t)
-                             {
-                                 Log.d(TAG, "onFailure: "+t);
+                             public void onFailure(Call<Routing> call, Throwable t) {
+                                 Log.d(TAG, "onFailure: " + t);
 
                              }
                          }
                 );
 
-        mMap.addMarker(new MarkerOptions().position(userLocation)
-        .title("You are here"));
+
 
     }
 
-    public void drawALine(ArrayList<LatLng> listLocsToDraw){
+    public void renderRoute() {
 
-        moveCamera(listLocsToDraw.get(0).latitude,listLocsToDraw.get(0).longitude,"");
-        if ( listLocsToDraw.size() < 2 )
-        {
-            return;
+        if(mMap!=null){
+            mMap.clear();
         }
 
-        PolylineOptions options = new PolylineOptions();
+        if(downloadedLocations.getValue()!=null){
 
-        options.color( Color.parseColor( "#CC0000FF" ) );
-        options.width(10);
-        options.visible( true );
+            if(userLocation.getValue()!=null){
+                moveCamera(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude(), "");
+            }
+
+            if (downloadedLocations.getValue().size() < 2) {
+                return;
+            }
+
+            PolylineOptions options = new PolylineOptions();
+
+            options.color(Color.parseColor("#CC0000FF"));
+            options.width(10);
+            options.visible(true);
 
 
+            for (LatLng locRecorded : downloadedLocations.getValue()) {
+                options.add(locRecorded);
+            }
 
-        for ( LatLng locRecorded : listLocsToDraw )
-        {
-            options.add(locRecorded);
+
+            mMap.addPolyline(options);
+
+            if(userLocation.getValue()!=null){
+                IconGenerator iconGen = new IconGenerator(this);
+                iconGen.setBackground(getDrawable(R.drawable.driver));
+                MarkerOptions markerOptions = new MarkerOptions().
+                        icon(BitmapDescriptorFactory.fromBitmap(iconGen.makeIcon("")));
+
+                        markerOptions.position(new LatLng(userLocation.getValue().getLatitude(),userLocation.getValue().getLongitude()));
+
+                mMap.addMarker(markerOptions);
+            }
+
         }
 
-
-        mMap.addPolyline(options );
 
     }
+
     public void getNewLocation(final String searchTerm) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -271,10 +309,12 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .position(pos)
                 .title(title));
 
+        mMap.clear();
+
 
     }
 
-    public String getAddress(Context context, double lat, double lng) {
+    public static String getAddress(Context context, double lat, double lng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
@@ -286,7 +326,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
             return add;
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -295,24 +334,24 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 9999 && grantResults.length  ==  2 && grantResults[0] == PERMISSION_GRANTED &&grantResults[1] == PERMISSION_GRANTED ) {
+
+        if (requestCode == 9999 &&
+                grantResults.length == 2 &&
+                grantResults[0] == PERMISSION_GRANTED &&
+                grantResults[1] == PERMISSION_GRANTED) {
             Log.d(TAG, "PERMISSION");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
         }
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        requestRoute(new LatLng(location.getLatitude(),location.getLongitude()),new LatLng(10.8830067,106.7795138));
-        moveCamera(location.getLatitude(),location.getLongitude(),"");
-
-
+        userLocation.setValue(location);
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(TAG, "onStatusChanged: ");
     }
 
     @Override

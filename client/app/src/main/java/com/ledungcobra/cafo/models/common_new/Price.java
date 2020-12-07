@@ -18,6 +18,9 @@ public class Price implements Serializable {
     @Expose
     private Integer value;
 
+    public Price(int sumOfCost){
+        this.value = sumOfCost;
+    }
     public String getText() {
         return text;
     }

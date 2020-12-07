@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.activity.CartInformationShipping;
-import com.ledungcobra.cafo.models.cart.Price;
 import com.ledungcobra.cafo.models.common_new.CartItem;
+import com.ledungcobra.cafo.models.common_new.Price;
 import com.ledungcobra.cafo.view_adapter.CartAdapterRecyclerView;
 
 import java.io.Serializable;
@@ -26,14 +26,14 @@ import java.util.List;
 
 
 public class ShoppingCartFragment extends Fragment {
-    List<CartItem> cartShops;
+    private List<CartItem> cartShops;
     //TODO : xử lí shopping cart khi không có gì thì disable nút đặt hàng
     public interface callBack{
         void callBackActivity(List<CartItem> cartShopList);
     }
 
     private String resID;
-    callBack listCart;
+    private callBack listCart;
 
     public static ShoppingCartFragment newInstance(Bundle bundle){
         ShoppingCartFragment shoppingCartFragment = new ShoppingCartFragment();
