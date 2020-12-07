@@ -3,6 +3,8 @@ package com.ledungcobra.cafo.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,13 +37,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.fragments.RestaurantCategoryFoodFragment;
 import com.ledungcobra.cafo.fragments.ShoppingCartFragment;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.common_new.Food;
 import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.ui_calllback.OnAnimationEnd;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.FragmentCategoryCollectionAdapter;
@@ -227,11 +229,31 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(RestaurantDetailScreen.this, MapScreen.class);
-                        intent.putExtra("lat", result.getPosition().getLatitude());
-                        intent.putExtra("long", result.getPosition().getLongitude());
+                        new AlertDialog.Builder(RestaurantDetailScreen.this).
+                                setTitle("Choose type of map do you want to use")
+                                .setPositiveButton("Google Map (Recommended)", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                        startActivity(intent);
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+MapScreen.getAddress(RestaurantDetailScreen.this,result.getPosition().getLatitude(),result.getPosition().getLongitude())+"&mode=d"));
+                                        intent.setPackage("com.google.android.apps.maps");
+                                        startActivity(intent);
+
+                                    }
+                                })
+                                .setNegativeButton("Built-in map", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(RestaurantDetailScreen.this, MapScreen.class);
+                                        intent.putExtra("lat", result.getPosition().getLatitude());
+                                        intent.putExtra("long", result.getPosition().getLongitude());
+                                        startActivity(intent);
+                                    }
+                                })
+                                .create()
+                                .show();
+
+
                     }
                 });
 

@@ -17,7 +17,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -315,7 +314,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     }
 
-    public String getAddress(Context context, double lat, double lng) {
+    public static String getAddress(Context context, double lat, double lng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
@@ -327,7 +326,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
             return add;
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             return null;
         }
     }
