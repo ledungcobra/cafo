@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,6 +70,8 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     String TAG = "GOOGLE_MAP";
     private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
     private final int maxTimeLocUpdateMilis = 300;
+    private final int REQUEST_CODE = 9999;
+    private boolean firstLoad = true;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -76,10 +79,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
 
-//        Uri gmmIntentUri = Uri.parse("google.navigation:q=10.10,100");
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//        mapIntent.setPackage("com.google.android.apps.maps");
-//        startActivity(mapIntent);
 
         ArrayAdapter<String> adapter
                 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listAddresses.getValue());
@@ -112,14 +111,13 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}, 9999);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            return;
+
         }
 
-
-
-
-
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
 
 
     }
@@ -129,36 +127,33 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        userLocation.observe(this, new Observer<Location>() {
             @Override
-            public void onMapClick(LatLng latLng) {
-                Log.d("GOOGLE_MAP", "onMapClick: " + latLng.toString());
-                Log.d("GOOGLE_MAP", "Address " + getAddress(MapScreen.this, latLng.latitude, latLng.longitude));
+            public void onChanged(Location loc) {
+                if (loc != null) {
+                    if (firstLoad) {
+                        Intent intent = getIntent();
+                        double lat = intent.getDoubleExtra("lat", 0);
+                        double long_ = intent.getDoubleExtra("long", 0);
+                        final LatLng pos = new LatLng(lat, long_);
+
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 50));
+                        requestRoute(new LatLng(loc.getLatitude(), loc.getLongitude()), new LatLng(lat, long_));
+                        firstLoad = false;
+                    }else{
+                        moveCamera(loc.getLatitude(), loc.getLongitude(), "You are here");
+                    }
+
+                }
             }
         });
 
 
-
-        Intent intent = getIntent();
-        double lat = intent.getDoubleExtra("lat", 0);
-        double long_ = intent.getDoubleExtra("long", 0);
-        final LatLng pos = new LatLng(lat, long_);
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
-        googleMap.addMarker(new MarkerOptions()
-                .position(pos)
-                .title("Marker in Sydney"));
-
-
-        moveCamera(10.8830067,106.7795138, "Start");
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
-
-//
-//
     }
 
-    private void requestRoute(LatLng userLocation, LatLng destLocation){
-        if(mMap !=null)  mMap.clear();
+    private void requestRoute(LatLng userLocation, LatLng destLocation) {
+//        if(mMap !=null)  mMap.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.geoapify.com/")
                 .addConverterFactory(GsonConverterFactory.create(
@@ -167,66 +162,63 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .build();
 
         MapService mapService = retrofit.create(MapService.class);
-        mapService.getRoute(userLocation.latitude+","+userLocation.longitude+"|"
-                +destLocation.latitude+","+destLocation.longitude,
-                "drive","e39be72fa4a1417db83845d0c9e238ce")
+        mapService.getRoute(userLocation.latitude + "," + userLocation.longitude + "|"
+                        + destLocation.latitude + "," + destLocation.longitude,
+                "drive", getString(R.string.api_geoapify))
                 .enqueue(new Callback<Routing>() {
                              @Override
                              public void onResponse(Call<Routing> call, retrofit2.Response<Routing> response) {
 
                                  ArrayList<LatLng> locs = new ArrayList<>();
-                                 try{
-                                     Log.d(TAG, "onResponse: "+response.body().getFeatures().get(0).getGeometry().getCoordinates().size());
-                                     Log.d(TAG, "onResponse: "+response.body().toString());
-                                     for (List<Double> cord: response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)){
-                                         locs.add(new LatLng(cord.get(1),cord.get(0)));
+                                 try {
+                                     Log.d(TAG, "onResponse: " + response.body().getFeatures().get(0).getGeometry().getCoordinates().size());
+                                     Log.d(TAG, "onResponse: " + response.body().toString());
+                                     for (List<Double> cord : response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)) {
+                                         locs.add(new LatLng(cord.get(1), cord.get(0)));
                                      }
                                      drawALine(locs);
-                                 }catch (Exception e){
-                                     Log.d(TAG, "Error"+e) ;
+                                 } catch (Exception e) {
+                                     Log.d(TAG, "Error" + e);
                                  }
 
                              }
 
                              @Override
-                             public void onFailure(Call<Routing> call, Throwable t)
-                             {
-                                 Log.d(TAG, "onFailure: "+t);
+                             public void onFailure(Call<Routing> call, Throwable t) {
+                                 Log.d(TAG, "onFailure: " + t);
 
                              }
                          }
                 );
 
         mMap.addMarker(new MarkerOptions().position(userLocation)
-        .title("You are here"));
+                .title("You are here"));
 
     }
 
-    public void drawALine(ArrayList<LatLng> listLocsToDraw){
+    public void drawALine(ArrayList<LatLng> listLocsToDraw) {
 
-        moveCamera(listLocsToDraw.get(0).latitude,listLocsToDraw.get(0).longitude,"");
-        if ( listLocsToDraw.size() < 2 )
-        {
+        moveCamera(listLocsToDraw.get(0).latitude, listLocsToDraw.get(0).longitude, "");
+        if (listLocsToDraw.size() < 2) {
             return;
         }
 
         PolylineOptions options = new PolylineOptions();
 
-        options.color( Color.parseColor( "#CC0000FF" ) );
+        options.color(Color.parseColor("#CC0000FF"));
         options.width(10);
-        options.visible( true );
+        options.visible(true);
 
 
-
-        for ( LatLng locRecorded : listLocsToDraw )
-        {
+        for (LatLng locRecorded : listLocsToDraw) {
             options.add(locRecorded);
         }
 
 
-        mMap.addPolyline(options );
+        mMap.addPolyline(options);
 
     }
+
     public void getNewLocation(final String searchTerm) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -297,19 +289,19 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 9999 &&
-                grantResults.length  ==  2 &&
+                grantResults.length == 2 &&
                 grantResults[0] == PERMISSION_GRANTED &&
-                grantResults[1] == PERMISSION_GRANTED ) {
+                grantResults[1] == PERMISSION_GRANTED) {
             Log.d(TAG, "PERMISSION");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,maxTimeLocUpdateMilis,5,this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
         }
 
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        requestRoute(new LatLng(location.getLatitude(),location.getLongitude()),new LatLng(10.8830067,106.7795138));
-        moveCamera(location.getLatitude(),location.getLongitude(),"");
+//        requestRoute(new LatLng(location.getLatitude(),location.getLongitude()),new LatLng(10.8830067,106.7795138));
+        userLocation.setValue(location);
 
 
     }
