@@ -70,7 +70,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     String TAG = "GOOGLE_MAP";
     private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
     private final int maxTimeLocUpdateMilis = 300;
-    private int i = 10;
 
     private final int REQUEST_CODE = 9999;
     private boolean firstLoad = true;
