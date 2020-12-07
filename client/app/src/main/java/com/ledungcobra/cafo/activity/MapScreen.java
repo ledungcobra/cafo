@@ -35,10 +35,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.GsonBuilder;
+import com.google.maps.android.ui.IconGenerator;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.routing.Routing;
 import com.ledungcobra.cafo.network.MapService;
@@ -70,6 +72,9 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     String TAG = "GOOGLE_MAP";
     private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
     private final int maxTimeLocUpdateMilis = 300;
+    private LatLng locSrc;
+    private LatLng locDest;
+    private MutableLiveData<ArrayList<LatLng>> downloadedLocations = new MutableLiveData<>(null);
 
     private final int REQUEST_CODE = 9999;
     private boolean firstLoad = true;
@@ -118,8 +123,13 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
         }
 
+
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
 
+        Intent intent = getIntent();
+        double lat = intent.getDoubleExtra("lat", 0);
+        double long_ = intent.getDoubleExtra("long", 0);
+        locDest = new LatLng(lat, long_);
 
     }
 
@@ -128,32 +138,42 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.d("GOOGLE_MAP", "onMapClick: " + latLng);
+
+            }
+        });
+
         userLocation.observe(this, new Observer<Location>() {
             @Override
             public void onChanged(Location loc) {
                 if (loc != null) {
+
                     if (firstLoad) {
-                        Intent intent = getIntent();
-                        double lat = intent.getDoubleExtra("lat", 0);
-                        double long_ = intent.getDoubleExtra("long", 0);
-                        final LatLng pos = new LatLng(lat, long_);
-
-
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 50));
-                        requestRoute(new LatLng(loc.getLatitude(), loc.getLongitude()), new LatLng(lat, long_));
-                        firstLoad = false;
-                    }else{
-                        moveCamera(loc.getLatitude(), loc.getLongitude(), "You are here");
+                        downloadLocations(new LatLng(loc.getLatitude(), loc.getLongitude()), locDest);
+                        renderRoute();
+                    } else {
+                        renderRoute();
                     }
 
                 }
             }
         });
 
+        downloadedLocations.observe(this, new Observer<ArrayList<LatLng>>() {
+            @Override
+            public void onChanged(ArrayList<LatLng> latLngs) {
+                if(userLocation.getValue()!=null){
+                    renderRoute();
+                }
+            }
+        });
 
     }
 
-    private void requestRoute(LatLng userLocation, LatLng destLocation) {
+    private void downloadLocations(LatLng userLocation, LatLng destLocation) {
 //        if(mMap !=null)  mMap.clear();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.geoapify.com/")
@@ -177,7 +197,10 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                                      for (List<Double> cord : response.body().getFeatures().get(0).getGeometry().getCoordinates().get(0)) {
                                          locs.add(new LatLng(cord.get(1), cord.get(0)));
                                      }
-                                     drawALine(locs);
+
+                                     downloadedLocations.setValue(locs);
+                                     firstLoad = false;
+
                                  } catch (Exception e) {
                                      Log.d(TAG, "Error" + e);
                                  }
@@ -192,31 +215,53 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                          }
                 );
 
-        mMap.addMarker(new MarkerOptions().position(userLocation)
-                .title("You are here"));
+
 
     }
 
-    public void drawALine(ArrayList<LatLng> listLocsToDraw) {
+    public void renderRoute() {
 
-        moveCamera(listLocsToDraw.get(0).latitude, listLocsToDraw.get(0).longitude, "");
-        if (listLocsToDraw.size() < 2) {
-            return;
+        if(mMap!=null){
+            mMap.clear();
         }
 
-        PolylineOptions options = new PolylineOptions();
+        if(downloadedLocations.getValue()!=null){
 
-        options.color(Color.parseColor("#CC0000FF"));
-        options.width(10);
-        options.visible(true);
+            if(userLocation.getValue()!=null){
+                moveCamera(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude(), "");
+            }
+
+            if (downloadedLocations.getValue().size() < 2) {
+                return;
+            }
+
+            PolylineOptions options = new PolylineOptions();
+
+            options.color(Color.parseColor("#CC0000FF"));
+            options.width(10);
+            options.visible(true);
 
 
-        for (LatLng locRecorded : listLocsToDraw) {
-            options.add(locRecorded);
+            for (LatLng locRecorded : downloadedLocations.getValue()) {
+                options.add(locRecorded);
+            }
+
+
+            mMap.addPolyline(options);
+
+            if(userLocation.getValue()!=null){
+                IconGenerator iconGen = new IconGenerator(this);
+                iconGen.setBackground(getDrawable(R.drawable.driver));
+                MarkerOptions markerOptions = new MarkerOptions().
+                        icon(BitmapDescriptorFactory.fromBitmap(iconGen.makeIcon("")));
+
+                        markerOptions.position(new LatLng(userLocation.getValue().getLatitude(),userLocation.getValue().getLongitude()));
+
+                mMap.addMarker(markerOptions);
+            }
+
         }
 
-
-        mMap.addPolyline(options);
 
     }
 
@@ -265,6 +310,8 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .position(pos)
                 .title(title));
 
+        mMap.clear();
+
 
     }
 
@@ -289,6 +336,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == 9999 &&
                 grantResults.length == 2 &&
                 grantResults[0] == PERMISSION_GRANTED &&
@@ -301,15 +349,11 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     @Override
     public void onLocationChanged(Location location) {
-//        requestRoute(new LatLng(location.getLatitude(),location.getLongitude()),new LatLng(10.8830067,106.7795138));
         userLocation.setValue(location);
-
-
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(TAG, "onStatusChanged: ");
     }
 
     @Override
