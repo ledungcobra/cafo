@@ -2,23 +2,19 @@ package com.ledungcobra.cafo.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,9 +25,7 @@ import com.ledungcobra.cafo.fragments.RestaurantOverViewFragment;
 import com.ledungcobra.cafo.fragments.UserOrdersFragment;
 import com.ledungcobra.cafo.fragments.fragmentDetailFoodInOrder;
 import com.ledungcobra.cafo.models.order.shipper.Food;
-import com.ledungcobra.cafo.models.restaurant_detail_new.RestaurantDetail;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
-import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.view_adapter.MenuNavigationDrawerAdapter;
 
 import java.util.ArrayList;
@@ -205,70 +199,23 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate xml to android UI
-        getMenuInflater().inflate(R.menu.shop_selected_menu, menu);
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//
+//    }
 
-        //Get two components from action bar menu
-        MenuItem searchButton = menu.findItem(R.id.menu_search);
-        MenuItem infoButton  = menu.findItem(R.id.action_info);
-
-        //Implement searching
-        final SearchView searchView = (SearchView) searchButton.getActionView();
-        View searchPlate = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-
-        //Change the background color for the palate search view
-        searchPlate.setBackgroundColor(getColor(R.color.white));
-
-        //Text change listener for search view
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-
-
-                return false;
-
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if(newText.length()>3){
-
-                    Repository.getInstance().searchRestaurant(newText,1,10,RestaurantsOverviewScreen.this).observe(RestaurantsOverviewScreen.this, new Observer<ArrayList<RestaurantDetail>>() {
-                        @Override
-                        public void onChanged(ArrayList<RestaurantDetail> restaurantDetails) {
-                            Log.d("SEARCHING", "onChanged: "+ restaurantDetails);
-                        }
-                    });
-
-
-
-                }else{
-
-                }
-
-                return false;
-            }
-        });
-
-        return true;
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.action_info) {
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_info) {
+//
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public void closeDrawer() {
         drawerLayout.closeDrawer(Gravity.LEFT, true);

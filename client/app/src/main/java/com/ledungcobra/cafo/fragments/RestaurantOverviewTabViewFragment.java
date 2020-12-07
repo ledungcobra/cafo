@@ -2,6 +2,7 @@ package com.ledungcobra.cafo.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     public static int NEW_PAGER = 0;
     public static int FAV_PAGER = 1;
     public static int VISITED_PAGER = 2;
+    public static int SEARCHING_PAGER = 3;
+
     private int currentPage = 1;
     private int type;
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>();
@@ -46,13 +49,13 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     }
 
 
-
     public static RestaurantOverviewTabViewFragment newInstance(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList, int type) {
         RestaurantOverviewTabViewFragment fragment = new RestaurantOverviewTabViewFragment();
         Bundle args = new Bundle();
-
-        assert restaurantList != null;
-        fragment.passedRestaurantList = restaurantList;
+        if(type != SEARCHING_PAGER){
+            assert restaurantList!=null;
+            fragment.passedRestaurantList = restaurantList;
+        }
         fragment.setArguments(args);
         fragment.type = type;
         return fragment;
@@ -133,31 +136,59 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
 
         }
 
-        assert passedRestaurantList!=null;
-        passedRestaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
-            @Override
-            public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
-                restaurantList.setValue((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
 
-            }
-        });
+        if(type !=SEARCHING_PAGER){
 
-        if (restaurantList != null) {
-
-            restaurantList.observe(getViewLifecycleOwner(), new Observer<List<BriefRestaurantInfo>>() {
+            assert passedRestaurantList!=null;
+            passedRestaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
                 @Override
-                public void onChanged(List<BriefRestaurantInfo> briefRestaurantInfos) {
+                public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
+                    restaurantList.setValue((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
 
-                    if (briefRestaurantInfos != null && adapter != null) {
-                        adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
-
-                    }
                 }
             });
 
+            if (restaurantList != null) {
+
+                restaurantList.observe(getViewLifecycleOwner(), new Observer<List<BriefRestaurantInfo>>() {
+                    @Override
+                    public void onChanged(List<BriefRestaurantInfo> briefRestaurantInfos) {
+
+                        if (briefRestaurantInfos != null && adapter != null) {
+
+                            adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
+
+                        }
+                    }
+                });
+
+            }
+        }else{
+            restaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
+                @Override
+                public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
+
+                    if (briefRestaurantInfos != null && adapter != null) {
+
+                        Log.d("VIEW_PAGER", briefRestaurantInfos.toString());
+                        adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
+
+                    }
+
+                }
+            });
         }
 
 
         return view;
+    }
+
+    public void setData(ArrayList<BriefRestaurantInfo> data){
+        restaurantList.setValue(data);
+
+    }
+
+    public void clearData(){
+        restaurantList.setValue(new ArrayList<BriefRestaurantInfo>());
     }
 }
