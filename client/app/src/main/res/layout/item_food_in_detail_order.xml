@@ -47,9 +47,10 @@
             android:layout_marginVertical="4dp"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:maxLength="10"
+                android:layout_weight="1"
+                android:maxLines="1"
                 android:text="@string/placeholder_text"
                 android:textColor="@color/colorCart"
                 android:textStyle="bold"
@@ -57,13 +58,11 @@
                 android:textSize="18sp"
                 android:id="@+id/tvCostFood"/>
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
-                android:gravity="end"
                 android:textSize="18sp"
-                android:text="Qty:"/>
+                android:text="x"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

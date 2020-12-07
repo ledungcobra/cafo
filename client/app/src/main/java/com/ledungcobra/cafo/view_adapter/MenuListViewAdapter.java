@@ -71,7 +71,8 @@ public class MenuListViewAdapter extends RecyclerView.Adapter<MenuListViewAdapte
 
             Picasso.get().load(useImageUrl).transform(new CropCircleTransformation()).into(holder.ivFoodPhoto);
             holder.tvFoodName.setText(food.getName());
-            holder.tvFoodPrice.setText(food.getPrice().getValue()+"");
+            holder.tvFoodPrice.setText(String.format("%,d",food.getPrice().getValue())
+                    + " " + context.getString(R.string.currency));
     }
 
     @Override

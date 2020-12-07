@@ -18,9 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.fragments.DashboardFragment;
 import com.ledungcobra.cafo.fragments.DriverDetailOrderFragment;
+import com.ledungcobra.cafo.fragments.DriverFragmentDetailFoodInOrder;
+import com.ledungcobra.cafo.fragments.DriverOrdersFragment;
 import com.ledungcobra.cafo.fragments.OrderViewPager;
 import com.ledungcobra.cafo.fragments.ProfileUserFragment;
+import com.ledungcobra.cafo.fragments.fragmentDetailFoodInOrder;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.ledungcobra.cafo.view_adapter.DrawerAdapter;
 import com.ledungcobra.cafo.view_adapter.DrawerItem;
 import com.ledungcobra.cafo.view_adapter.SimpleItem;
@@ -28,10 +32,12 @@ import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class DriverScreen extends AppCompatActivity implements
                                 DrawerAdapter.OnItemSelectedListener,
-                                    OrderViewPager.OrderViewPagerCallback {
+                                OrderViewPager.OrderViewPagerCallback,
+                                DriverOrdersFragment.CallBackToCreateFm {
     //VIEW
     private Drawable[] screenIcons;
     private SlidingRootNav slidingRootNav;
@@ -149,6 +155,7 @@ public class DriverScreen extends AppCompatActivity implements
             finish();
         }else if(position == POS_ORDERS){
             //TODO: Order accepted
+            fragment = DriverOrdersFragment.newInstance();
         }else if(position == POS_PROFILE){
             fragment = ProfileUserFragment.newInstance();
         }else if(position == POS_DASHBOARD){
@@ -194,5 +201,14 @@ public class DriverScreen extends AppCompatActivity implements
 
     }
 
-
+    //DriverOrdersFragment callback
+    @Override
+    public void onCreateFm(DetailOrderResponse detail) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
+                .add(R.id.container, DriverFragmentDetailFoodInOrder.newInstance(detail))
+                        .addToBackStack(null)
+                        .commit();
+    }
+    //DriverOrdersFragment callback
 }
