@@ -1,16 +1,24 @@
 package com.ledungcobra.cafo.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.activity.CartInformationShipping;
+import com.ledungcobra.cafo.models.common_new.CartItem;
+import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.ledungcobra.cafo.view_adapter.FoodListViewAdapter;
@@ -82,6 +90,7 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
         TextView tvCustomerContact = view.findViewById(R.id.tvCustomerPhoneOrder);
         TextView tvStatus = view.findViewById(R.id.tvStatusOrder);
         TextView tvShippingFee = view.findViewById(R.id.txtShippingFee);
+        Button btnCompleteOrder = view.findViewById(R.id.btnCompleteOrder);
         //Views
 
         //Set data
@@ -90,21 +99,62 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
         tvResAddress.setText(resAddress);
         tvCustomerPosition.setText(customerPosition);
         tvCustomerContact.setText(customerContact);
+        switch (status){
+            case "SHIPPING":
+                tvStatus.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+                break;
+            case "CANCELLED":
+                tvStatus.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                break;
+            case "DONE":
+                tvStatus.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                break;
+            default:
+                tvStatus.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+                break;
+        }
         tvStatus.setText(status);
         tvShippingFee.setText(String.format("%,d", shippingFee) + getString(R.string.currency));
         tvTotal.setText(String.format("%,d", total) + getString(R.string.currency));
 
         RecyclerView recyclerView = view.findViewById(R.id.listCustomerOrderItems);
         FoodListViewAdapter adapter = new FoodListViewAdapter(getContext(),foodList);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-
         recyclerView.setAdapter(adapter);
         //Set data
+
+        btnCompleteOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder myBuilder =
+                        new AlertDialog.Builder(getContext());
+                myBuilder.setTitle("Complete Order")
+                        .setMessage("Are you sure?")
+                        .setPositiveButton("Completed", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichOne) {
+                                Toast.makeText(
+                                        getContext(),
+                                        "Order will change status soon, please be patient",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                                //TODO: Call API to set order to status complete
+                                dialog.dismiss();
+                            }})
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }) //setNegativeButton
+                        .show();
+            }
+        });
         return view;
     }
 }

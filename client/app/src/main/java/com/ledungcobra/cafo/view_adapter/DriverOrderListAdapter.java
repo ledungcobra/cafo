@@ -70,7 +70,22 @@ public class DriverOrderListAdapter extends RecyclerView.Adapter<DriverOrderList
             tvResAddress.setText(orderResponseList.get(position).getRestaurant().getAddress());
             tvCustomerAddress.setText(orderResponseList.get(position).getOrderPosition().getLatitude()
                     +", "+orderResponseList.get(position).getOrderPosition().getLatitude());
-            tvStatusOrder.setText(orderResponseList.get(position).getStatus());
+            String status = orderResponseList.get(position).getStatus();
+            switch (status){
+                case "SHIPPING":
+                    tvStatusOrder.setTextColor(context.getColor(android.R.color.holo_blue_dark));
+                    break;
+                case "CANCELLED":
+                    tvStatusOrder.setTextColor(context.getColor(android.R.color.holo_red_dark));
+                    break;
+                case "DONE":
+                    tvStatusOrder.setTextColor(context.getColor(android.R.color.holo_green_dark));
+                    break;
+                default:
+                    tvStatusOrder.setTextColor(context.getColor(android.R.color.holo_orange_dark));
+                    break;
+            }
+            tvStatusOrder.setText(status);
         }
 
 

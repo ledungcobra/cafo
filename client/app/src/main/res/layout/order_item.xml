@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:text="@string/placeholder_text"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/colorCart"
                     android:textStyle="bold"
                     android:id="@+id/tvResOrder"
                     android:textSize="24sp"/>

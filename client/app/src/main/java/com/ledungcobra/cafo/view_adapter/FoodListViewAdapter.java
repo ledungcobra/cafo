@@ -73,7 +73,8 @@ public class FoodListViewAdapter extends RecyclerView.Adapter<FoodListViewAdapte
             Picasso.get().load(useImageUrl).into(ivFoodPhoto);
 
             tvNumber.setText(Integer.toString(food.getCount()));
-            tvCost.setText(Integer.toString(food.getPrice().getValue()*food.getCount()));
+            //Need to use global string resource for currency
+            tvCost.setText(String.format("%,d",food.getPrice().getValue()) + " ₫");
 
 
             tvSTT.setText(Integer.toString(serial));
