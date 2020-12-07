@@ -55,7 +55,7 @@ public class fragmentDetailFoodInOrder extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_detail_food_in_order, container, false);
         TextView tvTotal = view.findViewById(R.id.tvResultInOrder);
-        tvTotal.setText(Integer.toString(total)+" đ");
+        tvTotal.setText(String.format("%,d",total)+" đ");
         RecyclerView recyclerView = view.findViewById(R.id.rvDetailFoodOrder);
         FoodListViewAdapter adapter = new FoodListViewAdapter(getContext(),foodList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

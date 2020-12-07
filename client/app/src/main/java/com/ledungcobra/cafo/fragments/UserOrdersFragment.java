@@ -1,5 +1,7 @@
 package com.ledungcobra.cafo.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,8 +99,28 @@ public class UserOrdersFragment extends Fragment {
 
                 adapter.setOnClickListener(new OrderListAdapter.OnItemClickListener() {
                     @Override
-                    public void onDeleteOrder(int position) {
-                        Toast.makeText(getContext(),"Delete Click",Toast.LENGTH_SHORT).show();
+                    public void onDeleteOrder(final int position) {
+                        AlertDialog.Builder myBuilder =
+                                new AlertDialog.Builder(getContext());
+                        myBuilder.setTitle("Delete Order")
+                                .setMessage("Are you sure?")
+                                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichOne) {
+                                        Toast.makeText(
+                                                getContext(),
+                                                "Delete order " + orderList.get(position).getId(),
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+                                        //TODO: Call API to set order to status delete
+                                        dialog.dismiss();
+                                    }})
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }) //setNegativeButton
+                                .show();
                     }
 
                     @Override

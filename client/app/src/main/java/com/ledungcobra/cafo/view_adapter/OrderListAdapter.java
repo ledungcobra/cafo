@@ -2,6 +2,7 @@ package com.ledungcobra.cafo.view_adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,7 +70,15 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
             tvOrderID.setText(orderResponseList.get(position).getId());
             tvPriceOrder.setText(String.format("%,d",orderResponseList.get(position).getTotal())+" đ");
             tvTimeOrder.setText("Time" + String.valueOf(position));
-            tvStatusOrder.setText(orderResponseList.get(position).getStatus());
+
+            String status = orderResponseList.get(position).getStatus();
+
+            //Can only cancel orders which are not handled yet
+            if (!status.equals("WAITING")) {
+                ivDeleteOrder.setEnabled(false);
+                ivDeleteOrder.getDrawable().setTint(Color.GRAY);
+            }
+            tvStatusOrder.setText(status);
         }
 
 
