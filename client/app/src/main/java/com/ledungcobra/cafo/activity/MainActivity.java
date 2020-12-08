@@ -3,16 +3,16 @@ package com.ledungcobra.cafo.activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private View appTitle;
 
     //DATA
-    private static String TAG = "CALL_API";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Error error) {
-                //Handle Error
-                Log.d(TAG, "onFailure: " + error);
+                Toast.makeText(MainActivity.this, "Some thing wrong", Toast.LENGTH_SHORT).show();
             }
 
             @Override

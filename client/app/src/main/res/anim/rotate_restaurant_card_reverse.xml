@@ -7,7 +7,6 @@
         android:toDegrees="0"
         android:pivotX="0%"
         android:pivotY="0%"
-
-        android:duration="2000" >
+        android:duration="1300" >
     </rotate>
 </set>

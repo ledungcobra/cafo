@@ -236,7 +236,12 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements User
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 1234){
-            onCreate(new Bundle());
+
+            if( data!=null && data.getBooleanExtra(getString(R.string.need_update),false)){
+                onCreate(new Bundle());
+            }else{
+                //Do nothing
+            }
         }
 
     }

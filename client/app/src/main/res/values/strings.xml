@@ -35,4 +35,5 @@
     <string name="user_info">USER_INFO</string>
     <string name="list_restaurants">LIST_RESTAURANTS</string>
     <string name="api_geoapify">e39be72fa4a1417db83845d0c9e238ce</string>
+    <string name="need_update">NEED_UPDATE</string>
 </resources>

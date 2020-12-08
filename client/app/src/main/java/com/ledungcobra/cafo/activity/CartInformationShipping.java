@@ -14,7 +14,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,11 +25,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.order.customer.OrderResponse;
 import com.ledungcobra.cafo.models.user.DetailUserInfo;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import java.io.IOException;
@@ -48,8 +47,8 @@ public class CartInformationShipping extends AppCompatActivity {
 
     //View
     private LocationManager locationManager;
-    private  EditText edtFullname, edtAddress,edtPhoneNumber;
-    protected TextView  tvCostFood, tvShippingFee, tvTotalCost;
+    private EditText edtFullname, edtAddress, edtPhoneNumber;
+    protected TextView tvCostFood, tvShippingFee, tvTotalCost;
     protected Button btnOrderShip;
 
 
@@ -61,6 +60,7 @@ public class CartInformationShipping extends AppCompatActivity {
     private int foodCost = 0;
     private int shippingFeeCost = 0;
     private int totalCost = 0;
+    private final int minTime = 1000;
 
     //LISTENER
     private LocationListener locationListener = new LocationListener() {
@@ -97,13 +97,20 @@ public class CartInformationShipping extends AppCompatActivity {
 
         //GET DATA
         Intent intent = getIntent();
-        listCartShop = (ArrayList<CartItem>) intent.getSerializableExtra("Info");
+
+        try{
+            listCartShop = (ArrayList<CartItem>) intent.getSerializableExtra("Info");
+
+        }catch (Exception e){
+            Toast.makeText(this, "Casting error exception", Toast.LENGTH_SHORT).show();
+        }
+
         resID = intent.getStringExtra(getString(R.string.res_id));
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         //CALC TOTAL COST FOR EVERY ORDER
         if (listCartShop != null && listCartShop.size() > 0) {
-            for (CartItem cartShop: listCartShop){
+            for (CartItem cartShop : listCartShop) {
                 foodCost += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
             }
         }
@@ -121,14 +128,15 @@ public class CartInformationShipping extends AppCompatActivity {
 
 
         if (ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(CartInformationShipping.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CartInformationShipping.this,new String[]
-                            {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+            ActivityCompat.requestPermissions(CartInformationShipping.this, new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_LOCATION_CODE);
 
-        }else{
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, locationListener);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, 5, locationListener);
             Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(loc != null) edtAddress.setText(getAddress(this,loc.getLatitude(),loc.getLongitude()));
+            if (loc != null)
+                edtAddress.setText(getAddress(this, loc.getLatitude(), loc.getLongitude()));
 
         }
 
@@ -137,7 +145,7 @@ public class CartInformationShipping extends AppCompatActivity {
 
     }
 
-    private void getUserInformation(){
+    private void getUserInformation() {
         UserApiHandler.getInstance().getUser(new UIThreadCallBack<DetailUserInfo, Error>() {
             @Override
             public void stopProgressIndicator() {
@@ -163,23 +171,32 @@ public class CartInformationShipping extends AppCompatActivity {
     }
 
     @SuppressLint("MissingPermission")
-    private void doOrder(){
+    private void doOrder() {
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-            Log.d("ORDER", "doOrder: "+resID);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            UserApiHandler.getInstance().order(resID,location.getLatitude(),location.getLongitude(),foodOrderItems)
-                    .enqueue(new Callback<OrderResponse>() {
-                        @Override
-                        public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
-                            Log.d("CALL_API", "onResponse:"+response.body());
-                        }
 
-                        @Override
-                        public void onFailure(Call<OrderResponse> call, Throwable t) {
-                            Log.d("CALL_API", "onResponse:"+t.getMessage());
-                        }
-                    });
+            if(location == null){
+                Toast.makeText(CartInformationShipping.this,"Cannot get your location",Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            UserApiHandler.getInstance().order(resID, location.getLatitude(), location.getLongitude(), foodOrderItems)
+                    .enqueue(new Callback<OrderResponse>() {
+                                 @Override
+                                 public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                                     Toast.makeText(CartInformationShipping.this, "Order successfully", Toast.LENGTH_SHORT).show();
+
+                                 }
+
+                                 @Override
+
+                                 public void onFailure(Call<OrderResponse> call, Throwable t) {
+                                     Toast.makeText(CartInformationShipping.this, "Cannot order", Toast.LENGTH_SHORT).show();
+
+                                 }
+                             }
+                    );
         }
 
     }
@@ -189,17 +206,18 @@ public class CartInformationShipping extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_LOCATION_CODE){
-            if(grantResults.length == 2 && grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED){
+        if (requestCode == REQUEST_LOCATION_CODE) {
+            if (grantResults.length == 2 && grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED) {
                 //Permission granted
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5, locationListener);
 //                doOrder();
                 Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if(loc != null) edtAddress.setText(getAddress(this,loc.getLatitude(),loc.getLongitude()));
+                if (loc != null)
+                    edtAddress.setText(getAddress(this, loc.getLatitude(), loc.getLongitude()));
 
-            }else{
+            } else {
                 //User refuse to location
-                Toast.makeText(this,"Cannot get your location",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Cannot get your location", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -247,14 +265,17 @@ public class CartInformationShipping extends AppCompatActivity {
         //Add UI Listener
         TextWatcher textWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 //validate input
-                for (EditText edt  : new EditText[] {edtFullname, edtAddress, edtPhoneNumber}) {
+                for (EditText edt : new EditText[]{edtFullname, edtAddress, edtPhoneNumber}) {
                     if (edt.getText().toString().trim().isEmpty()) {
                         btnOrderShip.setEnabled(false);
                         return;
@@ -276,10 +297,10 @@ public class CartInformationShipping extends AppCompatActivity {
                 String phone = edtPhoneNumber.getText().toString();
 
                 String message = new String(
-                        "Your name: "+ fullname
-                                +"\nAddress: "+ address
-                                +"\nPhone: " + phone
-                                +"\n\nTotal Cost: " + tvTotalCost.getText().toString()
+                        "Your name: " + fullname
+                                + "\nAddress: " + address
+                                + "\nPhone: " + phone
+                                + "\n\nTotal Cost: " + tvTotalCost.getText().toString()
                         //Too lazy to do format number again :p
                 );
 
@@ -297,7 +318,8 @@ public class CartInformationShipping extends AppCompatActivity {
                                 doOrder();
                                 dialog.dismiss();
 
-                            }})
+                            }
+                        })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

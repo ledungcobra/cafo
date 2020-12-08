@@ -3,6 +3,7 @@ package com.ledungcobra.cafo.view_adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,19 +80,25 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
         public void bind(int position){
             //Respond to user don't have restaurant name
             //tvResOrder.setText(orderResponseList.get(position).getRestaurant().getName());
-            tvOrderID.setText(orderResponseList.get(position).getId());
-            tvPriceOrder.setText(String.format("%,d",orderResponseList.get(position).getTotal())+" đ");
-            String[] datetimeOrdered = orderResponseList.get(position).getOrderTime().split("T");
-            tvTimeOrder.setText(datetimeOrdered[0]+": "+ datetimeOrdered[1].substring(0,datetimeOrdered[1].length()-1)) ;
+            try{
+                tvOrderID.setText(orderResponseList.get(position).getId());
+                tvPriceOrder.setText(String.format("%,d",orderResponseList.get(position).getTotal())+" đ");
+                String[] datetimeOrdered = orderResponseList.get(position).getOrderTime().split("T");
+                tvTimeOrder.setText(datetimeOrdered[0]+": "+ datetimeOrdered[1].substring(0,datetimeOrdered[1].length()-1)) ;
 
-            String status = orderResponseList.get(position).getStatus();
+                String status = orderResponseList.get(position).getStatus();
+                tvResOrder.setText(orderResponseList.get(position).getRestaurant().getName());
+                //Can only cancel orders which are not handled yet
+                if (!status.equals("WAITING")) {
+                    ivDeleteOrder.setEnabled(false);
+                    ivDeleteOrder.getDrawable().setTint(Color.GRAY);
+                }
+                tvStatusOrder.setText(status);
 
-            //Can only cancel orders which are not handled yet
-            if (!status.equals("WAITING")) {
-                ivDeleteOrder.setEnabled(false);
-                ivDeleteOrder.getDrawable().setTint(Color.GRAY);
+            }catch (Exception e){
+                Log.d("BINDING", "bind: ");
             }
-            tvStatusOrder.setText(status);
+
         }
 
 

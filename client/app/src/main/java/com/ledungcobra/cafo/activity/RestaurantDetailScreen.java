@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,9 +68,9 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     //VIEW
     private TextView tvRestaurantAddress;
     private TextView tvRestaurantStatus;
-    private TextView tvRestaurantDistance;
     private ImageView ivLoc;
     private ImageView ivDist;
+    private TextView tvTimeOpenOff;
     private MenuListViewAdapter adapter;
     private MenuGridViewAdapter adapterGrid;
     private ImageView ivRestaurant;
@@ -94,8 +93,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     int cardHeight = -100;
     private String restaurantID;
     private MutableLiveData<Boolean> isFavoriteRestaurant = new MutableLiveData<>(false);
-    //TODO: fix bug Card view khi recycler view không thể kéo được
-    //TODO: xử lí
+    private boolean needUpdate = false;
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -147,12 +145,23 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
                 viewPager.setAdapter(collectionAdapter);
                 tabLayout.setupWithViewPager(viewPager);
 
+                if(result.getImage()!=null){
+                    Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
+                }
 
-                Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
                 tvRestaurantName.setText(result.getName());
                 tvRestaurantAddress.setText(result.getAddress());
                 //Only first number
-                tvRestaurantPhone.setText(result.getPhones().get(0));
+                if(result.getPhones()!=null && result.getPhones().size()>0){
+                    tvRestaurantPhone.setText(result.getPhones().get(0));
+                }
+
+                if (result.getOperating() != null) {
+                    tvTimeOpenOff.setText(result.getOperating().toString());
+                } else {
+                    tvTimeOpenOff.setText("chưa cập nhật");
+
+                }
 
                 findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,8 +204,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         });
 
 
-
-
         isFavoriteRestaurant.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -220,7 +227,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         tvRestaurantAddress = findViewById(R.id.address_restaurant);
         tvRestaurantStatus = findViewById(R.id.timeOpenOff);
         tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
-        tvRestaurantDistance = findViewById(R.id.distance);
 
 
         tabLayout = findViewById(R.id.categoryTabLayout);
@@ -233,11 +239,8 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
         toolbar = findViewById(R.id.toolbarDetail);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
-
         imgbtnList = findViewById(R.id.btnGrid);
-
-
-
+        tvTimeOpenOff = findViewById(R.id.timeOpenOff);
 
 
     }
@@ -329,6 +332,11 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
                     imgbtnList.setImageResource(R.drawable.ic_baseline_dehaze_24);
                 }
                 isListView.setValue(!isListView.getValue());
+
+                if (needUpdate == false) {
+                    needUpdate = true;
+                }
+
             }
         });
 
@@ -477,7 +485,8 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (Math.abs(scrollY - oldScrollY) < 400 && Math.abs(scrollY - oldScrollY) > 50) {
                     if (scrollY - oldScrollY > 0 && isShowCard == true) {
-                        Log.d(TAGKEO, "Keo len: " + "Y old: " + oldScrollY + " Y: " + scrollY);
+
+
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card);
                         restaurantCard.startAnimation(animation);
 
@@ -504,13 +513,18 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
                         Animation animation = AnimationUtils.loadAnimation(RestaurantDetailScreen.this, R.anim.rotate_restaurant_card_reverse);
                         boolean shouldMove = false;
 
-                        if (isListView.getValue() == false) {
-                            shouldMove = 0 == ((LinearLayoutManager) rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+                        if (rvMenuFood.getLayoutManager() != null) {
 
-                        } else {
-                            shouldMove = 0 == ((GridLayoutManager) rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+                            if (!isListView.getValue()) {
 
+                                shouldMove = 0 == ((LinearLayoutManager) rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+
+                            } else {
+                                shouldMove = 0 == ((GridLayoutManager) rvMenuFood.getLayoutManager()).findFirstVisibleItemPosition();
+
+                            }
                         }
+
                         if (shouldMove) {
                             restaurantCard.startAnimation(animation);
                             animation.setAnimationListener(new Animation.AnimationListener() {
@@ -544,8 +558,10 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        
-
+        Intent intent = new Intent();
+        intent.putExtra(getString(R.string.need_update), needUpdate);
+        setResult(1234, intent);
+        finish();
     }
 
 

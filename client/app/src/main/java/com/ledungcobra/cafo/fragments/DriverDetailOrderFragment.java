@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -26,6 +27,7 @@ public class DriverDetailOrderFragment extends Fragment {
     private RecyclerView listCustomerOrder;
     private TextView totalCost;
     private TextView shippingFee;
+    private Button btnCompleteOrder;
 
     //DATA
     private DetailOrderResponse detailOrderResponse;
@@ -65,6 +67,7 @@ public class DriverDetailOrderFragment extends Fragment {
         listCustomerOrder.setAdapter(new CustomerOrdersAdapter(foods));
         listCustomerOrder.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
         return view;
 
     }
@@ -74,7 +77,14 @@ public class DriverDetailOrderFragment extends Fragment {
         listCustomerOrder = view.findViewById(R.id.listCustomerOrderItems);
         totalCost = view.findViewById(R.id.txtTotalCost);
         shippingFee = view.findViewById(R.id.txtShippingFee);
+        btnCompleteOrder = view.findViewById(R.id.btnCompleteOrder);
 
+        btnCompleteOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
     }
 
     private long calcTotalCost() {

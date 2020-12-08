@@ -75,7 +75,6 @@ public class UserApiHandler {
                 callback.stopProgressIndicator();
 
                 if (response.code() == 200) {
-                    Log.d("CALL_API", "onResponse: " + response);
                     userAccessToken.setValue(response.body() != null ? response.body().getAccessToken() : null);
                     callback.onResult(response.body());
                 } else {

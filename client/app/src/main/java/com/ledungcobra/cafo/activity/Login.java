@@ -64,6 +64,7 @@ public class Login extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "USER_ACCESS_TOKEN";
     private String TAG = "CALL_API";
     private String currentButtonText = null;
+    private int maxHeight = -100;
 
     //LISTENER
     //INTERFACE
@@ -385,7 +386,6 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private int maxHeight = -100;
 
 
     private void animateView(final View view) {

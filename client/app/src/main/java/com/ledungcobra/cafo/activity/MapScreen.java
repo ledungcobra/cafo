@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,6 +67,8 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     //VIEW
     private GoogleMap mMap;
     private LocationManager locationManager;
+    private Button btnRecenter;
+
 
     //DATA
     private MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
@@ -129,6 +133,16 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         double lat = intent.getDoubleExtra("lat", 0);
         double long_ = intent.getDoubleExtra("long", 0);
         locDest = new LatLng(lat, long_);
+
+        btnRecenter = findViewById(R.id.btnRecenter);
+        btnRecenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(userLocation.getValue()!=null){
+                    moveCamera(userLocation.getValue().getLatitude(),userLocation.getValue().getLongitude(),"");
+                }
+            }
+        });
 
     }
 

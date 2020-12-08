@@ -31,4 +31,8 @@ public class Operating  implements Serializable {
         this.openTime = openTime;
     }
 
+    @Override
+    public String toString() {
+        return openTime+" - "+ closeTime;
+    }
 }

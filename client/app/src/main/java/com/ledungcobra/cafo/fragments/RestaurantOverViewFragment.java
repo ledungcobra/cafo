@@ -1,7 +1,6 @@
 package com.ledungcobra.cafo.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -140,7 +139,6 @@ public class RestaurantOverViewFragment extends Fragment {
                                         if (exist) {
                                             filterData.add(briefRes);
 
-                                            Log.d("CALL_API", "onChanged: " + briefRes);
                                         }
 
                                     }
