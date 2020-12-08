@@ -1,27 +1,28 @@
 package com.ledungcobra.cafo.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.service.UserApiHandler;
+import com.ledungcobra.cafo.activity.MapScreen;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
-import com.ledungcobra.cafo.models.order.shipper.Food;
+import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.DriverOrderListAdapter;
-import com.ledungcobra.cafo.view_adapter.OrderListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,7 @@ public class DriverOrdersFragment extends Fragment {
             }
 
             @Override
-            public void onResult(List<DetailOrderResponse> result) {
+            public void onResult(final List<DetailOrderResponse> result) {
                 orderList.addAll((ArrayList<DetailOrderResponse>) result);
                 RecyclerView recyclerViewOrder = view.findViewById(R.id.recyclerViewOrder);
                 DriverOrderListAdapter adapter;
@@ -97,6 +98,37 @@ public class DriverOrdersFragment extends Fragment {
                 recyclerViewOrder.setAdapter(adapter);
 
                 adapter.setOnClickListener(new DriverOrderListAdapter.OnItemClickListener() {
+                    @Override
+                    public void onMapButtonClicked(final int pos) {
+                        new AlertDialog.Builder(getActivity()).
+                                setTitle("Choose type of map do you want to use")
+                                .setPositiveButton("Google Map (Recommended)", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+ MapScreen.getAddress(getActivity(),
+                                                Double.parseDouble(result.get(pos).getOrderPosition().getLatitude()),
+                                                Double.parseDouble(result.get(pos).getOrderPosition().getLongitude()))+
+                                                "&mode=d"));
+
+                                        intent.setPackage("com.google.android.apps.maps");
+                                        startActivity(intent);
+
+                                    }
+                                })
+                                .setNegativeButton("Built-in map", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(getActivity(), MapScreen.class);
+                                        intent.putExtra("lat",Double.parseDouble(result.get(pos).getOrderPosition().getLatitude()));
+                                        intent.putExtra("long", Double.parseDouble(result.get(pos).getOrderPosition().getLongitude()));
+                                        startActivity(intent);
+                                    }
+                                })
+                                .create()
+                                .show();
+
+                    }
                     /*@Override
                     public void onDeleteOrder(int position) {
                         Toast.makeText(getContext(),"Delete Click",Toast.LENGTH_SHORT).show();

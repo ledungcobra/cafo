@@ -26,4 +26,8 @@ public interface TrackingRestaurantDao {
 
     @Query("UPDATE tracking_restaurant_table set type=1 where id=:resID")
     void removeFromFavorite(String resID);
+
+    @Query("DELETE FROM TRACKING_RESTAURANT_TABLE where type = 0 and id=:resID")
+    void removeARestaurant(String resID);
+
 }

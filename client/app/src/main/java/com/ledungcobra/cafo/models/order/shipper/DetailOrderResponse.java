@@ -43,6 +43,18 @@ public class DetailOrderResponse implements Serializable {
     @Expose
     private Restaurant restaurant;
 
+    @SerializedName("order_time")
+    @Expose
+    private String orderTime;
+
+    public String getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(String orderTime) {
+        this.orderTime = orderTime;
+    }
+
     public Integer getTotal() {
         return total;
     }

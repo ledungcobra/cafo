@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
+import com.ledungcobra.cafo.models.order.customer.OrderResponse;
 import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
 import com.ledungcobra.cafo.models.order.shipper.Food;
@@ -92,7 +93,7 @@ public class UserOrdersFragment extends Fragment {
                 tvIdOrder.setText("Loaded");
                 orderList.addAll(result);
                 RecyclerView recyclerViewOrder = view.findViewById(R.id.recyclerViewOrder);
-                OrderListAdapter adapter;
+                final OrderListAdapter adapter;
                 adapter = new OrderListAdapter(getContext(), orderList);
                 recyclerViewOrder.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerViewOrder.setAdapter(adapter);
@@ -111,7 +112,34 @@ public class UserOrdersFragment extends Fragment {
                                                 "Delete order " + orderList.get(position).getId(),
                                                 Toast.LENGTH_SHORT
                                         ).show();
-                                        //TODO: Call API to set order to status delete
+                                        if(adapter.getOrderResponseList().get(position).getStatus().equals("SHIPPING")){
+                                            Toast.makeText(getActivity(),"Cannot delete a shipping order ",Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        UserApiHandler.getInstance().cancelOrderByCustomer(adapter.getOrderResponseList().get(position).getId(), new UIThreadCallBack<OrderResponse, Error>() {
+                                            @Override
+                                            public void stopProgressIndicator() {
+
+                                            }
+
+                                            @Override
+                                            public void startProgressIndicator() {
+
+                                            }
+
+                                            @Override
+                                            public void onResult(OrderResponse result) {
+                                                Toast.makeText(getActivity(),"Delete completed",Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Error error) {
+                                                Toast.makeText(getActivity(),"Delete failed",Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                                        adapter.deleteItem(position);
+
                                         dialog.dismiss();
                                     }})
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -120,6 +148,7 @@ public class UserOrdersFragment extends Fragment {
                                         dialog.dismiss();
                                     }
                                 }) //setNegativeButton
+                                .create()
                                 .show();
                     }
 

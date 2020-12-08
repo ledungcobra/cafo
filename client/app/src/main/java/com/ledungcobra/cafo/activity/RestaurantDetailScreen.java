@@ -3,6 +3,7 @@ package com.ledungcobra.cafo.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,7 +30,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +71,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     private TextView tvRestaurantStatus;
     private TextView tvRestaurantDistance;
     private ImageView ivLoc;
-    private ImageView ivDist ;
+    private ImageView ivDist;
     private MenuListViewAdapter adapter;
     private MenuGridViewAdapter adapterGrid;
     private ImageView ivRestaurant;
@@ -78,6 +81,10 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     private LinearLayout restaurantCard;
     private ImageButton imgbtnList;
     private FragmentManager fm;
+    private ImageView imvLove;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private Toolbar toolbar;
 
     //DATA
     private static final String TAGKEO = "SCROLL";
@@ -86,31 +93,168 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     private MutableLiveData<Boolean> isListView = new MutableLiveData<>(false);
     int cardHeight = -100;
     private String restaurantID;
-
+    private MutableLiveData<Boolean> isFavoriteRestaurant = new MutableLiveData<>(false);
     //TODO: fix bug Card view khi recycler view không thể kéo được
     //TODO: xử lí
 
 
-
-
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail_screen);
 
-        restaurantCard = findViewById(R.id.restaurantCard);
-
-
+        //Get passed data
         Intent intent = getIntent();
         restaurantID = intent.getStringExtra(EXTRA_KEY);
         cartShops = (List<CartItem>) intent.getSerializableExtra("CartShop");
-        ImageView imvLove = findViewById(R.id.imAddToFavorite);
+
+        initUI();
+
+        checkIfAFavoriteRestaurant();
+
+        setListener();
+
+
+        LayoutInflater layoutInflater = getLayoutInflater();
+        final View view = layoutInflater.inflate(R.layout.progress_indicator, null, false);
+        final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
+
+
+        Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<RestaurantDetail, Error>() {
+            @Override
+            public void stopProgressIndicator() {
+                detailViewGroup.removeView(view);
+                detailViewGroup.addView(viewPager);
+            }
+
+            @Override
+            public void startProgressIndicator() {
+                ((ViewGroup) viewPager.getParent()).removeView(viewPager);
+                //Specify layout_width & height to fill the rest of the screen
+                //(addView ignore child's XML layout_width & height)
+                detailViewGroup.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            }
+
+            @Override
+            public void onResult(final RestaurantDetail result) {
+                //Menu theo loai
+
+                final FragmentCategoryCollectionAdapter collectionAdapter = new FragmentCategoryCollectionAdapter(getSupportFragmentManager(),
+                        FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, result.getMenu(), isListView);
+
+
+                viewPager.setAdapter(collectionAdapter);
+                tabLayout.setupWithViewPager(viewPager);
+
+
+                Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
+                tvRestaurantName.setText(result.getName());
+                tvRestaurantAddress.setText(result.getAddress());
+                //Only first number
+                tvRestaurantPhone.setText(result.getPhones().get(0));
+
+                findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        new AlertDialog.Builder(RestaurantDetailScreen.this).
+                                setTitle("Choose type of map do you want to use")
+                                .setPositiveButton("Google Map (Recommended)", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + MapScreen.getAddress(RestaurantDetailScreen.this, result.getPosition().getLatitude(), result.getPosition().getLongitude()) + "&mode=d"));
+                                        intent.setPackage("com.google.android.apps.maps");
+                                        startActivity(intent);
+
+                                    }
+                                })
+                                .setNegativeButton("Built-in map", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(RestaurantDetailScreen.this, MapScreen.class);
+                                        intent.putExtra("lat", result.getPosition().getLatitude());
+                                        intent.putExtra("long", result.getPosition().getLongitude());
+                                        startActivity(intent);
+                                    }
+                                })
+                                .create()
+                                .show();
+
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(Error error) {
+
+            }
+        });
+
+
+
+
+        isFavoriteRestaurant.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    imvLove.setImageDrawable(getDrawable(R.drawable.ic_like));
+                } else {
+                    imvLove.setImageDrawable(getDrawable(R.drawable.ic_heart));
+                }
+            }
+        });
+
+    }
+
+
+    public void initUI() {
+        restaurantCard = findViewById(R.id.restaurantCard);
+        imvLove = findViewById(R.id.imAddToFavorite);
+        //TODO: Bind views
+        ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
+        tvRestaurantName = findViewById(R.id.tvRestaurantName);
+        tvRestaurantAddress = findViewById(R.id.address_restaurant);
+        tvRestaurantStatus = findViewById(R.id.timeOpenOff);
+        tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
+        tvRestaurantDistance = findViewById(R.id.distance);
+
+
+        tabLayout = findViewById(R.id.categoryTabLayout);
+        viewPager = findViewById(R.id.categoryViewPager);
+
+
+        ivLoc = findViewById(R.id.ivLoc);
+        ivDist = findViewById(R.id.ivDist);
+        phoneContainer = findViewById(R.id.phoneContainer);
+        toolbar = findViewById(R.id.toolbarDetail);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
+
+        imgbtnList = findViewById(R.id.btnGrid);
+
+
+
+
+
+    }
+
+    public void setListener() {
 
         imvLove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CALL_API", "add love");
-                Repository.getInstance().insert(new TrackingRestaurant(restaurantID, TrackingRestaurant.FAVORITE));
+                if (!isFavoriteRestaurant.getValue()) {
+                    Repository.getInstance().insert(new TrackingRestaurant(restaurantID, TrackingRestaurant.FAVORITE));
+                } else {
+                    Repository.getInstance().removeARestaurantFromFavList(restaurantID);
+                }
+
+                isFavoriteRestaurant.setValue(!isFavoriteRestaurant.getValue());
+
 
             }
         });
@@ -161,19 +305,6 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
             }
         });
 
-
-        final TabLayout tabLayout = findViewById(R.id.categoryTabLayout);
-        final ViewPager viewPager = findViewById(R.id.categoryViewPager);
-
-        //TODO: Bind views
-        ivRestaurant = findViewById(R.id.ivRestaurantPhoto);
-        tvRestaurantName = findViewById(R.id.tvRestaurantName);
-        tvRestaurantAddress = findViewById(R.id.address_restaurant);
-        tvRestaurantStatus = findViewById(R.id.timeOpenOff);
-        tvRestaurantPhone = findViewById(R.id.tvRestaurantPhone);
-        tvRestaurantDistance = findViewById(R.id.distance);
-
-        phoneContainer = findViewById(R.id.phoneContainer);
         phoneContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,110 +314,40 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
             }
         });
 
-
-        ivLoc = findViewById(R.id.ivLoc);
-        ivDist = findViewById(R.id.ivDist);
-
-        LayoutInflater layoutInflater = getLayoutInflater();
-        final View view = layoutInflater.inflate(R.layout.progress_indicator, null, false);
-        final ViewGroup detailViewGroup = ((ViewGroup) findViewById(R.id.restaurant_detail_view));
-
-
-        Repository.getInstance().getRestaurant(restaurantID, new UIThreadCallBack<RestaurantDetail, Error>() {
-            @Override
-            public void stopProgressIndicator() {
-                detailViewGroup.removeView(view);
-                detailViewGroup.addView(viewPager);
-            }
-
-            @Override
-            public void startProgressIndicator() {
-                ((ViewGroup) viewPager.getParent()).removeView(viewPager);
-                //Specify layout_width & height to fill the rest of the screen
-                //(addView ignore child's XML layout_width & height)
-                detailViewGroup.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            }
-
-            @Override
-            public void onResult(final RestaurantDetail result) {
-                //Menu theo loai
-
-                final FragmentCategoryCollectionAdapter collectionAdapter = new FragmentCategoryCollectionAdapter(getSupportFragmentManager(),
-                        FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, result.getMenu(),isListView);
-
-
-                viewPager.setAdapter(collectionAdapter);
-                tabLayout.setupWithViewPager(viewPager);
-
-
-                Picasso.get().load(result.getImage().getValue()).into(ivRestaurant);
-                tvRestaurantName.setText(result.getName());
-                tvRestaurantAddress.setText(result.getAddress());
-                //Only first number
-                tvRestaurantPhone.setText(result.getPhones().get(0));
-
-                findViewById(R.id.btnMap).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        new AlertDialog.Builder(RestaurantDetailScreen.this).
-                                setTitle("Choose type of map do you want to use")
-                                .setPositiveButton("Google Map (Recommended)", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+MapScreen.getAddress(RestaurantDetailScreen.this,result.getPosition().getLatitude(),result.getPosition().getLongitude())+"&mode=d"));
-                                        intent.setPackage("com.google.android.apps.maps");
-                                        startActivity(intent);
-
-                                    }
-                                })
-                                .setNegativeButton("Built-in map", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(RestaurantDetailScreen.this, MapScreen.class);
-                                        intent.putExtra("lat", result.getPosition().getLatitude());
-                                        intent.putExtra("long", result.getPosition().getLongitude());
-                                        startActivity(intent);
-                                    }
-                                })
-                                .create()
-                                .show();
-
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(Error error) {
-
-            }
-        });
-
-
         //Toolbar setup menu
-        Toolbar toolbar = findViewById(R.id.toolbarDetail);
-        setSupportActionBar(toolbar);
-        toolbar.setTitleTextAppearance(this, R.style.titleToolbar);
+
 //        Transition from ListView to GridView and vice versa
-        imgbtnList = findViewById(R.id.btnGrid);
 
         imgbtnList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(isListView.getValue()){
+                if (isListView.getValue()) {
                     imgbtnList.setImageResource(R.drawable.ic_baseline_list_24);
 
-                }else{
+                } else {
                     imgbtnList.setImageResource(R.drawable.ic_baseline_dehaze_24);
                 }
                 isListView.setValue(!isListView.getValue());
             }
         });
 
+    }
+
+    public void checkIfAFavoriteRestaurant() {
+
+        LiveData<List<TrackingRestaurant>> trackedRestaurant = Repository.getInstance().getAllTrackingRestaurants();
+
+        if (trackedRestaurant.getValue() != null) {
+            for (TrackingRestaurant res : trackedRestaurant.getValue()) {
+
+                if (res.getType() == TrackingRestaurant.FAVORITE && res.getId().equals(restaurantID)) {
+                    isFavoriteRestaurant.setValue(true);
+                    break;
+                }
+
+            }
+        }
 
     }
 
@@ -386,7 +447,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
 
             Bundle bundleFragment = new Bundle();
             bundleFragment.putSerializable("ListFood", al_Food);
-            bundleFragment.putString("resID",restaurantID);
+            bundleFragment.putString("resID", restaurantID);
             FragmentTransaction ft_add = fm.beginTransaction();
             ft_add.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example).replace(R.id.flrestaurant_detail_view, ShoppingCartFragment.
                     newInstance(bundleFragment))
@@ -483,6 +544,7 @@ public class RestaurantDetailScreen extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        
 
     }
 

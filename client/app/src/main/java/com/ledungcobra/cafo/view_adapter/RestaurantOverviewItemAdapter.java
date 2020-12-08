@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
@@ -41,7 +42,7 @@ public class RestaurantOverviewItemAdapter
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, RestaurantDetailScreen.class);
-                context.startActivity(intent);
+                ((AppCompatActivity)context).startActivityForResult(intent,1234);
             }
         });
         MyViewHolder vh = new MyViewHolder(layout);

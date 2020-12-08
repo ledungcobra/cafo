@@ -194,4 +194,13 @@ public class Repository {
         });
         return result;
     }
+
+    public void removeARestaurantFromFavList(final String id){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                trackingRestaurantDao.removeARestaurant(id);
+            }
+        }).start();
+    }
 }

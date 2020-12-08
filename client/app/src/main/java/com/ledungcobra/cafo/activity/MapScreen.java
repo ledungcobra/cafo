@@ -304,7 +304,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
         final LatLng pos = new LatLng(latitude, longitude);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 50));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
         mMap.addMarker(new MarkerOptions()
                 .position(pos)
                 .title(title));

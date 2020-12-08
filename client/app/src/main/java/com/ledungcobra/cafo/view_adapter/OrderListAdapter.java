@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,9 +27,23 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
         this.orderResponseList = orderResponseList;
     }
 
+    public List<DetailOrderResponse> getOrderResponseList() {
+        return orderResponseList;
+    }
+
+    public void setOrderResponseList(List<DetailOrderResponse> orderResponseList) {
+        this.orderResponseList = orderResponseList;
+    }
+
     public interface OnItemClickListener{
         void onDeleteOrder(int position);
         void onDetailClick(int position);
+    }
+
+    public void deleteItem(int index){
+//        orderResponseList.remove(index);
+        orderResponseList.get(index).setStatus("CANCEL");
+        notifyItemChanged(index);
     }
 
     public void setOnClickListener(OnItemClickListener listener) { mListener = listener;}
@@ -69,7 +81,8 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
             //tvResOrder.setText(orderResponseList.get(position).getRestaurant().getName());
             tvOrderID.setText(orderResponseList.get(position).getId());
             tvPriceOrder.setText(String.format("%,d",orderResponseList.get(position).getTotal())+" đ");
-            tvTimeOrder.setText("Time" + String.valueOf(position));
+            String[] datetimeOrdered = orderResponseList.get(position).getOrderTime().split("T");
+            tvTimeOrder.setText(datetimeOrdered[0]+": "+ datetimeOrdered[1].substring(0,datetimeOrdered[1].length()-1)) ;
 
             String status = orderResponseList.get(position).getStatus();
 

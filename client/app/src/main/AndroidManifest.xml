@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,13 +15,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.DriverScreen">
+        <activity
+            android:name=".activity.DriverScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CallApi">
+        <activity
+            android:name=".activity.CallApi"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,28 +33,41 @@
         </activity>
         <activity
             android:name=".activity.CartInformationShipping"
-            android:label="@string/title_activity_cart_infomation_shipping">
-        </activity>
+            android:label="@string/title_activity_cart_infomation_shipping"
+            android:screenOrientation="portrait"
+
+            ></activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_api_key" />
+
         <activity
             android:name=".activity.Login"
-            android:label="@string/title_activity_login">
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MapScreen">
+        <activity
+            android:name=".activity.MapScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.RestaurantDetailScreen" />
-        <activity android:name=".activity.RestaurantsOverviewScreen"/>
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.RestaurantDetailScreen"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.RestaurantsOverviewScreen"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

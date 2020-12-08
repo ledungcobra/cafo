@@ -1,5 +1,6 @@
 package com.ledungcobra.cafo.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RestaurantsOverviewScreen extends AppCompatActivity implements  UserOrdersFragment.CallBacktoCreateFm {
+public class RestaurantsOverviewScreen extends AppCompatActivity implements UserOrdersFragment.CallBacktoCreateFm {
 
     //VIEW
     private ActionBarDrawerToggle drawerToggle;
@@ -42,10 +44,8 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
 
     //DATA
     public static String EXTRA_KEY = "RESTAURANT";
-    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders","Logout"};
-    public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_person_24, R.drawable.ic_baseline_list_alt_24,R.drawable.logout};
-
-
+    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders", "Logout"};
+    public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_person_24, R.drawable.ic_baseline_list_alt_24, R.drawable.logout};
 
 
     @Override
@@ -181,7 +181,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
 
                     }
 
-                } else  if (position == 2) {
+                } else if (position == 2) {
 
 
                     if (fm.findFragmentByTag("Your order") == null) {
@@ -191,7 +191,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
                                 .replace(R.id.OverViewLayout, UserOrdersFragment.newInstance(), "Your Order").addToBackStack("Your Order").commit();
                     } else getSupportFragmentManager().popBackStack("Your Order", 0);
 
-                }else if(position == 3){
+                } else if (position == 3) {
                     finish();
                 }
             }
@@ -199,23 +199,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
     }
 
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//
-//    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_info) {
-//
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     public void closeDrawer() {
         drawerLayout.closeDrawer(Gravity.LEFT, true);
@@ -240,9 +224,20 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements  Use
 
 
     @Override
-    public void onCreateFm(List<Food> foods,Integer total) {
+    public void onCreateFm(List<Food> foods, Integer total) {
 
         ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.animation_enter, R.anim.animation_example, R.anim.animation_enter, R.anim.animation_example)
-                .add(R.id.OverViewLayout, fragmentDetailFoodInOrder.newInstance(foods,total)).addToBackStack("Your Order").commit();    }
+                .add(R.id.OverViewLayout, fragmentDetailFoodInOrder.newInstance(foods, total)).addToBackStack("Your Order").commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1234){
+            onCreate(new Bundle());
+        }
+
+    }
 }
