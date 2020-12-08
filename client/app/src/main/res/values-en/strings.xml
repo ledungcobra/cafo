@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cafo</string>
     <string name="maps_api_key">AIzaSyDscN7POG1r4wNZDSBsoTz5xgRFKfQH0LM</string>
@@ -11,6 +12,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="username">Username</string>
+    <string name="fullname">Fullname</string>
     <string name="currency">₫</string>
     <string name="placeholder_text">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -50,7 +52,6 @@
     <string name="status">Status</string>
     <string name="user_address">User Address</string>
     <string name="restaurant_address">Restaurant Address</string>
-    <string name="fullname">Fullname</string>
     <string name="address">Address</string>
     <string name="phone_number">Phone number</string>
     <string name="your_shipping_information">Your shipping information</string>
@@ -64,9 +65,4 @@
     <string name="customer">Customer</string>
     <string name="shipper">Shipper</string>
     <string name="already_have_account">Already have account?</string>
-    <string name="permission_granted" translatable="false">Location permission granted</string>
-    <string name="cannot_get_your_location" translatable="false">Cannot get your location</string>
-    <string name="order_successfully" translatable="false">Order successfully</string>
-    <string name="cannot_order" translatable="false">Cannot order</string>
-    <string name="your_session_expired" translatable="false">User session expired</string>
 </resources>

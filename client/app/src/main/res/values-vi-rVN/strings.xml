@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cafo</string>
+    <string name="maps_api_key">AIzaSyDscN7POG1r4wNZDSBsoTz5xgRFKfQH0LM</string>
+    <string name="title_activity_login">Login</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="username">Username</string>
+    <string name="fullname">Fullname</string>
+    <string name="currency">₫</string>
+    <string name="placeholder_text">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Đang tải.....</string>
+    <string name="shopcart">Shopping Cart</string>
+    <string name="total">Tổng</string>
+    <string name="title_activity_cart_infomation_shipping">CartInfomationShipping</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="token">TOKEN</string>
+    <string name="role">ROLE</string>
+    <string name="cart_items">CART</string>
+    <string name="ListFood">ListFood</string>
+    <string name="res_id">resID</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_an_account">Tạo một tài khoản</string>
+    <string name="user_info">USER_INFO</string>
+    <string name="list_restaurants">LIST_RESTAURANTS</string>
+    <string name="api_geoapify">e39be72fa4a1417db83845d0c9e238ce</string>
+    <string name="need_update">NEED_UPDATE</string>
+    <string name="find_orders_text">Tìm đơn đặt hàng</string>
+    <string name="new_tab">Mới</string>
+    <string name="visited">Đã ghé thăm</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="searching">Tìm kiếm</string>
+    <string name="home">Màn hình chính</string>
+    <string name="profile">Hồ sơ</string>
+    <string name="your_orders">Đơn của bạn</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="open_map">Mở bản đồ</string>
+    <string name="shopping_cart">Giỏ hàng</string>
+    <string name="detail">Chi tiết</string>
+    <string name="status">Trạng thái</string>
+    <string name="user_address">Địa chỉ người dùng</string>
+    <string name="restaurant_address">Địa chỉ khách hàng</string>
+    <string name="address">Địa chỉ</string>
+    <string name="phone_number">Số điện thoại</string>
+    <string name="your_shipping_information">Thông tin giao hàng của bạn</string>
+    <string name="shipping_information">Thông tin giao hàng</string>
+    <string name="restaurant">Nhà hàng</string>
+    <string name="accept_this_order">Nhận đơn</string>
+    <string name="shipping_fee">Chi phí ship:</string>
+    <string name="quantity">Số lượng:</string>
+    <string name="dashboard">Bảng điều khiển</string>
+    <string name="sign_in_as">Đăng nhập với tư cách: </string>
+    <string name="customer">Khách hàng</string>
+    <string name="shipper">Người giao hàng</string>
+    <string name="already_have_account">Đã có tài khoản?</string>
+</resources>

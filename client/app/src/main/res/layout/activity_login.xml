@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="5dp"
-                        android:text="Sign In As"
+                        android:text="@string/sign_in_as"
                         android:textSize="20sp" />
 
                     <RadioGroup
@@ -215,13 +215,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
-                            android:text="Customer" />
+                            android:text="@string/customer" />
 
                         <RadioButton
                             android:id="@+id/radioDriver"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Driver" />
+                            android:text="@string/shipper" />
 
                     </RadioGroup>
 
@@ -239,7 +239,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Already have account?"
+                android:text="@string/already_have_account"
                 android:textColor="@color/sign_in_text_color" />
 
             <com.google.android.material.button.MaterialButton
@@ -247,7 +247,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign In"
+                android:text="@string/sign_in"
                 android:textAllCaps="false"
                 android:textColor="@color/sign_in_text_color" />
 

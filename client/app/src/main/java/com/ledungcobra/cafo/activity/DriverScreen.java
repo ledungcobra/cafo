@@ -57,7 +57,8 @@ public class DriverScreen extends AppCompatActivity implements
     private static final int POS_PROFILE = 1;
     private static final int POS_ORDERS = 2;
     private static final int POS_LOGOUT = 3;
-    private String[] screenTitles = new String[]{"Dashboard", "Profile", "Your orders", "Logout"};
+    private String[] screenTitles ;
+
     private final int REQUEST_CODE = 9999;
     //LISTENER
 
@@ -73,7 +74,7 @@ public class DriverScreen extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_screen);
-
+        screenTitles = new String[]{getString(R.string.dashboard), getString(R.string.profile), getString(R.string.your_orders),getString(R.string.logout)};
         initUI(savedInstanceState);
 
     }
@@ -145,7 +146,7 @@ public class DriverScreen extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE && grantResults.length == 2 && grantResults[1] == PERMISSION_GRANTED && grantResults[0] == PERMISSION_GRANTED) {
-            Toast.makeText(this, "Location permission granted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.permission_granted), Toast.LENGTH_SHORT).show();
         }
     }
 

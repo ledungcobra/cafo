@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="35sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Tìm Đơn Đặt"
+                android:text="@string/find_orders_text"
                 android:textColor="@android:color/black"/>
             <ImageView
                 android:layout_width="150dp"

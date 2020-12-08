@@ -12,7 +12,7 @@
 <!--    </item>-->
     <item
         android:id="@+id/shopCart"
-        android:title="Shopping Cart"
+        android:title="@string/shopping_cart"
         android:icon="@drawable/ic_baseline_shopping_cart_24"
         app:showAsAction="ifRoom"
         />

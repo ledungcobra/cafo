@@ -198,13 +198,13 @@ public class RestaurantOverViewFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
 
             if (position == 0) {
-                return "New";
+                return getString(R.string.new_tab);
             } else if (position == 1) {
-                return "Visited";
+                return getString(R.string.visited);
             } else if (position == 2) {
-                return "Favorite";
+                return getString(R.string.favorite);
             } else if (position == 3) {
-                return "Searching";
+                return getString(R.string.searching);
             }
 
             return null;

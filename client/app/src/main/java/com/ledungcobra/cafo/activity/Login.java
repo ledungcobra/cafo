@@ -119,7 +119,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onFailure(Error error) {
 
-                    Toast.makeText(Login.this, "User session expired", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, getString(R.string.your_session_expired), Toast.LENGTH_SHORT).show();
                     Editor editor = pref.edit();
                     editor.clear();
                     editor.apply();

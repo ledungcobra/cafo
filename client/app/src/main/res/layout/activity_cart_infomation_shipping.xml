@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Shipping Infomation"
+            android:text="@string/shipping_information"
             android:textColor="@android:color/white"/>
     </androidx.appcompat.widget.Toolbar>
 
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your shipping information"
+                android:text="@string/your_shipping_information"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
                 android:layout_margin="8dp"/>
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     app:boxBackgroundColor="@android:color/transparent"
-                    android:hint="Fullname">
+                    android:hint="@string/fullname">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editFullNameShip"
                         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     app:boxBackgroundColor="@android:color/transparent"
-                    android:hint="Address (House number, Street, Ward, District, Province)">
+                    android:hint="@string/address">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editAddressShip"
                         android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     app:boxBackgroundColor="@android:color/transparent"
-                    android:hint="Phone number">
+                    android:hint="@string/phone_number">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editPhone"
                         android:layout_width="match_parent"
@@ -177,7 +177,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Total"
+                    android:text="@string/total"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
                 <TextView

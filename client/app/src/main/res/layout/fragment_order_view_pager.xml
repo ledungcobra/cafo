@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
-                    android:text="Quán"
+                    android:text="@string/restaurant"
                     android:textSize="12sp"
                     android:textColor="@android:color/black"
                     android:textStyle="bold"/>
@@ -53,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="4dp"
-                        android:text="Địa chỉ"
+                        android:text="@string/address"
                         android:textSize="12sp"
                         android:textColor="@android:color/black"
                         android:textStyle="bold"/>
@@ -88,7 +88,7 @@
                     android:layout_gravity="right"
                     app:backgroundTint="@color/colorPrimary"
                     android:id="@+id/btnAcceptOrder"
-                    android:text="Nhận đơn"
+                    android:text="@string/accept_this_order"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

@@ -44,7 +44,7 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements User
 
     //DATA
     public static String EXTRA_KEY = "RESTAURANT";
-    public static String[] MENU_NAV_NAME = {"Home", "Profile", "Your orders", "Logout"};
+    public static String[] MENU_NAV_NAME;
     public static Integer[] MENU_NAV_THUMB = {R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_person_24, R.drawable.ic_baseline_list_alt_24, R.drawable.logout};
 
 
@@ -66,6 +66,8 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements User
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retaurant_overview);
+
+        MENU_NAV_NAME = new String[]{getString(R.string.home), getString(R.string.profile), getString(R.string.your_orders), getString(R.string.logout)};
 
         //Initial View Element
         initUI();
@@ -199,8 +201,6 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements User
     }
 
 
-
-
     public void closeDrawer() {
         drawerLayout.closeDrawer(Gravity.LEFT, true);
     }
@@ -235,11 +235,11 @@ public class RestaurantsOverviewScreen extends AppCompatActivity implements User
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1234){
+        if (requestCode == 1234) {
 
-            if( data!=null && data.getBooleanExtra(getString(R.string.need_update),false)){
+            if (data != null && data.getBooleanExtra(getString(R.string.need_update), false)) {
                 onCreate(new Bundle());
-            }else{
+            } else {
                 //Do nothing
             }
         }

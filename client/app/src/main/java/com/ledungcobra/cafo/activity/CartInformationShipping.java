@@ -177,7 +177,7 @@ public class CartInformationShipping extends AppCompatActivity {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if(location == null){
-                Toast.makeText(CartInformationShipping.this,"Cannot get your location",Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartInformationShipping.this,getString (R.string.cannot_get_your_location),Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -185,14 +185,15 @@ public class CartInformationShipping extends AppCompatActivity {
                     .enqueue(new Callback<OrderResponse>() {
                                  @Override
                                  public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
-                                     Toast.makeText(CartInformationShipping.this, "Order successfully", Toast.LENGTH_SHORT).show();
+                                     Toast.makeText(CartInformationShipping.this,getString( R.string.order_successfully), Toast.LENGTH_SHORT).show();
 
                                  }
 
                                  @Override
 
                                  public void onFailure(Call<OrderResponse> call, Throwable t) {
-                                     Toast.makeText(CartInformationShipping.this, "Cannot order", Toast.LENGTH_SHORT).show();
+                                     Toast.makeText(CartInformationShipping.this, getString(R.string.cannot_order), Toast.LENGTH_SHORT).show();
+
 
                                  }
                              }
@@ -217,7 +218,7 @@ public class CartInformationShipping extends AppCompatActivity {
 
             } else {
                 //User refuse to location
-                Toast.makeText(this, "Cannot get your location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.cannot_get_your_location), Toast.LENGTH_SHORT).show();
             }
         }
     }
