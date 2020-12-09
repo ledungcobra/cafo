@@ -88,8 +88,11 @@ class SiteController {
 
         result = rest1.concat(difference);
         //result.push(difference);
+        let n = 10;
+        if (req.body.limit) {
+            n = req.body.limit;
+        }
 
-        let n = req.body.limit;
         if (n > result.length) {
             n = result.length;
         }
