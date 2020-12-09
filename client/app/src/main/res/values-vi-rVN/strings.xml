@@ -61,4 +61,18 @@
     <string name="customer">Customer</string>
     <string name="shipper">Shipper</string>
     <string name="already_have_account">Đã có tài khoản?</string>
+    <string name="permission_granted" >Đã có quyền truy cập vị trí</string>
+    <string name="cannot_get_your_location" >Không thể lấy vị trí của bạn</string>
+    <string name="order_successfully">Đơn đã được đặt thành công</string>
+    <string name="cannot_order">Không thể đặt đơn</string>
+    <string name="your_session_expired">Phiên đăng nhập user hết hạn</string>
+    <string name="login_failed" >Đăng nhập thất bại</string>
+    <string name="invalid_input">Dữ liệu nhập vào không hợp lệ</string>
+    <string name="you_must_complete_all_field" >Bạn cần phải hoàn thành tất cả các trường</string>
+    <string name="server_error" translatable="false">Máy chủ bị lỗi</string>
+    <string name="finish_order_successfully">Hoàn tất đơn thành công</string>
+    <string name="network_error">Lỗi mạng</string>
+    <string name="order_id">ORDER_ID</string>
+    <string name="result">RESULT</string>
+    <string name="finish">FINISH</string>
 </resources>

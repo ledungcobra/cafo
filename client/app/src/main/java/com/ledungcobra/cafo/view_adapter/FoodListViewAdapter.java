@@ -1,6 +1,5 @@
 package com.ledungcobra.cafo.view_adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-
-import com.ledungcobra.cafo.models.common_new.CartItem;
 import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.squareup.picasso.Picasso;
 

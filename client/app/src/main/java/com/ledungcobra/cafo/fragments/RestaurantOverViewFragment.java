@@ -28,6 +28,7 @@ import com.ledungcobra.cafo.service.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.ledungcobra.cafo.models.user.TrackingRestaurant.FAVORITE;
 import static com.ledungcobra.cafo.models.user.TrackingRestaurant.VISITED;
@@ -84,7 +85,6 @@ public class RestaurantOverViewFragment extends Fragment {
 
         viewPagerAdapter = new RestaurantOverViewFragment.OverviewViewPagerAdapter(getChildFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -97,7 +97,7 @@ public class RestaurantOverViewFragment extends Fragment {
 
         private List<Fragment> fragments = new ArrayList<>();
         private Fragment searchingFragment = null;
-
+        ArrayList<BriefRestaurantInfo> cached = null;
 
         public OverviewViewPagerAdapter(@NonNull FragmentManager fm,
                                         int behavior
@@ -172,9 +172,11 @@ public class RestaurantOverViewFragment extends Fragment {
 
 
             if (fragments.size() == 3) {
+
                 searchingFragment = RestaurantOverviewTabViewFragment.newInstance(restaurantList, RestaurantOverviewTabViewFragment.SEARCHING_PAGER);
                 ((RestaurantOverviewTabViewFragment) searchingFragment).setData(searchingData);
                 fragments.add(searchingFragment);
+
             } else {
                 ((RestaurantOverviewTabViewFragment) fragments.get(3)).setData(searchingData);
             }
@@ -187,7 +189,7 @@ public class RestaurantOverViewFragment extends Fragment {
 
             if (fragments.size() == 4) {
                 ((RestaurantOverviewTabViewFragment) searchingFragment).clearData();
-                fragments.remove(fragments.size() - 1);
+                searchingFragment = fragments.remove(fragments.size() - 1);
                 notifyDataSetChanged();
             }
 
@@ -240,7 +242,7 @@ public class RestaurantOverViewFragment extends Fragment {
                                     @Override
                                     public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
                                         viewPagerAdapter.setDataSearchingFragment(briefRestaurantInfos);
-                                        tabLayout.getTabAt(3).select();
+                                        Objects.requireNonNull(tabLayout.getTabAt(3)).select();
                                     }
                                 }
                         );
@@ -253,7 +255,7 @@ public class RestaurantOverViewFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.length() == 0) {
-                    viewPagerAdapter.removeSearchingFragment();
+//                    viewPagerAdapter.removeSearchingFragment();
                     tabLayout.getTabAt(0).select();
                 }
 

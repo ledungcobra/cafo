@@ -1,7 +1,6 @@
 package com.ledungcobra.cafo.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -20,7 +19,6 @@ public abstract class TrackingRestaurantRoomDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-            Log.d("CALL_API", "onOpen: ");
         }
     };
     public static TrackingRestaurantRoomDatabase getDatabase(final  Context ctx){

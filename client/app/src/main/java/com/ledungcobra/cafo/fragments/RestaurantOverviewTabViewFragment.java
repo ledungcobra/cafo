@@ -1,11 +1,13 @@
 package com.ledungcobra.cafo.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -17,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.activity.RestaurantDetailScreen;
-import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.models.restaurants_new.BriefRestaurantInfo;
 import com.ledungcobra.cafo.models.user.TrackingRestaurant;
+import com.ledungcobra.cafo.service.Repository;
 import com.ledungcobra.cafo.ui_calllback.RestaurantClickListener;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.RestaurantOverviewItemAdapter;
@@ -44,6 +46,8 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     private int type;
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>();
     private LiveData<ArrayList<BriefRestaurantInfo>> passedRestaurantList;
+    private AnimationDrawable animationDrawable;
+    private ImageView gifProgressbar;
 
     public RestaurantOverviewTabViewFragment() {
     }
@@ -52,8 +56,8 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     public static RestaurantOverviewTabViewFragment newInstance(LiveData<ArrayList<BriefRestaurantInfo>> restaurantList, int type) {
         RestaurantOverviewTabViewFragment fragment = new RestaurantOverviewTabViewFragment();
         Bundle args = new Bundle();
-        if(type != SEARCHING_PAGER){
-            assert restaurantList!=null;
+        if (type != SEARCHING_PAGER) {
+            assert restaurantList != null;
             fragment.passedRestaurantList = restaurantList;
         }
         fragment.setArguments(args);
@@ -77,11 +81,14 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     }
 
 
-    public void InitUI(View view) {
+    public void InitUI(final View view) {
         //init adapter
         adapter = new RestaurantOverviewItemAdapter(getContext());
 
-        final RecyclerView recyclerView = (RecyclerView) view;
+        final RecyclerView recyclerView =  view.findViewById(R.id.list_view);
+
+        gifProgressbar =  view.findViewById(R.id.gif_progress_bar);
+        animationDrawable = (AnimationDrawable)gifProgressbar.getDrawable();
 
         //Set onClick every element in adapter
         adapter.setOnRestaurantClickListener(new RestaurantClickListener() {
@@ -144,9 +151,9 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
         }
 
 
-        if(type !=SEARCHING_PAGER){
+        if (type != SEARCHING_PAGER) {
 
-            assert passedRestaurantList!=null;
+            assert passedRestaurantList != null;
             passedRestaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
                 @Override
                 public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
@@ -166,11 +173,12 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
                             adapter.setRestaurants((ArrayList<BriefRestaurantInfo>) briefRestaurantInfos);
 
                         }
+
                     }
                 });
 
             }
-        }else{
+        } else {
             restaurantList.observe(getViewLifecycleOwner(), new Observer<ArrayList<BriefRestaurantInfo>>() {
                 @Override
                 public void onChanged(ArrayList<BriefRestaurantInfo> briefRestaurantInfos) {
@@ -182,17 +190,29 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
 
                     }
 
+
+                    if(briefRestaurantInfos.size() == 0){
+
+                        animationDrawable.start();
+                        gifProgressbar.setVisibility(View.VISIBLE);
+                    }else{
+                        gifProgressbar.setVisibility(View.INVISIBLE);
+                        animationDrawable.stop();
+                    }
+
+
                 }
             });
         }
     }
 
-    public void setData(ArrayList<BriefRestaurantInfo> data){
+    public void setData(ArrayList<BriefRestaurantInfo> data) {
+
         restaurantList.setValue(data);
 
     }
 
-    public void clearData(){
+    public void clearData() {
         restaurantList.setValue(new ArrayList<BriefRestaurantInfo>());
     }
 }

@@ -65,4 +65,18 @@
     <string name="customer">Customer</string>
     <string name="shipper">Shipper</string>
     <string name="already_have_account">Already have account?</string>
+    <string name="permission_granted" >Location permission granted</string>
+    <string name="cannot_get_your_location">Cannot get your location</string>
+    <string name="order_successfully" >Order successfully</string>
+    <string name="cannot_order" >Cannot order</string>
+    <string name="your_session_expired" >User session expired</string>
+    <string name="login_failed">Login failed</string>
+    <string name="invalid_input" >Your input is invalid</string>
+    <string name="you_must_complete_all_field" >You must complete all field</string>
+    <string name="server_error" >Server Error</string>
+    <string name="finish_order_successfully">Finish order successfully</string>
+    <string name="network_error">Network error</string>
+    <string name="order_id">ORDER_ID</string>
+    <string name="result">RESULT</string>
+    <string name="finish">FINISH</string>
 </resources>

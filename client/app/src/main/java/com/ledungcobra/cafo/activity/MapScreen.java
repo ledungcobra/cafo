@@ -2,6 +2,7 @@ package com.ledungcobra.cafo.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -74,7 +75,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     private LocationManager locationManager;
     private Button btnRecenter;
 
-
     //DATA
     private MutableLiveData<ArrayList<String>> listAddresses = new MutableLiveData<>(new ArrayList<String>());
     String TAG = "GOOGLE_MAP";
@@ -86,6 +86,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     private boolean firstLoad = true;
     private boolean completedTheRouting = false;
     public static  final int CODE = 9099;
+    private ActivityManager activityManager;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -93,6 +94,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_screen);
 
+        ActivityManager activityManager = (ActivityManager)getBaseContext().getSystemService (Context.ACTIVITY_SERVICE);
 
         ArrayAdapter<String> adapter
                 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listAddresses.getValue());
@@ -394,7 +396,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 builder.setTitle("You completed the route")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(final DialogInterface dialog, int which) {
 
                                 Intent intent = getIntent();
                                 String orderID = intent.getStringExtra(getString(R.string.order_id));
@@ -417,6 +419,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                                             Intent intent = new Intent();
                                             intent.putExtra(getString(R.string.result),getString(R.string.finish));
                                             setResult(CODE,intent);
+                                            dialog.dismiss();
                                             finish();
                                         }
 
@@ -428,12 +431,9 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                                     });
                                 }
 
-                                dialog.dismiss();
                             }
                         })
-                        .create()
-                        .show();
-
+                        .create().show();
 
 
             }

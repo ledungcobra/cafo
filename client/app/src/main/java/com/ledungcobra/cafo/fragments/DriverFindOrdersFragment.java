@@ -140,6 +140,8 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             return;
 
         }
+
+
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager != null) {
