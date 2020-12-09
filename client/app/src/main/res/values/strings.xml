@@ -69,4 +69,8 @@
     <string name="order_successfully" translatable="false">Order successfully</string>
     <string name="cannot_order" translatable="false">Cannot order</string>
     <string name="your_session_expired" translatable="false">User session expired</string>
+    <string name="login_failed" translatable="false">Login failed</string>
+    <string name="invalid_input" translatable="false">Your input is invalid</string>
+    <string name="you_must_complete_all_field" translatable="false">You must complete all field</string>
+    <string name="server_error" translatable="false">Server Error</string>
 </resources>

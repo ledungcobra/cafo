@@ -17,6 +17,19 @@ public class Food implements Serializable {
     @Expose
     private Integer amount;
 
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("decription")
+    @Expose
+    private String decription;
+    @SerializedName("price")
+    @Expose
+    private Price price;
+    @SerializedName("image_url")
+    @Expose
+    private Image image;
+
     public String getFoodID() {
         return foodID;
     }
@@ -40,19 +53,6 @@ public class Food implements Serializable {
     public void setCount(int count) {
         this.count = count;
     }
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("decription")
-    @Expose
-    private String decription;
-    @SerializedName("price")
-    @Expose
-    private Price price;
-    @SerializedName("image_url")
-    @Expose
-    private Image image;
-
 
     public String getName() {
         return name;

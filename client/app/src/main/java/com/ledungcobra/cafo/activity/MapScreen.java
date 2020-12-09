@@ -2,7 +2,9 @@ package com.ledungcobra.cafo.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
@@ -75,12 +77,12 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     String TAG = "GOOGLE_MAP";
     private MutableLiveData<Location> userLocation = new MutableLiveData<>(null);
     private final int maxTimeLocUpdateMilis = 300;
-    private LatLng locSrc;
     private LatLng locDest;
     private MutableLiveData<ArrayList<LatLng>> downloadedLocations = new MutableLiveData<>(null);
-
     private final int REQUEST_CODE = 9999;
     private boolean firstLoad = true;
+    private boolean completedTheRouting = false;
+
 
     @SuppressLint("MissingPermission")
     @Override
@@ -117,6 +119,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.myMap);
+        assert mapFragment != null;
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -127,6 +130,12 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         }
 
 
+        runIfHasPermission();
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private void runIfHasPermission() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
 
         Intent intent = getIntent();
@@ -138,12 +147,11 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         btnRecenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userLocation.getValue()!=null){
-                    moveCamera(userLocation.getValue().getLatitude(),userLocation.getValue().getLongitude(),"");
+                if (userLocation.getValue() != null) {
+                    moveCamera(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude(), "", false);
                 }
             }
         });
-
     }
 
     @SuppressLint("MissingPermission")
@@ -178,7 +186,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         downloadedLocations.observe(this, new Observer<ArrayList<LatLng>>() {
             @Override
             public void onChanged(ArrayList<LatLng> latLngs) {
-                if(userLocation.getValue()!=null){
+                if (userLocation.getValue() != null) {
                     renderRoute();
                 }
             }
@@ -187,7 +195,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     }
 
     private void downloadLocations(LatLng userLocation, LatLng destLocation) {
-//        if(mMap !=null)  mMap.clear();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.geoapify.com/")
                 .addConverterFactory(GsonConverterFactory.create(
@@ -196,6 +204,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .build();
 
         MapService mapService = retrofit.create(MapService.class);
+        if (userLocation == null || destLocation == null) return;
         mapService.getRoute(userLocation.latitude + "," + userLocation.longitude + "|"
                         + destLocation.latitude + "," + destLocation.longitude,
                 "drive", getString(R.string.api_geoapify))
@@ -229,19 +238,18 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 );
 
 
-
     }
 
     public void renderRoute() {
 
-        if(mMap!=null){
+        if (mMap != null) {
             mMap.clear();
         }
 
-        if(downloadedLocations.getValue()!=null){
+        if (downloadedLocations.getValue() != null) {
 
-            if(userLocation.getValue()!=null){
-                moveCamera(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude(), "");
+            if (userLocation.getValue() != null) {
+                moveCamera(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude(), "", true);
             }
 
             if (downloadedLocations.getValue().size() < 2) {
@@ -262,13 +270,13 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
             mMap.addPolyline(options);
 
-            if(userLocation.getValue()!=null){
+            if (userLocation.getValue() != null) {
                 IconGenerator iconGen = new IconGenerator(this);
                 iconGen.setBackground(getDrawable(R.drawable.driver));
                 MarkerOptions markerOptions = new MarkerOptions().
                         icon(BitmapDescriptorFactory.fromBitmap(iconGen.makeIcon("")));
 
-                        markerOptions.position(new LatLng(userLocation.getValue().getLatitude(),userLocation.getValue().getLongitude()));
+                markerOptions.position(new LatLng(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude()));
 
                 mMap.addMarker(markerOptions);
             }
@@ -297,7 +305,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                                             ((JSONObject) response.get(0)).get("long")
                                     ));
 
-                                    moveCamera(latitude, longitude, searchTerm);
+                                    moveCamera(latitude, longitude, searchTerm, true);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -314,7 +322,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     }
 
-    public void moveCamera(double latitude, double longitude, String title) {
+    public void moveCamera(double latitude, double longitude, String title, boolean clear) {
 
         final LatLng pos = new LatLng(latitude, longitude);
 
@@ -323,7 +331,9 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 .position(pos)
                 .title(title));
 
-        mMap.clear();
+        if (clear) {
+            mMap.clear();
+        }
 
 
     }
@@ -349,12 +359,11 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 9999 &&
+        if (requestCode == REQUEST_CODE &&
                 grantResults.length == 2 &&
                 grantResults[0] == PERMISSION_GRANTED &&
                 grantResults[1] == PERMISSION_GRANTED) {
-            Log.d(TAG, "PERMISSION");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, maxTimeLocUpdateMilis, 5, this);
+            runIfHasPermission();
         }
 
     }
@@ -362,6 +371,25 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     @Override
     public void onLocationChanged(Location location) {
         userLocation.setValue(location);
+
+        if (location != null && locDest != null) {
+
+            if (calcDistanceBetweenTwoLocationInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(locDest.latitude, locDest.longitude)) < 0.1) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("You completed the route")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        }
+
+
     }
 
     @Override
@@ -376,6 +404,28 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    private double degreeToRadian(double deg) {
+        return deg * Math.PI / 180;
+    }
+
+    private double calcDistanceBetweenTwoLocationInKm(LatLng loc1, LatLng loc2) {
+
+        final int earthRadius = 6371;
+
+        double dLat = degreeToRadian(loc2.latitude - loc1.latitude);
+        double dLong = degreeToRadian(loc2.longitude - loc2.longitude);
+
+        double lat1 = degreeToRadian(loc1.latitude);
+        double lat2 = degreeToRadian(loc2.latitude);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLong / 2) * Math.sin(dLong / 2)
+                * Math.cos(lat1) * Math.cos(lat2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return earthRadius * c;
 
     }
 }

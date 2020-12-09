@@ -226,15 +226,15 @@ public class Login extends AppCompatActivity {
 
                                         @Override
                                         public void onFailure(Error error) {
-                                            Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
-                                            showErrorDialog("Đăng nhập thất bại");
+                                            Toast.makeText(Login.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+                                            showErrorDialog(getString(R.string.login_failed));
                                         }
                                     });
                         }else{
-                            showErrorDialog("Input nhập vào không hợp lệ");
+                            showErrorDialog(Login.this.getString(R.string.invalid_input));
                         }
                     } else {
-                        Toast.makeText(Login.this, "You must complete all field", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this,getString( R.string.you_must_complete_all_field), Toast.LENGTH_SHORT).show();
                     }
 
                 } else { // User want to Create an account
@@ -289,7 +289,7 @@ public class Login extends AppCompatActivity {
                                 }
                         );
                     }else{
-                        showErrorDialog("Thông tin nhập vào không đúng vui lòng kiểm tra lại");
+                        showErrorDialog(getString(R.string.invalid_input));
                     }
 
                 }
@@ -319,7 +319,7 @@ public class Login extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.d("CALL_API", "onResult: " + e);
-            Toast.makeText(Login.this, "Server Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Login.this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
         }
     }
     private boolean validateUserSignIn(){
