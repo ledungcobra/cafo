@@ -1,17 +1,18 @@
 const mongoose = require('mongoose')
+const debug = require('debug')('cafo-api:db');
 
 async function connect() {
     try {
-        //await mongoose.connect('mongodb+srv://anhhuu:maiy3uem@cluster0.16sjn.mongodb.net/cafo_app_API1_0?retryWrites=true&w=majority', {
-        await mongoose.connect('mongodb://localhost:27017/cafo_api_dev', {
+        await mongoose.connect(process.env.DB_URI, {
+            //await mongoose.connect('mongodb://localhost:27017/cafo_api_dev', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false,
             useCreateIndex: true
         });
-        console.log('Connect cafo_api_dev database successfully!')
+        debug('connect cafo_app_API1_0 database successfully!');
     } catch (error) {
-        console.log('Connect cafo_api_dev database failure!')
+        debug('connect cafo_app_API1_0 database failure! <' + error + '>')
     }
 }
 

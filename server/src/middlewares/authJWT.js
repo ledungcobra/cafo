@@ -3,80 +3,86 @@ const config = require("../config/auth/auth");
 const Role = require('../app/model/Role');
 const User = require('../app/model/User');
 
+const getMessageForClient = require('../utils/message');
+
 verifyToken = (req, res, next) => {
-    let token = req.headers["x-cafo-client-access-token"];
+    let token = req.headers['x-cafo-client-access-token'];
     if (!token) {
-        return res.status(403).send({ message: "No token provided!" });
+        return res.status(403).send(getMessageForClient(res.statusCode, 'No token provided!'));
     }
     jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
-            return res.status(401).send({ message: "Unauthorized!" });
+            return res.status(401).send(getMessageForClient(res.statusCode, 'Unauthorized'));
         }
-        req.userId = decoded.id;
-        //console.log(req.userId)
+        req.userID = decoded.id;
         next();
     });
 };
 
-isAdmin = (req, res, next) => {
-    User.findById(req.userId).exec((err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        Role.find({
-                _id: { $in: user.roles }
-            },
-            (err, roles) => {
-                if (err) {
-                    res.status(500).send({ message: err });
-                    return;
-                }
-                for (let i = 0; i < roles.length; i++) {
-                    if (roles[i].name === "admin") {
-                        req.permision = "admin"
-                        next();
-                        return;
-                    }
-                }
+isAdmin = async(req, res, next) => {
+    try {
+        const user = await User.findById(req.userID);
+        const roles = await Role.find({ _id: { $in: user.roles } });
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].name === 'admin') {
+                req.permision = 'admin';
+                next();
                 return;
-                //res.status(403).send({ message: "Require Admin Role!" });
             }
-        );
-    });
+        }
+        res.status(403).send(getMessageForClient(res.statusCode, 'Require [admin] Role!'));
+        return;
+
+    } catch (error) {
+        res.status(500).send(getMessageForClient(res.statusCode, error));
+    }
 };
 
 
-isCustomer = (req, res, next) => {
-    User.findById(req.userId).exec((err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
-        Role.find({
-                _id: { $in: user.roles }
-            },
-            (err, roles) => {
-                if (err) {
-                    res.status(500).send({ message: err });
-                    return;
-                }
-                for (let i = 0; i < roles.length; i++) {
-                    if (roles[i].name === "customer") {
-                        next();
-                        return;
-                    }
-                }
+isCustomer = async(req, res, next) => {
+    try {
+        const user = await User.findById(req.userID);
+        const roles = await Role.find({ _id: { $in: user.roles } });
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].name === 'customer') {
+                req.permision = 'customer';
+                next();
                 return;
-                //res.status(403).send({ message: "Require Moderator Role!" });
             }
-        );
-    });
+        }
+        res.status(403).send(getMessageForClient(res.statusCode, 'Require [customer] role!'));
+        return;
+
+    } catch (error) {
+        res.status(500).send(getMessageForClient(res.statusCode, error));
+    }
+};
+
+
+
+isShipper = async(req, res, next) => {
+    try {
+        const user = await User.findById(req.userID);
+        const roles = await Role.find({ _id: { $in: user.roles } });
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].name === 'shipper') {
+                req.permision = 'shipper';
+                next();
+                return;
+            }
+        }
+        res.status(403).send(getMessageForClient(res.statusCode, 'Require [shipper] role!'));
+        return;
+
+    } catch (error) {
+        res.status(500).send(getMessageForClient(res.statusCode, error));
+    }
 };
 
 const authJWT = {
     verifyToken,
     isAdmin,
-    isCustomer
+    isCustomer,
+    isShipper
 };
 module.exports = authJWT;
