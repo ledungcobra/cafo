@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,8 @@ import com.google.maps.android.ui.IconGenerator;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.routing.Routing;
 import com.ledungcobra.cafo.network.MapService;
+import com.ledungcobra.cafo.service.UserApiHandler;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,7 +85,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     private final int REQUEST_CODE = 9999;
     private boolean firstLoad = true;
     private boolean completedTheRouting = false;
-
+    public static  final int CODE = 9099;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -96,7 +99,6 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
 
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.edtTextField);
-        autoCompleteTextView.setThreshold(5);
         autoCompleteTextView.setAdapter(adapter);
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
@@ -175,6 +177,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                     if (firstLoad) {
                         downloadLocations(new LatLng(loc.getLatitude(), loc.getLongitude()), locDest);
                         renderRoute();
+
                     } else {
                         renderRoute();
                     }
@@ -196,12 +199,14 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
     private void downloadLocations(LatLng userLocation, LatLng destLocation) {
 
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.geoapify.com/")
                 .addConverterFactory(GsonConverterFactory.create(
                         new GsonBuilder()
                                 .create()))
                 .build();
+
 
         MapService mapService = retrofit.create(MapService.class);
         if (userLocation == null || destLocation == null) return;
@@ -244,6 +249,9 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
         if (mMap != null) {
             mMap.clear();
+
+        }else{
+            return;
         }
 
         if (downloadedLocations.getValue() != null) {
@@ -279,7 +287,13 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
                 markerOptions.position(new LatLng(userLocation.getValue().getLatitude(), userLocation.getValue().getLongitude()));
 
                 mMap.addMarker(markerOptions);
+
+                mMap.addMarker(new MarkerOptions().position(locDest).title(""));
+
+
             }
+
+
 
         }
 
@@ -374,18 +388,54 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
         if (location != null && locDest != null) {
 
-            if (calcDistanceBetweenTwoLocationInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(locDest.latitude, locDest.longitude)) < 0.1) {
+            if (calcDistanceBetweenTwoLocationInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(locDest.latitude, locDest.longitude)) < 0.05){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("You completed the route")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
+                                Intent intent = getIntent();
+                                String orderID = intent.getStringExtra(getString(R.string.order_id));
+
+                                if(orderID!=null){
+                                    UserApiHandler.getInstance().finishOrderByShipper(orderID, new UIThreadCallBack<Object, Error>() {
+                                        @Override
+                                        public void stopProgressIndicator() {
+
+                                        }
+
+                                        @Override
+                                        public void startProgressIndicator() {
+
+                                        }
+
+                                        @Override
+                                        public void onResult(Object result) {
+                                            Toast.makeText(MapScreen.this,getString(R.string.finish_order_successfully),Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent();
+                                            intent.putExtra(getString(R.string.result),getString(R.string.finish));
+                                            setResult(CODE,intent);
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Error error) {
+                                            Toast.makeText(MapScreen.this,getString(R.string.network_error),Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    });
+                                }
+
                                 dialog.dismiss();
                             }
                         })
                         .create()
                         .show();
+
+
+
             }
         }
 

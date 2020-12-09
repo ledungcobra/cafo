@@ -1,7 +1,6 @@
 package com.ledungcobra.cafo.fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,13 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
-import com.ledungcobra.cafo.activity.CartInformationShipping;
-import com.ledungcobra.cafo.models.common_new.CartItem;
-import com.ledungcobra.cafo.models.order.FoodOrderItem;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
-import com.ledungcobra.cafo.models.order.shipper.Food;
+import com.ledungcobra.cafo.service.UserApiHandler;
+import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.FoodListViewAdapter;
-
 
 import java.io.Serializable;
 import java.util.List;
@@ -70,7 +66,7 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
         }
 
         //Data
-        String orderID = details.getId();
+        final String orderID = details.getId();
         String resName = details.getRestaurant().getName();
         String resAddress = details.getRestaurant().getAddress();
         String customerPosition = details.getOrderPosition().getLatitude()
@@ -143,7 +139,28 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
                                         "Order will change status soon, please be patient",
                                         Toast.LENGTH_SHORT
                                 ).show();
-                                //TODO: Call API to set order to status complete
+
+                                UserApiHandler.getInstance().finishOrderByShipper(orderID, new UIThreadCallBack<Object, Error>() {
+                                    @Override
+                                    public void stopProgressIndicator() {
+
+                                    }
+
+                                    @Override
+                                    public void startProgressIndicator() {
+
+                                    }
+
+                                    @Override
+                                    public void onResult(Object result) {
+                                        Toast.makeText(getActivity(), getString(R.string.finish_order_successfully),Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Error error) {
+                                        Toast.makeText(getActivity(), getString(R.string.network_error),Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                                 dialog.dismiss();
                             }})
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

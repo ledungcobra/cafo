@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.activity.MapScreen;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.models.user.DetailUserInfo;
 
 import java.util.List;
 
