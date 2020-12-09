@@ -56,27 +56,44 @@ public class ShoppingCartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        assert this.getArguments() != null;
-        cartShops= (List<CartItem>) this.getArguments().getSerializable("ListFood");
 
         final View rootView = inflater.inflate(R.layout.fragment_shopping_cart, container, false);
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.recycleViewCart);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        InitUI(rootView);
 
+        return rootView;
+    }
+
+    public void InitUI(final View view){
+        //DATA
+        assert this.getArguments() != null;
+        cartShops= (List<CartItem>) this.getArguments().getSerializable("ListFood");
+        //VIEW
         final CartAdapterRecyclerView cartAdapterRecyclerView = new CartAdapterRecyclerView(getContext(),cartShops);
+        TextView tvSum = view.findViewById(R.id.tvResult);
+        Button Order = view.findViewById(R.id.btnOrderFood);
+        RecyclerView recyclerView = view.findViewById(R.id.recycleViewCart);
 
+        //Condition button
+        if (cartShops.size()==0){
+            Order.setEnabled(false);
+        }
+        else Order.setEnabled(true);
+
+        //Init recycleView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(cartAdapterRecyclerView);
+        //Calc total cost order
         int sumOfCost = 0;
         for (CartItem cartShop: cartShops){
             sumOfCost += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
         }
         //Click event
-        final TextView CostTotal = rootView.findViewById(R.id.tvResult);
+        final TextView CostTotal = view.findViewById(R.id.tvResult);
 
         cartAdapterRecyclerView.setOnClickListener(new CartAdapterRecyclerView.OnItemClickListener() {
             @Override
-            public void onAddClick(int position) {
+            public void onAddClick(int position) {//Set Onclick when click button +(add)
                 int sumOfCostNew=0;
                 for (CartItem cartShop: cartShops){
                     sumOfCostNew += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
@@ -88,13 +105,14 @@ public class ShoppingCartFragment extends Fragment {
             }
 
             @Override
-            public void onRemove(int position) {
-                if (cartShops.get(position).getNumber() == 0) {
+            public void onRemove(int position) {//Set Onclick when click button -(remove)
+                if (cartShops.get(position).getNumber() == 0) { //When number of food equal zero, delete food
                     cartShops.remove(position);
                     cartAdapterRecyclerView.notifyItemRemoved(position);
                     cartAdapterRecyclerView.notifyDataSetChanged();
                 }
 
+                //Calc total cost order after change the number of food
                 int sumOfCostNew=0;
                 for (CartItem cartShop: cartShops){
                     sumOfCostNew += cartShop.getFood().getPrice().getValue() * cartShop.getNumber();
@@ -106,11 +124,11 @@ public class ShoppingCartFragment extends Fragment {
             }
         });
 
-        TextView tvSum = rootView.findViewById(R.id.tvResult);
+
         Price priceTotal = new Price(sumOfCost);
         tvSum.setText(String.format("%,d",priceTotal.getValue()) + " " + getString(R.string.currency));
 
-        Button Order = rootView.findViewById(R.id.btnOrderFood);
+        //Set onClick button to trans information ship
         Order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,10 +140,7 @@ public class ShoppingCartFragment extends Fragment {
             }
         });
 
-
-        return rootView;
     }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
