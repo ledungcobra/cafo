@@ -5,6 +5,6 @@ const siteController = require('../app/controllers/SiteController');
 
 router.get('/', siteController.index);
 router.post('/search', siteController.search);
-router.post('/search-detail', siteController.search);
+router.post('/search-detail', siteController.searchDetail);
 
 module.exports = router;
