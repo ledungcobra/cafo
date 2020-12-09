@@ -388,7 +388,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
         if (location != null && locDest != null) {
 
-            if (calcDistanceBetweenTwoLocationInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(locDest.latitude, locDest.longitude)) < 0.05){
+            if (calcDistanceBetweenTwoLocationInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(locDest.latitude, locDest.longitude)) < 0.09){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("You completed the route")
