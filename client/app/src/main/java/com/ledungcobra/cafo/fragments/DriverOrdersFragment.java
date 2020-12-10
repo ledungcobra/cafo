@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +32,15 @@ import java.util.List;
 
 
 public class DriverOrdersFragment extends Fragment {
+    //VIEW
+    private ImageView gifProgressbar;
+    private TextView tvIdOrder;
+    private AnimationDrawable animationDrawable;
+    private View viewFragment;
+
+
+    //DATA
+    MutableLiveData<List<DetailOrderResponse>> orders = new MutableLiveData<>(null);
 
     CallBackToCreateFm callback;
     public interface CallBackToCreateFm{
@@ -59,19 +71,31 @@ public class DriverOrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view =  inflater.inflate(R.layout.fragment_user_orders, container, false);
-        final TextView tvIdOrder = view.findViewById(R.id.tvIdOrder);
-
+        this.viewFragment = view;
         //Load animation
-        final ImageView gifProgressbar =  view.findViewById(R.id.gif_progress_bar);
-        final AnimationDrawable animationDrawable = (AnimationDrawable)gifProgressbar.getDrawable();
+        gifProgressbar =  view.findViewById(R.id.gif_progress_bar);
+        animationDrawable = (AnimationDrawable)gifProgressbar.getDrawable();
         gifProgressbar.setVisibility(View.GONE);
+        tvIdOrder = view.findViewById(R.id.tvIdOrder);
         //Load animation
 
-        final DetailOrderResponse orderResponse;
-        final List<DetailOrderResponse> orderList= new ArrayList<>();
         callback = (CallBackToCreateFm) getActivity();
 
+        getAllOrders();
 
+        orders.observe(getViewLifecycleOwner(), new Observer<List<DetailOrderResponse>>() {
+            @Override
+            public void onChanged(List<DetailOrderResponse> detailOrderResponses) {
+                if(detailOrderResponses!=null){
+                    bindView(view, (ArrayList<DetailOrderResponse>) detailOrderResponses);
+                }
+            }
+        });
+
+        return view;
+    }
+
+    private void getAllOrders(){
         UserApiHandler.getInstance().getAcceptedOrdersByShipper(new UIThreadCallBack<List<DetailOrderResponse>, Error>() {
             @Override
             public void stopProgressIndicator() {
@@ -90,56 +114,7 @@ public class DriverOrdersFragment extends Fragment {
 
             @Override
             public void onResult(final List<DetailOrderResponse> result) {
-                orderList.addAll((ArrayList<DetailOrderResponse>) result);
-                RecyclerView recyclerViewOrder = view.findViewById(R.id.recyclerViewOrder);
-                DriverOrderListAdapter adapter;
-                adapter = new DriverOrderListAdapter(getContext(), orderList);
-                recyclerViewOrder.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerViewOrder.setAdapter(adapter);
-
-                adapter.setOnClickListener(new DriverOrderListAdapter.OnItemClickListener() {
-                    @Override
-                    public void onMapButtonClicked(final int pos) {
-                        new AlertDialog.Builder(getActivity()).
-                                setTitle("Choose type of map do you want to use")
-                                .setPositiveButton("Google Map (Recommended)", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+ MapScreen.getAddress(getActivity(),
-                                                Double.parseDouble(result.get(pos).getOrderPosition().getLatitude()),
-                                                Double.parseDouble(result.get(pos).getOrderPosition().getLongitude()))+
-                                                "&mode=d"));
-
-                                        intent.setPackage("com.google.android.apps.maps");
-                                        startActivity(intent);
-
-                                    }
-                                })
-                                .setNegativeButton("Built-in map", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(getActivity(), MapScreen.class);
-                                        intent.putExtra("lat",Double.parseDouble(result.get(pos).getOrderPosition().getLatitude()));
-                                        intent.putExtra("long", Double.parseDouble(result.get(pos).getOrderPosition().getLongitude()));
-                                        startActivity(intent);
-                                    }
-                                })
-                                .create()
-                                .show();
-
-                    }
-                    /*@Override
-                    public void onDeleteOrder(int position) {
-                        Toast.makeText(getContext(),"Delete Click",Toast.LENGTH_SHORT).show();
-                    }*/
-
-                    @Override
-                    public void onDetailClick(int position) {
-                        callback.onCreateFm(orderList.get(position));
-                    }
-                });
-
+                orders.setValue(result);
             }
 
             @Override
@@ -148,6 +123,68 @@ public class DriverOrdersFragment extends Fragment {
                 tvIdOrder.setText("Error");
             }
         });
-        return view;
+    }
+
+    private void bindView(final View view, final ArrayList<DetailOrderResponse> result){
+        RecyclerView recyclerViewOrder = view.findViewById(R.id.recyclerViewOrder);
+        DriverOrderListAdapter adapter;
+        adapter = new DriverOrderListAdapter(getContext(), orders.getValue());
+        recyclerViewOrder.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewOrder.setAdapter(adapter);
+
+        adapter.setOnClickListener(new DriverOrderListAdapter.OnItemClickListener() {
+            @Override
+            public void onMapButtonClicked(final int pos) {
+                new AlertDialog.Builder(getActivity()).
+                        setTitle("Choose type of map do you want to use")
+                        .setPositiveButton("Google Map (Recommended)", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+ MapScreen.getAddress(getActivity(),
+                                        Double.parseDouble(result.get(pos).getOrderPosition().getLatitude()),
+                                        Double.parseDouble(result.get(pos).getOrderPosition().getLongitude()))+
+                                        "&mode=d"));
+
+                                intent.setPackage("com.google.android.apps.maps");
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setNegativeButton("Built-in map", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(getActivity(), MapScreen.class);
+                                intent.putExtra("lat",Double.parseDouble(result.get(pos).getOrderPosition().getLatitude()));
+                                intent.putExtra("long", Double.parseDouble(result.get(pos).getOrderPosition().getLongitude()));
+
+                                intent.putExtra(getString(R.string.order_id),result.get(pos).getId());
+
+                                startActivityForResult(intent,MapScreen.CODE);
+                            }
+                        })
+                        .create()
+                        .show();
+
+            }
+                    /*@Override
+                    public void onDeleteOrder(int position) {
+                        Toast.makeText(getContext(),"Delete Click",Toast.LENGTH_SHORT).show();
+                    }*/
+
+            @Override
+            public void onDetailClick(int position) {
+                callback.onCreateFm(orders.getValue().get(position));
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == MapScreen.CODE && data !=null && resultCode == MapScreen.CODE ){
+            getAllOrders();
+        }
     }
 }

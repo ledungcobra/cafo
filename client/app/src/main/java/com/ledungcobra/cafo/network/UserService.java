@@ -65,6 +65,8 @@ public interface UserService  {
     @GET("shipper/orders")
     Call<List<DetailOrderResponse>> getAcceptedOrdersByShipper(@Header("x-cafo-client-access-token") String token);
 
+    @POST("shipper/finish-order")
+    @FormUrlEncoded
+    Call<Object> finishOrderByShipper(@Header("x-cafo-client-access-token") String token, @Field("order_id") String id);
 
-    
 }

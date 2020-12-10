@@ -60,7 +60,7 @@ public class Login extends AppCompatActivity {
 
     //DATA
     private SharedPreferences pref;
-    private boolean signInClicked = false;
+    private boolean signInClicked = true;
     private static final String SHARED_PREF_NAME = "USER_ACCESS_TOKEN";
     private String TAG = "CALL_API";
     private String currentButtonText = null;
@@ -83,6 +83,7 @@ public class Login extends AppCompatActivity {
         final String ROLE= pref.getString(getString(R.string.role), "");
         //Initial
         initUI();
+        changeLayoutForSignIn();
         //Init database
         Repository.getInstance().initDb(getApplication());
 

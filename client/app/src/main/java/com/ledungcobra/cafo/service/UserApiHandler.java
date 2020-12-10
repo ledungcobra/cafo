@@ -292,5 +292,27 @@ public class UserApiHandler {
             }
         });
     }
+
+    public void finishOrderByShipper(String id, final UIThreadCallBack<Object,Error> callBack){
+        callBack.startProgressIndicator();
+        userService.finishOrderByShipper(userAccessToken.getValue(),id).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                callBack.stopProgressIndicator();
+
+                if(response.code() == 200){
+                    callBack.onResult("OKE");
+                }else{
+                    callBack.onFailure(new Error("Error"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                callBack.stopProgressIndicator();
+                callBack.onFailure(new Error(t.getMessage()));
+            }
+        });
+    }
 }
 

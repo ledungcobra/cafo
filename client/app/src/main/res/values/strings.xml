@@ -73,4 +73,9 @@
     <string name="invalid_input" translatable="false">Your input is invalid</string>
     <string name="you_must_complete_all_field" translatable="false">You must complete all field</string>
     <string name="server_error" translatable="false">Server Error</string>
+    <string name="finish_order_successfully">Finish order successfully</string>
+    <string name="network_error">Network error</string>
+    <string name="order_id">ORDER_ID</string>
+    <string name="result">RESULT</string>
+    <string name="finish">FINISH</string>
 </resources>
