@@ -50,7 +50,7 @@ public interface UserService  {
     @FormUrlEncoded
     Call<OrderResponse> cancelOrderByCustomer(@Header("x-cafo-client-access-token") String token, @Field("order_id") String orderID);
 
-    @GET("shipper/search")
+    @GET("shipper/search-v2")
     Call<List<DetailOrderResponse>> getCustomerOrders(@Header("x-cafo-client-access-token") String token,
                                                       @Query("long") double longitude, @Query("lat") double latitude);
 
