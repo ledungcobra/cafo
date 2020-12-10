@@ -238,8 +238,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
                              @Override
                              public void onFailure(Call<Routing> call, Throwable t) {
-                                 Log.d(TAG, "onFailure: " + t);
-
+                                 Toast.makeText(MapScreen.this,getString(R.string.network_error),Toast.LENGTH_SHORT).show();
                              }
                          }
                 );
@@ -388,52 +387,60 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
     public void onLocationChanged(Location location) {
         userLocation.setValue(location);
 
+        Log.d("MEM_LEAKS", "onLocationChanged: ");
         if (location != null && locDest != null) {
 
             if (calcDistanceBetweenTwoLocationInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(locDest.latitude, locDest.longitude)) < 0.09){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setTitle("You completed the route")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                Intent intent = getIntent();
+                String orderID = intent.getStringExtra(getString(R.string.order_id));
+                try{
+
+                    if(orderID!=null){
+                        UserApiHandler.getInstance().finishOrderByShipper(orderID, new UIThreadCallBack<Object, Error>() {
                             @Override
-                            public void onClick(final DialogInterface dialog, int which) {
-
-                                Intent intent = getIntent();
-                                String orderID = intent.getStringExtra(getString(R.string.order_id));
-
-                                if(orderID!=null){
-                                    UserApiHandler.getInstance().finishOrderByShipper(orderID, new UIThreadCallBack<Object, Error>() {
-                                        @Override
-                                        public void stopProgressIndicator() {
-
-                                        }
-
-                                        @Override
-                                        public void startProgressIndicator() {
-
-                                        }
-
-                                        @Override
-                                        public void onResult(Object result) {
-                                            Toast.makeText(MapScreen.this,getString(R.string.finish_order_successfully),Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent();
-                                            intent.putExtra(getString(R.string.result),getString(R.string.finish));
-                                            setResult(CODE,intent);
-                                            dialog.dismiss();
-                                            finish();
-                                        }
-
-                                        @Override
-                                        public void onFailure(Error error) {
-                                            Toast.makeText(MapScreen.this,getString(R.string.network_error),Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    });
-                                }
+                            public void stopProgressIndicator() {
 
                             }
-                        })
-                        .create().show();
+
+                            @Override
+                            public void startProgressIndicator() {
+
+                            }
+
+                            @Override
+                            public void onResult(Object result) {
+                                Toast.makeText(MapScreen.this,getString(R.string.finish_order_successfully),Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent();
+                                intent.putExtra(getString(R.string.result),getString(R.string.finish));
+                                setResult(CODE,intent);
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(Error error) {
+                                Toast.makeText(MapScreen.this,getString(R.string.network_error),Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+
+                    builder.setTitle("You completed the route")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create().show();
+
+                }catch (Exception e){
+
+                    Log.d(TAG, "onLocationChanged: "+e);
+
+                }
+
 
 
             }
@@ -477,5 +484,11 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return earthRadius * c;
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationManager.removeUpdates(this);
     }
 }

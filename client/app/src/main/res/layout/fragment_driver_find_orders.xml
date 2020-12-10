@@ -2,34 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-        <fragment
-            android:id="@+id/myMap2"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal|top"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:context="com.ledungcobra.cafo.activity.DriverScreen" />
+    <fragment
+        android:id="@+id/myMap2"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:context="com.ledungcobra.cafo.activity.DriverScreen" />
 
 
     <!-- activity_screen_slide.xml -->
-    <androidx.viewpager.widget.ViewPager
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1">
+
+        <androidx.viewpager.widget.ViewPager
+
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
+        <ImageView
+            android:id="@+id/gif_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="90dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/svg_progress_animate"
+            android:visibility="invisible" />
+
+    </FrameLayout>
 
 
 </LinearLayout>

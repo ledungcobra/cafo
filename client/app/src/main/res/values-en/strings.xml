@@ -79,4 +79,15 @@
     <string name="order_id">ORDER_ID</string>
     <string name="result">RESULT</string>
     <string name="finish">FINISH</string>
+
+    <string name="cannot_get_user">Cannot get user</string>
+    <string name="cannot_get_restaurant">Cannot get restaurant</string>
+    <string name="casting_error">Casting error exception</string>
+    <string name="some_thing_wrong">Some thing wrong</string>
+    <string name="cannot_fetch_from_server">Cannot fetch from server</string>
+    <string name="accept_an_order_successfully">Accept an order successfully</string>
+    <string name="cannot_delete">\"Cannot delete a shipping order \"</string>
+    <string name="cannot_accept_this_order">Cannot accept this order</string>
+    <string name="delete_completed">Delete completed</string>
+    <string name="delete_failed">Delete failed</string>
 </resources>

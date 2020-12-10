@@ -3,17 +3,20 @@ package com.ledungcobra.cafo.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -63,16 +66,34 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
     private ViewPager viewPager;
     private ScreenSlidePagerAdapter adapter;
     private MenuItem refreshOrdersList;
+    private AnimationDrawable animationDrawable;
+    private ImageView gifProgressbar;
 
     //DATA
     private MutableLiveData<Integer> currentPage = new MutableLiveData<>(-1);
     private final MutableLiveData<ArrayList<DetailOrderResponse>> listCustomerOrders = new MutableLiveData<>(new ArrayList<DetailOrderResponse>());
     private LocationManager locationManager;
     private Location userLocation;
+    private int REQUEST_CODE = 3333;
+    private CountDownTimer countDownTimer = new CountDownTimer(5000, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
 
+        }
+
+        @Override
+        public void onFinish() {
+            if (gifProgressbar != null) {
+                gifProgressbar.setVisibility(View.INVISIBLE);
+                animationDrawable.stop();
+            }
+        }
+    };
 
 
     public void fetchUserOrder() {
+
+        if(userLocation == null) return ;
 
         UserApiHandler
                 .getInstance()
@@ -103,7 +124,7 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
                             public void onFailure(Error error) {
 
 
-                                Toast.makeText(getActivity(), "Cannot fetch from server", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(),getString( R.string.cannot_fetch_from_server), Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -136,12 +157,19 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         setHasOptionsMenu(true);
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 3333);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             return;
 
         }
 
 
+        runIfHasPermission();
+
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private void runIfHasPermission() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         if (locationManager != null) {
@@ -185,15 +213,23 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
         View view = inflater.inflate(R.layout.fragment_driver_find_orders, container, false);
 
         initUI(view);
+        countDownTimer.start();
 
         listCustomerOrders.observe(getViewLifecycleOwner(), new Observer<ArrayList<DetailOrderResponse>>() {
             @Override
             public void onChanged(ArrayList<DetailOrderResponse> detailOrderResponses) {
 
                 if (detailOrderResponses != null) {
+
                     adapter.setListCustomerOrders(detailOrderResponses);
 
-
+                    if (detailOrderResponses.size() == 0) {
+                        gifProgressbar.setVisibility(View.VISIBLE);
+                        animationDrawable.start();
+                    }else{
+                        gifProgressbar.setVisibility(View.INVISIBLE);
+                        animationDrawable.stop();
+                    }
                 }
 
 
@@ -226,6 +262,9 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
             mapFragment.getMapAsync(this);
         }
 
+        gifProgressbar = view.findViewById(R.id.gif_progress_bar);
+        animationDrawable = (AnimationDrawable) gifProgressbar.getDrawable();
+
         viewPager = view.findViewById(R.id.pager);
         adapter = new ScreenSlidePagerAdapter(requireActivity().getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -246,7 +285,6 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
 
             }
         });
-
 
 
     }
@@ -409,63 +447,8 @@ public class DriverFindOrdersFragment extends Fragment implements OnMapReadyCall
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 3333 && grantResults.length == 2 && grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED) {
-
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-            });
-
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-            if (locationManager != null) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 2, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                });
-            }
-
-            userLocation = null;
-
-            if (locationManager != null) {
-                userLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
-
-
+        if (requestCode == REQUEST_CODE && grantResults.length == 2 && grantResults[0] == PERMISSION_GRANTED && grantResults[1] == PERMISSION_GRANTED) {
+            runIfHasPermission();
         }
     }
 

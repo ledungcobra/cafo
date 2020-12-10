@@ -75,4 +75,16 @@
     <string name="order_id">ORDER_ID</string>
     <string name="result">RESULT</string>
     <string name="finish">FINISH</string>
+
+    <string name="cannot_get_user">Không thể lấy thông tin user</string>
+    <string name="cannot_get_restaurant">Không thể lấy thông tin cửa hàng</string>
+
+    <string name="casting_error">Có lỗi xảy ra</string>
+    <string name="some_thing_wrong">Điều gì đó không đúng</string>
+    <string name="cannot_fetch_from_server">Không thể lấy dữ liệu từ máy chủ</string>
+    <string name="accept_an_order_successfully">Nhận đơn thành công</string>
+    <string name="cannot_delete">Không thể xoá đơn hàng</string>
+    <string name="cannot_accept_this_order">Không thể nhận đơn này</string>
+    <string name="delete_completed">Xoá thành công</string>
+    <string name="delete_failed">Xoá thất bại</string>
 </resources>

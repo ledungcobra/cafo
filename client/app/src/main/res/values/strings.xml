@@ -1,39 +1,37 @@
 <resources>
-    <string name="app_name">Cafo</string>
-    <string name="maps_api_key">AIzaSyDscN7POG1r4wNZDSBsoTz5xgRFKfQH0LM</string>
-    <string name="title_activity_login">Login</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="username">Username</string>
     <string name="currency">₫</string>
     <string name="placeholder_text">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Loading......</string>
     <string name="shopcart">Shopping Cart</string>
     <string name="total">Total</string>
+
+    <!--    CONSTANT-->
+    <string name="app_name">Cafo</string>
+    <string name="maps_api_key">AIzaSyDscN7POG1r4wNZDSBsoTz5xgRFKfQH0LM</string>
     <string name="title_activity_cart_infomation_shipping">CartInfomationShipping</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
     <string name="hello_world">Hello Square World!</string>
     <string name="token">TOKEN</string>
     <string name="role">ROLE</string>
     <string name="cart_items">CART</string>
     <string name="ListFood">ListFood</string>
     <string name="res_id">resID</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="order_id">ORDER_ID</string>
+    <string name="result">RESULT</string>
+    <string name="finish">FINISH</string>
+    <string name="user_info">USER_INFO</string>
+    <string name="api_geoapify">e39be72fa4a1417db83845d0c9e238ce</string>
+
     <string name="sign_in">Sign In</string>
     <string name="create_an_account">Create An Account</string>
-    <string name="user_info">USER_INFO</string>
     <string name="list_restaurants">LIST_RESTAURANTS</string>
-    <string name="api_geoapify">e39be72fa4a1417db83845d0c9e238ce</string>
     <string name="need_update">NEED_UPDATE</string>
     <string name="find_orders_text">Find Orders</string>
     <string name="new_tab">New</string>
@@ -44,6 +42,7 @@
     <string name="profile">Profile</string>
     <string name="your_orders">Your orders</string>
     <string name="logout">Logout</string>
+    <string name="sign_up">Sign Up</string>
     <string name="open_map">Open Map</string>
     <string name="shopping_cart">Shopping Cart</string>
     <string name="detail">Detail</string>
@@ -64,18 +63,26 @@
     <string name="customer">Customer</string>
     <string name="shipper">Shipper</string>
     <string name="already_have_account">Already have account?</string>
-    <string name="permission_granted" translatable="false">Location permission granted</string>
-    <string name="cannot_get_your_location" translatable="false">Cannot get your location</string>
-    <string name="order_successfully" translatable="false">Order successfully</string>
-    <string name="cannot_order" translatable="false">Cannot order</string>
-    <string name="your_session_expired" translatable="false">User session expired</string>
-    <string name="login_failed" translatable="false">Login failed</string>
-    <string name="invalid_input" translatable="false">Your input is invalid</string>
-    <string name="you_must_complete_all_field" translatable="false">You must complete all field</string>
-    <string name="server_error" translatable="false">Server Error</string>
+    <string name="permission_granted" >Location permission granted</string>
+    <string name="cannot_get_your_location" >Cannot get your location</string>
+    <string name="order_successfully" >Order successfully</string>
+    <string name="cannot_order" >Cannot order</string>
+    <string name="your_session_expired" >User session expired</string>
+    <string name="login_failed">Login failed</string>
+    <string name="invalid_input" >Your input is invalid</string>
+    <string name="you_must_complete_all_field">You must complete all field</string>
+    <string name="server_error" >Server Error</string>
     <string name="finish_order_successfully">Finish order successfully</string>
     <string name="network_error">Network error</string>
-    <string name="order_id">ORDER_ID</string>
-    <string name="result">RESULT</string>
-    <string name="finish">FINISH</string>
+    <string name="title_activity_login">Login</string>
+    <string name="cannot_get_user">Cannot get user</string>
+    <string name="cannot_get_restaurant">Cannot get restaurant</string>
+    <string name="casting_error">Casting error exception</string>
+    <string name="some_thing_wrong">Some thing wrong</string>
+    <string name="cannot_fetch_from_server">Cannot fetch from server</string>
+    <string name="accept_an_order_successfully">Accept an order successfully</string>
+    <string name="cannot_delete">\"Cannot delete a shipping order \"</string>
+    <string name="cannot_accept_this_order">Cannot accept this order</string>
+    <string name="delete_completed">Delete completed</string>
+    <string name="delete_failed">Delete failed</string>
 </resources>

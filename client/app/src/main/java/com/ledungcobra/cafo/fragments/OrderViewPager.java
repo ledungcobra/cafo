@@ -105,7 +105,7 @@ public class OrderViewPager extends Fragment {
 
                         try{
 
-                            Toast.makeText(getContext(),"Accept an order successfully",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.accept_an_order_successfully),Toast.LENGTH_SHORT).show();
 
                         }catch (Exception e){
 
@@ -117,7 +117,7 @@ public class OrderViewPager extends Fragment {
 
                     @Override
                     public void onFailure(Error error) {
-                        Toast.makeText(getContext(),"Cannot accept this order",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.cannot_accept_this_order),Toast.LENGTH_SHORT).show();
                     }
                 });
             }

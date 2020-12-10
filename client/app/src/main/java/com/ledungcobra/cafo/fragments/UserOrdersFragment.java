@@ -113,7 +113,7 @@ public class UserOrdersFragment extends Fragment {
                                                 Toast.LENGTH_SHORT
                                         ).show();
                                         if(adapter.getOrderResponseList().get(position).getStatus().equals("SHIPPING")){
-                                            Toast.makeText(getActivity(),"Cannot delete a shipping order ",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), getString(R.string.cannot_delete),Toast.LENGTH_SHORT).show();
                                             return;
                                         }
                                         UserApiHandler.getInstance().cancelOrderByCustomer(adapter.getOrderResponseList().get(position).getId(), new UIThreadCallBack<OrderResponse, Error>() {
@@ -129,12 +129,12 @@ public class UserOrdersFragment extends Fragment {
 
                                             @Override
                                             public void onResult(OrderResponse result) {
-                                                Toast.makeText(getActivity(),"Delete completed",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(), getString(R.string.delete_completed),Toast.LENGTH_SHORT).show();
                                             }
 
                                             @Override
                                             public void onFailure(Error error) {
-                                                Toast.makeText(getActivity(),"Delete failed",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(),getString(R.string.delete_failed),Toast.LENGTH_SHORT).show();
 
                                             }
                                         });

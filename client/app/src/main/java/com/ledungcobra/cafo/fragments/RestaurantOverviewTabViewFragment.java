@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -34,7 +35,9 @@ import static com.ledungcobra.cafo.activity.RestaurantsOverviewScreen.EXTRA_KEY;
 public class RestaurantOverviewTabViewFragment extends Fragment {
 
     //VIEW
-    RestaurantOverviewItemAdapter adapter;
+    private RestaurantOverviewItemAdapter adapter;
+    private AnimationDrawable animationDrawable;
+    private ImageView gifProgressbar;
 
     //DATA
     public static int NEW_PAGER = 0;
@@ -46,8 +49,7 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
     private int type;
     private MutableLiveData<ArrayList<BriefRestaurantInfo>> restaurantList = new MutableLiveData<>();
     private LiveData<ArrayList<BriefRestaurantInfo>> passedRestaurantList;
-    private AnimationDrawable animationDrawable;
-    private ImageView gifProgressbar;
+
 
     public RestaurantOverviewTabViewFragment() {
     }
@@ -138,7 +140,7 @@ public class RestaurantOverviewTabViewFragment extends Fragment {
 
                                 @Override
                                 public void onFailure(Error error) {
-
+                                    Toast.makeText(getActivity(), getString(R.string.cannot_get_restaurant), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

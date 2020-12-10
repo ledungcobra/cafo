@@ -102,7 +102,7 @@ public class CartInformationShipping extends AppCompatActivity {
             listCartShop = (ArrayList<CartItem>) intent.getSerializableExtra("Info");
 
         }catch (Exception e){
-            Toast.makeText(this, "Casting error exception", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.casting_error), Toast.LENGTH_SHORT).show();
         }
 
         resID = intent.getStringExtra(getString(R.string.res_id));
@@ -165,7 +165,7 @@ public class CartInformationShipping extends AppCompatActivity {
 
             @Override
             public void onFailure(Error error) {
-
+                Toast.makeText(CartInformationShipping.this, getString(R.string.cannot_get_user),Toast.LENGTH_SHORT).show();
             }
         });
     }

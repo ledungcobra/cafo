@@ -199,7 +199,7 @@ public class    RestaurantDetailScreen extends AppCompatActivity implements
 
             @Override
             public void onFailure(Error error) {
-
+                Toast.makeText(RestaurantDetailScreen.this, getString(R.string.cannot_get_restaurant), LENGTH_SHORT).show();
             }
         });
 

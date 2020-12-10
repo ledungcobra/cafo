@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Error error) {
-                Toast.makeText(MainActivity.this, "Some thing wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,getString(R.string.some_thing_wrong), Toast.LENGTH_SHORT).show();
             }
 
             @Override
