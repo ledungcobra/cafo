@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ledungcobra.cafo.R;
 import com.ledungcobra.cafo.models.order.shipper.DetailOrderResponse;
+import com.ledungcobra.cafo.models.order.shipper.Food;
 import com.ledungcobra.cafo.service.UserApiHandler;
 import com.ledungcobra.cafo.ui_calllback.UIThreadCallBack;
 import com.ledungcobra.cafo.view_adapter.FoodListViewAdapter;
@@ -74,8 +75,11 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
         String customerContact = "(NONE)";  //API can't handle
         String status = details.getStatus();
         List<com.ledungcobra.cafo.models.order.shipper.Food> foodList = details.getFoods();
+
         int shippingFee = 20000;
-        int total = details.getTotal() + shippingFee;
+        int total = 0;
+
+
         //Data
 
         //Views
@@ -111,6 +115,20 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
         }
         tvStatus.setText(status);
         tvShippingFee.setText(String.format("%,d", shippingFee) + getString(R.string.currency));
+        //Call total
+        if( details.getTotal() == null){
+
+            for(Food food: details.getFoods()){
+
+                total+= food.getCount()*food.getPrice().getValue();
+
+            }
+            total+=shippingFee;
+            //If order has not been accepted, button CompleteOrder is invisible
+            btnCompleteOrder.setVisibility(View.GONE);
+        }else{
+            total = details.getTotal()+shippingFee;
+        }
         tvTotal.setText(String.format("%,d", total) + getString(R.string.currency));
 
         RecyclerView recyclerView = view.findViewById(R.id.listCustomerOrderItems);
