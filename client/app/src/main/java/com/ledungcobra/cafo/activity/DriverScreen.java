@@ -213,7 +213,7 @@ public class DriverScreen extends AppCompatActivity implements
     public void onSelectedOrder(DetailOrderResponse detailOrderResponse) {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container, DriverDetailOrderFragment.newInstance(detailOrderResponse));
+        ft.add(R.id.container, DriverFragmentDetailFoodInOrder.newInstance(detailOrderResponse));
         ft.addToBackStack(null);
         ft.commit();
 

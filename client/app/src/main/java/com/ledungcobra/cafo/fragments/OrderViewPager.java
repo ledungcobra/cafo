@@ -125,6 +125,7 @@ public class OrderViewPager extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                detailOrderResponse.getFoods()  ;
                 callback.onSelectedOrder(detailOrderResponse);
 
             }

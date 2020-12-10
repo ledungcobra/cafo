@@ -78,8 +78,22 @@ public class DriverFragmentDetailFoodInOrder extends Fragment {
         String customerContact = "(NONE)";  //API can't handle
         String status = details.getStatus();
         List<com.ledungcobra.cafo.models.order.shipper.Food> foodList = details.getFoods();
+
         int shippingFee = 20000;
-        int total = details.getTotal() + shippingFee;
+        int total = 0;
+
+
+        if( details.getTotal() == null){
+
+            for(Food food: details.getFoods()){
+
+                total+= food.getCount()*food.getPrice().getValue();
+
+            }
+
+        }else{
+            total = details.getTotal()+shippingFee;
+        }
         //Data
 
         //Views
