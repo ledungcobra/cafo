@@ -25,7 +25,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="4dp"
             android:elevation="8dp"
             app:cardBackgroundColor="#EEFFFFFF"
             app:cardCornerRadius="12dp">
@@ -192,14 +193,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:elevation="16dp"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="4dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="Menu"
                 android:textColor="@android:color/white"
@@ -218,8 +218,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/categoryTabLayout"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
             app:tabMode="scrollable"
             android:background="@null"
             app:tabIndicatorColor="@color/white"
