@@ -89,7 +89,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.Orde
                 String status = orderResponseList.get(position).getStatus();
                 tvResOrder.setText(orderResponseList.get(position).getRestaurant().getName());
                 //Can only cancel orders which are not handled yet
-                if (!status.equals("WAITING")) {
+                if (status.equalsIgnoreCase("SHIPPING") || "CANCEL".equalsIgnoreCase(status)||"DONE".equalsIgnoreCase(status)) {
                     ivDeleteOrder.setEnabled(false);
                     ivDeleteOrder.getDrawable().setTint(Color.GRAY);
                 }
