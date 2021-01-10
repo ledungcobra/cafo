@@ -10,7 +10,7 @@ public class Leg {
 
     @SerializedName("distance")
     @Expose
-    private Integer distance;
+    private Float distance;
     @SerializedName("time")
     @Expose
     private Float time;
@@ -18,11 +18,11 @@ public class Leg {
     @Expose
     private List<Step> steps = null;
 
-    public Integer getDistance() {
+    public Float getDistance() {
         return distance;
     }
 
-    public void setDistance(Integer distance) {
+    public void setDistance(Float distance) {
         this.distance = distance;
     }
 
