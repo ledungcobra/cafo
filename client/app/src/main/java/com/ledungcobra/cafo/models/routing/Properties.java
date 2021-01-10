@@ -16,10 +16,10 @@ public class Properties {
     private List<Waypoint> waypoints = null;
     @SerializedName("distance")
     @Expose
-    private Integer distance;
+    private Float distance;
     @SerializedName("time")
     @Expose
-    private Integer time;
+    private Float time;
     @SerializedName("legs")
     @Expose
     private List<Leg> legs = null;
@@ -40,19 +40,19 @@ public class Properties {
         this.waypoints = waypoints;
     }
 
-    public Integer getDistance() {
+    public Float getDistance() {
         return distance;
     }
 
-    public void setDistance(Integer distance) {
+    public void setDistance(Float distance) {
         this.distance = distance;
     }
 
-    public Integer getTime() {
+    public Float getTime() {
         return time;
     }
 
-    public void setTime(Integer time) {
+    public void setTime(Float time) {
         this.time = time;
     }
 

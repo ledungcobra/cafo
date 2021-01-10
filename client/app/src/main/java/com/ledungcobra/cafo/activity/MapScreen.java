@@ -238,6 +238,7 @@ public class MapScreen extends AppCompatActivity implements OnMapReadyCallback, 
 
                              @Override
                              public void onFailure(Call<Routing> call, Throwable t) {
+                                 Log.d(TAG, "onFailure: "+ t);
                                  Toast.makeText(MapScreen.this,getString(R.string.network_error),Toast.LENGTH_SHORT).show();
                              }
                          }

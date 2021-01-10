@@ -11,16 +11,16 @@ public class Step {
     private Instruction instruction;
     @SerializedName("from_index")
     @Expose
-    private Integer fromIndex;
+    private Double fromIndex;
     @SerializedName("to_index")
     @Expose
-    private Integer toIndex;
+    private Double toIndex;
     @SerializedName("distance")
     @Expose
     private Double distance;
     @SerializedName("time")
     @Expose
-    private Integer time;
+    private Double time;
 
     public Instruction getInstruction() {
         return instruction;
@@ -30,21 +30,6 @@ public class Step {
         this.instruction = instruction;
     }
 
-    public Integer getFromIndex() {
-        return fromIndex;
-    }
-
-    public void setFromIndex(Integer fromIndex) {
-        this.fromIndex = fromIndex;
-    }
-
-    public Integer getToIndex() {
-        return toIndex;
-    }
-
-    public void setToIndex(Integer toIndex) {
-        this.toIndex = toIndex;
-    }
 
     public Double getDistance() {
         return distance;
@@ -54,14 +39,29 @@ public class Step {
         this.distance = distance;
     }
 
-    public Integer getTime() {
+    public Double getFromIndex() {
+        return fromIndex;
+    }
+
+    public void setFromIndex(Double fromIndex) {
+        this.fromIndex = fromIndex;
+    }
+
+    public Double getToIndex() {
+        return toIndex;
+    }
+
+    public void setToIndex(Double toIndex) {
+        this.toIndex = toIndex;
+    }
+
+    public Double getTime() {
         return time;
     }
 
-    public void setTime(Integer time) {
+    public void setTime(Double time) {
         this.time = time;
     }
-
 
     @Override
     public String toString() {
